@@ -4,7 +4,7 @@ Team Borg
 Group members are:
   Orion Sehn (funmaster524),
   Joseph Latina (josephlatina),
-  Alex Cairns,
+  Alex Cairns (AlexCairns),
   Ziyu Zhou.
 
 ### Description
