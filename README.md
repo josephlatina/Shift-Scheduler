@@ -5,7 +5,7 @@ Group members are:
   Orion Sehn (funmaster524),
   Joseph Latina (josephlatina),
   Alex Cairns (AlexCairns),
-  Ziyu Zhou(jeffrey).
+  Ziyu Zhou(jeffrey818).
 
 ### Description
 
