@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___01_intro_ek2_shape.xml" value="0.2046875" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___02_employee_ek2_shape.xml" value="0.15648148148148147" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___02a_employeedetails_ek2_shape.xml" value="0.15648148148148147" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___02b_employeemodify_ek2_shape.xml" value="0.15648148148148147" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___02c_employeeavailability_ek2_shape.xml" value="0.15648148148148147" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___03_scheduling_ek2_shape.xml" value="0.15648148148148147" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/drawable-nodpi/_bg___04_settings_ek2_shape.xml" value="0.15648148148148147" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/layout/employee.xml" value="0.18" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/layout/employeeavailability.xml" value="0.25" />
+        <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/layout/intro.xml" value="0.25" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
