@@ -283,17 +283,17 @@
 							android:layout_width="335dp"
 							android:layout_height="79dp" />
 
-						<TextView android:id="@+id/john_smith_ek7"
-							android:fontFamily="Arial"
-							android:textStyle="bold"
-							android:textSize="20sp"
-							android:textColor="@color/title_color"
-							android:layout_marginLeft="124dp"
-							android:layout_marginTop="29dp"
+						<TextView
+							android:id="@+id/john_smith_ek7"
 							android:layout_width="142dp"
 							android:layout_height="37dp"
+							android:layout_marginLeft="124dp"
+							android:layout_marginTop="29dp"
+							android:fontFamily="Arial"
 							android:text="@string/john_smith_ek7_string"
-							 />
+							android:textColor="@color/title_color"
+							android:textSize="20sp"
+							android:textStyle="bold" />
 
 
 						<RelativeLayout android:id="@+id/ellipse_1_ek6"
