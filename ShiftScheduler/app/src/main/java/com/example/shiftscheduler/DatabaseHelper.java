@@ -2,10 +2,13 @@ package com.example.shiftscheduler;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     //declare constants
@@ -48,14 +51,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    /*
     //Inserts new entry into the database.
         //Note: to check,
         // go to View -> Tool Windows -> Device File Explorer -> data -> edu.shadsluiter.sqldemo3
             // -> databases -> name of database. Export them to DB Browser Sqlite
     public boolean addEntry(EmployeeModel employeeModel) {
         //Retrieve the database already created and create an instance of database to hold it
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
 
         //Fill in the data for each column
@@ -77,7 +79,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-     */
+    // retrieve data from the Employee table
+    public List<EmployeeModel> getEveryone(){
+        List<EmployeeModel> returnList = new ArrayList<>();
+
+        //get data from the database
+        String queryString = "SELECT * FROM" + EMPLOYEE_TABLE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()){ //move it to the first of the result set
+            //loop through the results
+            do{
+                int employeeID = cursor.getInt(0);
+                int shiftTypeID = cursor.getInt(1);
+                int avaID = cursor.getInt(2);
+                String fName = cursor.getString(3);
+                String lName = cursor.getString(4);
+                String city = cursor.getString(5);
+                String street = cursor.getString(6);
+                String province = cursor.getString(7);
+                String postal = cursor.getString(8);
+                String dateOfBirth = cursor.getString(9);
+                String phone = cursor.getString(10);
+
+                EmployeeModel newEmpolyee = new EmployeeModel(employeeID, shiftTypeID,avaID,
+                        fName,lName, city, street, province, postal, dateOfBirth, phone);
+                returnList.add(newEmpolyee);
+            } while(cursor.moveToNext());
+        } else {
+            // error, nothing added to the list
+        }
+
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+        return returnList;
+    }
+
 
 
 
