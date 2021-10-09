@@ -85,7 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<EmployeeModel> returnList = new ArrayList<>();
 
         //get data from the database
-        String queryString = "SELECT * FROM" + EMPLOYEE_TABLE;
+        String queryString = "SELECT * FROM " + EMPLOYEE_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
         Cursor cursor = db.rawQuery(queryString, null);
@@ -105,9 +105,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String dateOfBirth = cursor.getString(9);
                 String phone = cursor.getString(10);
 
-                EmployeeModel newEmpolyee = new EmployeeModel(employeeID, qualificationID,avaID,
+                EmployeeModel newEmployee = new EmployeeModel(employeeID, qualificationID,avaID,
                         fName,lName, city, street, province, postal, dateOfBirth, phone);
-                returnList.add(newEmpolyee);
+                returnList.add(newEmployee);
             } while(cursor.moveToNext());
         } else {
             // error, nothing added to the list
