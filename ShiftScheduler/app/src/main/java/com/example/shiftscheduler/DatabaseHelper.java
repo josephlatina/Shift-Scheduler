@@ -15,7 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //declare constants
     public static final String EMPLOYEE_TABLE = "EMPLOYEE_TABLE";
     public static final String COL_ID = "EMPID";
-    public static final String COL_SHIFTTYPEID = "SHIFTTYPEID";
+    public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
     public static final String COL_AVAILABILITYID = "AVAILABILITYID";
     public static final String COL_FNAME = "FNAME";
     public static final String COL_LNAME = "LNAME";
@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //creates the table
         String createTableStatement = "CREATE TABLE " + EMPLOYEE_TABLE + "(" +
                 COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                COL_SHIFTTYPEID + " INTEGER," +
+                COL_QUALIFICATIONID + " INTEGER," +
                 COL_AVAILABILITYID + " INTEGER," +
                 COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
                 COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
@@ -88,13 +88,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String queryString = "SELECT * FROM" + EMPLOYEE_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString);
+        Cursor cursor = db.rawQuery(queryString, null);
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()){ //move it to the first of the result set
             //loop through the results
             do{
                 int employeeID = cursor.getInt(0);
-                int shiftTypeID = cursor.getInt(1);
+                int qualificationID = cursor.getInt(1);
                 int avaID = cursor.getInt(2);
                 String fName = cursor.getString(3);
                 String lName = cursor.getString(4);
@@ -105,7 +105,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String dateOfBirth = cursor.getString(9);
                 String phone = cursor.getString(10);
 
-                EmployeeModel newEmpolyee = new EmployeeModel(employeeID, shiftTypeID,avaID,
+                EmployeeModel newEmpolyee = new EmployeeModel(employeeID, qualificationID,avaID,
                         fName,lName, city, street, province, postal, dateOfBirth, phone);
                 returnList.add(newEmpolyee);
             } while(cursor.moveToNext());

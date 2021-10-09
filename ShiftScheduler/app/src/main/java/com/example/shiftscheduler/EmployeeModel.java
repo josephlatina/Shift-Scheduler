@@ -1,8 +1,10 @@
 package com.example.shiftscheduler;
 
+import java.util.Objects;
+
 public class EmployeeModel {
     private int employeeID;
-    private int shiftTypeID;
+    private int qualificationID;
     private int avaID;
     private String fName;
     private String lName;
@@ -12,12 +14,14 @@ public class EmployeeModel {
     private String postal;
     private String DOB;
     private String phoneNum;
+    boolean isActive;
 
-    public EmployeeModel(int employeeID, int shiftTypeID, int avaID, String fName, String lName,
+
+    public EmployeeModel(int employeeID, int qualificationID, int avaID, String fName, String lName,
                          String city, String street, String province, String postal, String dob,
                          String phoneNum) {
         this.employeeID = employeeID;
-        this.shiftTypeID = shiftTypeID;
+        this.qualificationID = qualificationID;
         this.avaID = avaID;
         this.fName = fName;
         this.lName = lName;
@@ -33,8 +37,8 @@ public class EmployeeModel {
         return employeeID;
     }
 
-    public int getShiftTypeID() {
-        return shiftTypeID;
+    public int getQualificationID() {
+        return qualificationID;
     }
 
     public int getAvaID() {
@@ -77,8 +81,8 @@ public class EmployeeModel {
         this.employeeID = employeeID;
     }
 
-    public void setShiftTypeID(Integer shiftTypeID) {
-        this.shiftTypeID = shiftTypeID;
+    public void setQualificationID(Integer qualificationID) {
+        this.qualificationID = qualificationID;
     }
 
     public void setAvaID(Integer avaID) {
@@ -115,5 +119,36 @@ public class EmployeeModel {
 
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EmployeeModel that = (EmployeeModel) o;
+        return employeeID == that.employeeID && qualificationID == that.qualificationID && avaID == that.avaID && isActive == that.isActive && fName.equals(that.fName) && lName.equals(that.lName) && city.equals(that.city) && street.equals(that.street) && province.equals(that.province) && postal.equals(that.postal) && DOB.equals(that.DOB) && phoneNum.equals(that.phoneNum);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeID, qualificationID, avaID, fName, lName, city, street, province, postal, DOB, phoneNum, isActive);
+    }
+
+    @Override
+    public String toString() {
+        return "EmployeeModel{" +
+                "employeeID=" + employeeID +
+                ", qualificationID=" + qualificationID +
+                ", avaID=" + avaID +
+                ", fName='" + fName + '\'' +
+                ", lName='" + lName + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", province='" + province + '\'' +
+                ", postal='" + postal + '\'' +
+                ", DOB='" + DOB + '\'' +
+                ", phoneNum='" + phoneNum + '\'' +
+                ", isActive=" + isActive +
+                '}';
     }
 }
