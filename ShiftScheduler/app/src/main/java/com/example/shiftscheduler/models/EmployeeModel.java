@@ -1,4 +1,4 @@
-package com.example.shiftscheduler;
+package com.example.shiftscheduler.models;
 
 import java.util.Objects;
 

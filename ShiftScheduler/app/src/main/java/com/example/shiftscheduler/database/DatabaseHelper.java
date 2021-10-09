@@ -1,4 +1,4 @@
-package com.example.shiftscheduler;
+package com.example.shiftscheduler.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import com.example.shiftscheduler.models.EmployeeModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,26 +28,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_DOB = "DATEOFBIRTH";
     public static final String COL_PHONENUM = "PHONENUM";
 
+    /* QUERY STRINGS TO CREATE TABLES */
+    //Create Employee Table
+    private String createEmployeeTable = "CREATE TABLE " + EMPLOYEE_TABLE + "(" +
+            COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_QUALIFICATIONID + " INTEGER," +
+            COL_AVAILABILITYID + " INTEGER," +
+            COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
+            COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
+            COL_DOB + " DATE," +
+            COL_PHONENUM + " TEXT)";
+    //Create Shift Table
+    //Create Availability Table
+    //Create the Qualifications Table
+
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
     public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
-    //method called to create a new database. Automatically called when app requests or inputs new data
+    //When App launches, method called to create a new database. Also automatically called when app requests or inputs new data
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //creates the table
-        String createTableStatement = "CREATE TABLE " + EMPLOYEE_TABLE + "(" +
-                COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                COL_QUALIFICATIONID + " INTEGER," +
-                COL_AVAILABILITYID + " INTEGER," +
-                COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
-                COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
-                COL_DOB + " DATE," +
-                COL_PHONENUM + " TEXT)";
-
-        db.execSQL(createTableStatement);
+        //create the Employee table
+        db.execSQL(createEmployeeTable);
+        //create the Shift table
+        //create the Availability table
+        //create the Qualifications table
     }
     //called to modify the schema for the database. Used when the database version number changes
     @Override
@@ -53,9 +63,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
     //Inserts new entry into the database.
-        //Note: to check,
-        // go to View -> Tool Windows -> Device File Explorer -> data -> edu.shadsluiter.sqldemo3
-            // -> databases -> name of database. Export them to DB Browser Sqlite
     public boolean addEntry(EmployeeModel employeeModel) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
