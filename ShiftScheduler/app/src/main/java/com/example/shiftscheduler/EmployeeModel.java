@@ -13,7 +13,9 @@ public class EmployeeModel {
     private String DOB;
     private String phoneNum;
 
-    public EmployeeModel(Integer employeeID, Integer shiftTypeID, Integer avaID, String fName, String lName, String city, String street, String province, String postal, String dob, String phoneNum) {
+    public EmployeeModel(int employeeID, int shiftTypeID, int avaID, String fName, String lName,
+                         String city, String street, String province, String postal, String dob,
+                         String phoneNum) {
         this.employeeID = employeeID;
         this.shiftTypeID = shiftTypeID;
         this.avaID = avaID;
