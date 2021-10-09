@@ -48,7 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
-    //method called to create a new database. Automatically called when app requests or inputs new data
+    //When App launches, method called to create a new database. Also automatically called when app requests or inputs new data
     @Override
     public void onCreate(SQLiteDatabase db) {
         //create the Employee table
