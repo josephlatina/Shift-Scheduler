@@ -6,10 +6,4 @@
 	<color name="colorPrimaryDark">#00574B</color>
 	<color name="colorAccent">#D81B60</color>
 
-	<color name="_bg__settings_ek2_color">#FFFFFF</color>
-	<color name="title_color">#1C0F13</color>
-	<color name="bg_color">#ffffff</color>
-	<color name="save_color">#000000</color>
-	<color name="rectangle_7_color">#D9D1C9</color>
-	<color name="ellipse_2_color">#C4C4C4</color>
 </resources>
