@@ -3,4 +3,6 @@
 	<!-- android_app_ui strings -->
 
 	<string name="app_name">Page 1</string>
+	<string name="AddEmployeeButton">Add</string>
+	<string name="EmployeeListTitle">Employees</string>
 </resources>
