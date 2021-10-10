@@ -44,8 +44,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
-    public DatabaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
+    public DatabaseHelper(@Nullable Context context) {
+        super(context, "shiftscheduler.db", null, 1);
     }
 
     //When App launches, method called to create a new database. Also automatically called when app requests or inputs new data
