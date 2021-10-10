@@ -60,7 +60,7 @@ public class EmployeeForm extends AppCompatActivity {
                 }
 
                 //Initialize database helper object
-                DatabaseHelper dbHelper = new DatabaseHelper(EmployeeForm.this, null, null, 0);
+                DatabaseHelper dbHelper = new DatabaseHelper(EmployeeForm.this);
                 //Use the addEntry method to insert the new employee object into the database and store result in boolean variable
                 boolean success = dbHelper.addEntry(employee);
                 //Generate message indicating if insertion was a success or a failure
