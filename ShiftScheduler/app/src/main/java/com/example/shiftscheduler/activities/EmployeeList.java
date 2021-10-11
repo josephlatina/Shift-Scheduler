@@ -31,7 +31,7 @@ public class EmployeeList extends AppCompatActivity{
 
         //example data:
         employeeList.add(new EmployeeModel(1,0,0,"Julius","Caesar",
-                "","","","","",""));
+                "","","","","","", true));
 
 
 
