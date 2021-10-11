@@ -16,15 +16,36 @@ import java.util.ArrayList;
 
 public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapter.EmployeeListViewHolder> {
     private ArrayList<EmployeeModel> employeeList;
+    private OnEmployeeClickListener listener;
+
+    public interface OnEmployeeClickListener {
+        void onEmployeeClick(int position);
+    }
+
+    public void setOnEmployeeClickListener(OnEmployeeClickListener listener) {
+        this.listener = listener;
+    }
 
     public static class EmployeeListViewHolder extends RecyclerView.ViewHolder {
         public ImageView imageView;
         public TextView employeeName;
 
-        public EmployeeListViewHolder(@NonNull View itemView) {
+        public EmployeeListViewHolder(@NonNull View itemView, final OnEmployeeClickListener listener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.employeeAvatar_iv);
             employeeName = itemView.findViewById(R.id.employeeName_tv);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEmployeeClick(position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -36,7 +57,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
     @Override
     public EmployeeListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_object, parent, false);
-        EmployeeListViewHolder elvh = new EmployeeListViewHolder(v);
+        EmployeeListViewHolder elvh = new EmployeeListViewHolder(v, listener);
         return elvh;
     }
 

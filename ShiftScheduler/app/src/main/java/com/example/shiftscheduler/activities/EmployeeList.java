@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,8 +20,9 @@ import java.util.ArrayList;
 public class EmployeeList extends AppCompatActivity{
     //references to controls on the layout
     //Recycler View Setup:
+    private ArrayList<EmployeeModel> employeeList;
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
+    private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -28,18 +30,9 @@ public class EmployeeList extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.employee_list);
 
-        //Recycler View Setup:
-        recyclerView = findViewById(R.id.employeeList_rv);
-        recyclerView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        ArrayList<EmployeeModel> employeeList = new ArrayList<>(); //to be filled from db
-        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeList.this);
-
-        //Retrieve entries
-        adapter = new EmployeeListAdapter(employeeList);
-        recyclerView.setAdapter(adapter);
+        employeeList = new ArrayList<>();
+        updateEmployeeList();
+        buildRecyclerView();
 
         //Add button functionality
         Button buttonOpenEmployeeForm = (Button) findViewById(R.id.add_btn);
@@ -54,9 +47,33 @@ public class EmployeeList extends AppCompatActivity{
 
     public void onResume() {
         super.onResume();
-        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeList.this);
-        adapter = new EmployeeListAdapter((ArrayList) dbHelper.getEveryone());
-        recyclerView.setAdapter(adapter);
+        updateEmployeeList();
+        buildRecyclerView();
     }
 
+    public void updateEmployeeList() {
+        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeList.this);
+        employeeList = (ArrayList) dbHelper.getEveryone();
+    }
+
+    public void buildRecyclerView() {
+        recyclerView = findViewById(R.id.employeeList_rv);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        adapter = new EmployeeListAdapter(employeeList);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        adapter.setOnEmployeeClickListener(new EmployeeListAdapter.OnEmployeeClickListener() {
+            @Override
+            public void onEmployeeClick(int position) {
+                EmployeeModel employee = employeeList.get(position);
+                //TBD: fill in logic to open Employee Info page & populate it.
+
+                //temp:
+                Toast.makeText(EmployeeList.this, employee.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
