@@ -78,9 +78,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_POSTAL, employeeModel.getPostal());
         cv.put(COL_DOB, employeeModel.getDOB());
         cv.put(COL_PHONENUM, employeeModel.getPhoneNum());
-        if (employeeModel.getStatus())
-            cv.put(COL_ISACTIVE, "1");
-        else cv.put(COL_ISACTIVE, "0");
+        cv.put(COL_ISACTIVE, "1");
+
 
 
         //check if inserting into the database was successful or not
