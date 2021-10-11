@@ -1,6 +1,9 @@
 package com.example.shiftscheduler.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +32,8 @@ public class EmployeeList extends AppCompatActivity{
         //example data:
         employeeList.add(new EmployeeModel(1,0,0,"John","Smith",
                 "","","","","",""));
+        employeeList.add(new EmployeeModel(1,0,0,"Julius","Caesar",
+                "","","","","",""));
 
 
         //Recycler View Setup:
@@ -36,8 +41,24 @@ public class EmployeeList extends AppCompatActivity{
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         adapter = new EmployeeListAdapter(employeeList);
-
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+
+        //Add button functionality
+        Button buttonOpenEmployeeForm = (Button) findViewById(R.id.add_btn);
+
+        buttonOpenEmployeeForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(EmployeeList.this, EmployeeForm.class);
+                startActivity(myIntent);
+            }
+
+        });
+
+
     }
+
+
 }
