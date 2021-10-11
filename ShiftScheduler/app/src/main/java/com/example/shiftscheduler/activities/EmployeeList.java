@@ -21,7 +21,6 @@ public class EmployeeList extends AppCompatActivity{
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +32,6 @@ public class EmployeeList extends AppCompatActivity{
         employeeList.add(new EmployeeModel(1,0,0,"Julius","Caesar",
                 "","","","","","", true));
 
-
-
         //Recycler View Setup:
         recyclerView = findViewById(R.id.employeeList_rv);
         recyclerView.setHasFixedSize(true);
@@ -42,7 +39,6 @@ public class EmployeeList extends AppCompatActivity{
         adapter = new EmployeeListAdapter(employeeList);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-
 
         //Add button functionality
         Button buttonOpenEmployeeForm = (Button) findViewById(R.id.add_btn);
@@ -53,10 +49,7 @@ public class EmployeeList extends AppCompatActivity{
                 Intent myIntent = new Intent(EmployeeList.this, EmployeeForm.class);
                 startActivity(myIntent);
             }
-
         });
-
-
     }
 
 

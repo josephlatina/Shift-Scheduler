@@ -78,6 +78,8 @@ public class EmployeeModel {
         return phoneNum;
     }
 
+    public boolean getStatus() { return isActive; }
+
     public void setEmployeeID(Integer employeeID) {
         this.employeeID = employeeID;
     }

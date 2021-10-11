@@ -1,6 +1,8 @@
 package com.example.shiftscheduler.activities;
 
 import com.example.shiftscheduler.R;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +37,7 @@ public class EmployeeForm extends AppCompatActivity {
         dob = findViewById(R.id.DOB);
         phoneNum = findViewById(R.id.phoneNumber);
 
-        //Button listener for submit button
+        //Button listener for save button
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,6 +66,10 @@ public class EmployeeForm extends AppCompatActivity {
                 boolean success = dbHelper.addEntry(employee);
                 //Generate message indicating if insertion was a success or a failure
                 Toast.makeText(EmployeeForm.this, "Success = " + success, Toast.LENGTH_SHORT).show();
+
+                //Go back to the EmployeeList button
+                Intent myIntent = new Intent(EmployeeForm.this, EmployeeList.class);
+                startActivity(myIntent);
             }
         });
 
