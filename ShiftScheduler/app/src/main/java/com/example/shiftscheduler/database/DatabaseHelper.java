@@ -27,6 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_POSTAL = "POSTALCODE";
     public static final String COL_DOB = "DATEOFBIRTH";
     public static final String COL_PHONENUM = "PHONENUM";
+    public static final String COL_ISACTIVE = "ISACTIVE";
 
     /* QUERY STRINGS TO CREATE TABLES */
     //Create Employee Table
@@ -37,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
-            COL_PHONENUM + " TEXT)";
+            COL_PHONENUM + " TEXT," + COL_ISACTIVE + " INTEGER)";
     //Create Shift Table
     //Create Availability Table
     //Create the Qualifications Table
@@ -77,6 +78,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_POSTAL, employeeModel.getPostal());
         cv.put(COL_DOB, employeeModel.getDOB());
         cv.put(COL_PHONENUM, employeeModel.getPhoneNum());
+        cv.put(COL_ISACTIVE, "1");
+
+
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
