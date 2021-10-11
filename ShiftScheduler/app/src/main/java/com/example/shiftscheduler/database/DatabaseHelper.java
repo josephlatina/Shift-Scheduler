@@ -111,9 +111,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String postal = cursor.getString(8);
                 String dateOfBirth = cursor.getString(9);
                 String phone = cursor.getString(10);
+                boolean isActive = cursor.getInt(11) == 1 ? true: false;
 
                 EmployeeModel newEmployee = new EmployeeModel(employeeID, qualificationID,avaID,
-                        fName,lName, city, street, province, postal, dateOfBirth, phone);
+                        fName,lName, city, street, province, postal, dateOfBirth, phone, isActive);
                 returnList.add(newEmployee);
             } while(cursor.moveToNext());
         } else {

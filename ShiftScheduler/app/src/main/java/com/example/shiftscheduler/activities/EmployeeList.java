@@ -30,10 +30,9 @@ public class EmployeeList extends AppCompatActivity{
         ArrayList<EmployeeModel> employeeList = new ArrayList<>(); //to be filled from db
 
         //example data:
-        employeeList.add(new EmployeeModel(1,0,0,"John","Smith",
-                "","","","","",""));
         employeeList.add(new EmployeeModel(1,0,0,"Julius","Caesar",
-                "","","","","",""));
+                "","","","","","", true));
+
 
 
         //Recycler View Setup:

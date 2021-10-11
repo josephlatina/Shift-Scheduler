@@ -1,5 +1,6 @@
 package com.example.shiftscheduler.activities;
 
+import com.example.shiftscheduler.R;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,30 +15,28 @@ import com.example.shiftscheduler.models.EmployeeModel;
 
 public class EmployeeForm extends AppCompatActivity {
     //references to controls on the layout
-    Button submit_btn;
-    EditText fname, lname, street, city, province, postalCode, dob, phoneNum, qualifications;
+    Button save_btn;
+    EditText fname, lname, street, city, province, postalCode, dob, phoneNum;
     Switch activeEmployee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.employee_form);
+        setContentView(R.layout.employee_form);
 
         //Link the layout controls
-//        add_btn = findViewById(R.id.add_btn);
-//        submit_btn = findViewById(R.id.submit_btn);
-//        fname = findViewById(R.id.fname);
-//        lname = findViewById(R.id.lname);
-//        street = findViewById(R.id.street);
-//        city = findViewById(R.id.city);
-//        province = findViewById(R.id.province);
-//        postalCode = findViewById(R.id.postalCode);
-//        dob = findViewById(R.id.dob);
-//        phoneNum = findViewById(R.id.phoneNum);
-//        qualifications = findViewById(R.id.qualifications);
+        save_btn = findViewById(R.id.save);
+        fname = findViewById(R.id.firstName);
+        lname = findViewById(R.id.lastName);
+        street = findViewById(R.id.streetAddress);
+        city = findViewById(R.id.city);
+        province = findViewById(R.id.province);
+        postalCode = findViewById(R.id.postalCode);
+        dob = findViewById(R.id.DOB);
+        phoneNum = findViewById(R.id.phoneNumber);
 
         //Button listener for submit button
-        submit_btn.setOnClickListener(new View.OnClickListener() {
+        save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EmployeeModel employee;
@@ -47,7 +46,7 @@ public class EmployeeForm extends AppCompatActivity {
                             fname.getText().toString(), lname.getText().toString(),
                             city.getText().toString(), street.getText().toString(),
                             province.getText().toString(), postalCode.getText().toString(),
-                            dob.getText().toString(), phoneNum.getText().toString());
+                            dob.getText().toString(), phoneNum.getText().toString(), true);
                 }
                 catch (Exception e) {
                     //If unsuccessful, generate error message and add in an error entry to know error was made
@@ -56,7 +55,7 @@ public class EmployeeForm extends AppCompatActivity {
                             "error", "error",
                             "error", "error",
                             "error", "error",
-                            "error", "error");
+                            "error", "error", false);
                 }
 
                 //Initialize database helper object
