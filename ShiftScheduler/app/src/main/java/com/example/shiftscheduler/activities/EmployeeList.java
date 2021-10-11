@@ -28,7 +28,7 @@ public class EmployeeList extends AppCompatActivity{
 
         //example data:
         employeeList.add(new EmployeeModel(1,0,0,"John","Smith",
-                "","","","","",""));
+                "","","","","","", true));
 
 
         //Recycler View Setup:

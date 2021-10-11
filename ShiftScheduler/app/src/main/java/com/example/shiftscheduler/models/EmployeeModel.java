@@ -14,12 +14,12 @@ public class EmployeeModel {
     private String postal;
     private String DOB;
     private String phoneNum;
-    boolean isActive;
+    private boolean isActive;
 
 
     public EmployeeModel(int employeeID, int qualificationID, int avaID, String fName, String lName,
                          String city, String street, String province, String postal, String dob,
-                         String phoneNum) {
+                         String phoneNum, boolean isActive) {
         this.employeeID = employeeID;
         this.qualificationID = qualificationID;
         this.avaID = avaID;
@@ -31,6 +31,7 @@ public class EmployeeModel {
         this.postal = postal;
         this.DOB = dob;
         this.phoneNum = phoneNum;
+        this.isActive = isActive;
     }
 
     public int getEmployeeID() {
@@ -120,6 +121,8 @@ public class EmployeeModel {
     public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
+
+    public void setisActive(boolean status) { this.isActive = status; }
 
     @Override
     public boolean equals(Object o) {
