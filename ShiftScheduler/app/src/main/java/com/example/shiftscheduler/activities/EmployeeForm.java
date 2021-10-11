@@ -16,7 +16,7 @@ import com.example.shiftscheduler.models.EmployeeModel;
 public class EmployeeForm extends AppCompatActivity {
     //references to controls on the layout
     Button save_btn;
-    EditText fname, lname, street, city, province, postalCode, dob, phoneNum, qualifications;
+    EditText fname, lname, street, city, province, postalCode, dob, phoneNum;
     Switch activeEmployee;
 
     @Override
