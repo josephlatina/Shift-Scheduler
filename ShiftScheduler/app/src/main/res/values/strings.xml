@@ -5,4 +5,16 @@
 	<string name="app_name">Page 1</string>
 	<string name="AddEmployeeButton">Add</string>
 	<string name="EmployeeListTitle">Employees</string>
+
+    <string name="last_name">Last Name</string>
+	<string name="first_name">First Name</string>
+	<string name="date_of_birth">Date Of Birth</string>
+	<string name="email">Email</string>
+	<string name="phone_number">Phone Number</string>
+	<string name="city">City</string>
+	<string name="street_address">Street Address</string>
+	<string name="postal_code">Postal Code</string>
+	<string name="province">Province</string>
+	<string name="save">Save</string>
+	<string name="back">Back</string>
 </resources>
