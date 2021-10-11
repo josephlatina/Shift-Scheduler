@@ -37,6 +37,16 @@ public class EmployeeForm extends AppCompatActivity {
         dob = findViewById(R.id.DOB);
         phoneNum = findViewById(R.id.phoneNumber);
 
+        //Button listener for back
+        Button buttonOpenEmployeeForm = (Button) findViewById(R.id.Back);
+        buttonOpenEmployeeForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(EmployeeForm.this, EmployeeList.class);
+                startActivity(myIntent);
+            }
+        });
+
         //Button listener for save button
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
