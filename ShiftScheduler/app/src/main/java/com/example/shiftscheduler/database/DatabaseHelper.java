@@ -27,6 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_POSTAL = "POSTALCODE";
     public static final String COL_DOB = "DATEOFBIRTH";
     public static final String COL_PHONENUM = "PHONENUM";
+    public static final String COL_EMAIL = "EMAIL";
     public static final String COL_ISACTIVE = "ISACTIVE";
 
     /* QUERY STRINGS TO CREATE TABLES */
@@ -38,7 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
-            COL_PHONENUM + " TEXT," + COL_ISACTIVE + " INTEGER)";
+            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT ," + COL_ISACTIVE + " INTEGER)";
     //Create Shift Table
     //Create Availability Table
     //Create the Qualifications Table
@@ -78,6 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_POSTAL, employeeModel.getPostal());
         cv.put(COL_DOB, employeeModel.getDOB());
         cv.put(COL_PHONENUM, employeeModel.getPhoneNum());
+        cv.put(COL_EMAIL, employeeModel.getEmail());
         cv.put(COL_ISACTIVE, "1");
 
 
@@ -115,10 +117,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String postal = cursor.getString(8);
                 String dateOfBirth = cursor.getString(9);
                 String phone = cursor.getString(10);
-                boolean isActive = cursor.getInt(11) == 1 ? true: false;
+                String email = cursor.getString(11);
+                boolean isActive = cursor.getInt(12) == 1 ? true: false;
 
                 EmployeeModel newEmployee = new EmployeeModel(employeeID, qualificationID,avaID,
-                        fName,lName, city, street, province, postal, dateOfBirth, phone, isActive);
+                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
                 returnList.add(newEmployee);
             } while(cursor.moveToNext());
         } else {

@@ -14,12 +14,12 @@ public class EmployeeModel {
     private String postal;
     private String DOB;
     private String phoneNum;
+    private String email;
     private boolean isActive;
-
 
     public EmployeeModel(int employeeID, int qualificationID, int avaID, String fName, String lName,
                          String city, String street, String province, String postal, String dob,
-                         String phoneNum, boolean isActive) {
+                         String phoneNum, String email, boolean isActive) {
         this.employeeID = employeeID;
         this.qualificationID = qualificationID;
         this.avaID = avaID;
@@ -31,6 +31,7 @@ public class EmployeeModel {
         this.postal = postal;
         this.DOB = dob;
         this.phoneNum = phoneNum;
+        this.email = email;
         this.isActive = isActive;
     }
 
@@ -78,6 +79,8 @@ public class EmployeeModel {
         return phoneNum;
     }
 
+    public String getEmail() { return email; }
+
     public boolean getStatus() { return isActive; }
 
     public void setEmployeeID(Integer employeeID) {
@@ -124,6 +127,8 @@ public class EmployeeModel {
         this.phoneNum = phoneNum;
     }
 
+    public void setEmail(String email) { this.email = email; }
+
     public void setisActive(boolean status) { this.isActive = status; }
 
     @Override
@@ -153,6 +158,7 @@ public class EmployeeModel {
                 ", postal='" + postal + '\'' +
                 ", DOB='" + DOB + '\'' +
                 ", phoneNum='" + phoneNum + '\'' +
+                ", email='" + email + '\'' +
                 ", isActive=" + isActive +
                 '}';
     }
