@@ -18,6 +18,15 @@ import com.example.shiftscheduler.models.EmployeeModel;
 import java.util.ArrayList;
 
 public class EmployeeList extends AppCompatActivity{
+    //for passing info to employeeInfo
+    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String EMPLOYEE_PHONE_NUMBER = "com.example.shiftscheduler.activities.PHONE_NUMBER";
+    public static final String EMPLOYEE_EMAIL = "com.example.shiftscheduler.activities.EMPLOYEE_EMAIL";
+    public static final String EMPLOYEE_ADDRESS = "com.example.shiftscheduler.activities.EMPLOYEE_ADDRESS";
+    public static final String EMPLOYEE_DOB = "com.example.shiftscheduler.activities.EMPLOYEE_DOB";
+
+
     //references to controls on the layout
     //Recycler View Setup:
     private ArrayList<EmployeeModel> employeeList;
@@ -71,8 +80,16 @@ public class EmployeeList extends AppCompatActivity{
                 EmployeeModel employee = employeeList.get(position);
                 //TBD: fill in logic to open Employee Info page & populate it.
 
+                Intent myIntent = new Intent(EmployeeList.this, EmployeeInfo.class);
+                myIntent.putExtra(EMPLOYEE_NAME, employee.getFName() + " " + employee.getLName());
+                myIntent.putExtra(EMPLOYEE_PHONE_NUMBER, employee.getPhoneNum());
+                myIntent.putExtra(EMPLOYEE_EMAIL, employee.getEmail());
+                myIntent.putExtra(EMPLOYEE_ADDRESS, employee.getStreet());
+                myIntent.putExtra(EMPLOYEE_DOB, employee.getDOB());
+                startActivity(myIntent);
+
                 //temp:
-                Toast.makeText(EmployeeList.this, employee.toString(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(EmployeeList.this, employee.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
