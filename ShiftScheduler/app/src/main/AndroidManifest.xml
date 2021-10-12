@@ -1,39 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.example.shiftscheduler">
+    package="com.example.shiftscheduler">
 
-	
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
 
-	<application
 
-		android:allowBackup="true"
-		android:theme="@style/AppTheme"
-		android:label="@string/app_name" >
+        <activity
+            android:name=".activities.EmployeeList"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-		<activity
-			android:name="com.example.shiftscheduler.activities.EmployeeList"
-			android:exported="true"
-			android:configChanges="orientation|keyboardHidden|screenSize"
-			android:label="@string/app_name"  >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-		</activity>
-		<activity
-			android:name=".activities.EmployeeForm"
-			android:exported="true"
-			android:configChanges="orientation|keyboardHidden|screenSize"
-			android:label="@string/app_name"  >
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
 
-		</activity>
-	</application>
+        <activity
+            android:name=".activities.EmployeeForm"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".activities.EmployeeInfo"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+    </application>
 
 </manifest>
-	
-	

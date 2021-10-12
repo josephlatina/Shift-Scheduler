@@ -18,7 +18,7 @@ import com.example.shiftscheduler.models.EmployeeModel;
 public class EmployeeForm extends AppCompatActivity {
     //references to controls on the layout
     Button save_btn;
-    EditText fname, lname, street, city, province, postalCode, dob, phoneNum;
+    EditText fname, lname, street, city, province, postalCode, dob, phoneNum, email;
     Switch activeEmployee;
 
     @Override
@@ -36,6 +36,7 @@ public class EmployeeForm extends AppCompatActivity {
         postalCode = findViewById(R.id.postalCode);
         dob = findViewById(R.id.DOB);
         phoneNum = findViewById(R.id.phoneNumber);
+        email = findViewById(R.id.email);
 
         //Button listener for back
         Button buttonOpenEmployeeForm = (Button) findViewById(R.id.Back);
@@ -58,7 +59,8 @@ public class EmployeeForm extends AppCompatActivity {
                             fname.getText().toString(), lname.getText().toString(),
                             city.getText().toString(), street.getText().toString(),
                             province.getText().toString(), postalCode.getText().toString(),
-                            dob.getText().toString(), phoneNum.getText().toString(), true);
+                            dob.getText().toString(), phoneNum.getText().toString(),
+                            email.getText().toString(), true);
                 }
                 catch (Exception e) {
                     //If unsuccessful, generate error message and add in an error entry to know error was made
@@ -67,7 +69,7 @@ public class EmployeeForm extends AppCompatActivity {
                             "error", "error",
                             "error", "error",
                             "error", "error",
-                            "error", "error", false);
+                            "error", "error", "error", false);
                 }
 
                 //Initialize database helper object
