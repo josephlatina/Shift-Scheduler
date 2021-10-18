@@ -16,9 +16,17 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
     //declare constants
     public static final String EMPLOYEE_TABLE = "EMPLOYEE_TABLE";
-    public static final String COL_ID = "EMPID";
+    public static final String SHIFT_TABLE = "SHIFT_TABLE";
+    public static final String QUALIFICATIONS_TABLE = "QUALIFICATIONS_TABLE";
+    public static final String COL_EMPID = "EMPID";
+    public static final String COL_SHIFTID = "SHIFTID";
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
     public static final String COL_AVAILABILITYID = "AVAILABILITYID";
+    public static final String COL_SHIFTTYPE = "SHIFTTYPE";
+    public static final String COL_MORNING = "MORNING";
+    public static final String COL_EVENING = "EVENING";
+    public static final String COL_FULLDAY = "FULLDAY";
+    public static final String COL_DATE = "DATE";
     public static final String COL_FNAME = "FNAME";
     public static final String COL_LNAME = "LNAME";
     public static final String COL_CITY = "CITY";
@@ -33,7 +41,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /* QUERY STRINGS TO CREATE TABLES */
     //Create Employee Table
     private String createEmployeeTable = "CREATE TABLE " + EMPLOYEE_TABLE + "(" +
-            COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_EMPID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_QUALIFICATIONID + " INTEGER," +
             COL_AVAILABILITYID + " INTEGER," +
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
@@ -41,8 +49,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_DOB + " DATE," +
             COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT ," + COL_ISACTIVE + " INTEGER)";
     //Create Shift Table
+    private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
+            COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_EMPID + " INTEGER," +
+            COL_SHIFTTYPE + " TEXT," +
+            COL_DATE + " TEXT," +
+            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
+
     //Create Availability Table
     //Create the Qualifications Table
+    private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
+            COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_EMPID + " INTEGER," +
+            COL_MORNING + " INTEGER," +
+            COL_EVENING + " INTEGER," +
+            COL_FULLDAY + " INTEGER," +
+            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -56,8 +78,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //create the Employee table
         db.execSQL(createEmployeeTable);
         //create the Shift table
+        db.execSQL(createShiftTable);
         //create the Availability table
         //create the Qualifications table
+        db.execSQL(createQualificationsTable);
     }
     //called to modify the schema for the database. Used when the database version number changes
     @Override
