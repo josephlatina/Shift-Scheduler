@@ -65,7 +65,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
     //Inserts new entry into the database.
-    public boolean addEntry(EmployeeModel employeeModel) {
+    public boolean addEmployee(EmployeeModel employeeModel) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // retrieve data from the Employee table
-    public List<EmployeeModel> getEveryone(){
+    public List<EmployeeModel> getEmployees(){
         List<EmployeeModel> returnList = new ArrayList<>();
 
         //get data from the database

@@ -75,7 +75,7 @@ public class EmployeeForm extends AppCompatActivity {
                 //Initialize database helper object
                 DatabaseHelper dbHelper = new DatabaseHelper(EmployeeForm.this);
                 //Use the addEntry method to insert the new employee object into the database and store result in boolean variable
-                boolean success = dbHelper.addEntry(employee);
+                boolean success = dbHelper.addEmployee(employee);
                 //Generate message indicating if insertion was a success or a failure
                 Toast.makeText(EmployeeForm.this, "Success = " + success, Toast.LENGTH_SHORT).show();
 
