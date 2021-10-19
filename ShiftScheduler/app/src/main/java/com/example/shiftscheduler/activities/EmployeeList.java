@@ -2,10 +2,8 @@ package com.example.shiftscheduler.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,7 +60,7 @@ public class EmployeeList extends AppCompatActivity{
 
     public void updateEmployeeList() {
         DatabaseHelper dbHelper = new DatabaseHelper(EmployeeList.this);
-        employeeList = (ArrayList) dbHelper.getEveryone();
+        employeeList = (ArrayList) dbHelper.getEmployees();
     }
 
     public void buildRecyclerView() {
