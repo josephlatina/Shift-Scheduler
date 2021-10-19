@@ -17,6 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //declare constants
     public static final String EMPLOYEE_TABLE = "EMPLOYEE_TABLE";
     public static final String SHIFT_TABLE = "SHIFT_TABLE";
+    public static final String AVAILABILITY_TABLE = "AVAILABILITY_TABLE";
     public static final String QUALIFICATIONS_TABLE = "QUALIFICATIONS_TABLE";
     public static final String COL_EMPID = "EMPID";
     public static final String COL_SHIFTID = "SHIFTID";
@@ -37,6 +38,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_PHONENUM = "PHONENUM";
     public static final String COL_EMAIL = "EMAIL";
     public static final String COL_ISACTIVE = "ISACTIVE";
+    public static final String COL_SUNSHIFT = "SUNSHIFT";
+    public static final String COL_MONSHIFT = "MONSHIFT";
+    public static final String COL_TUESHIFT = "TUESHIFT";
+    public static final String COL_WEDSHIFT = "WEDSHIFT";
+    public static final String COL_THURSSHIFT = "THURSSHIFT";
+    public static final String COL_FRISHIFT = "FRISHIFT";
+    public static final String COL_SATSHIFT = "SATSHIFT";
 
     /* QUERY STRINGS TO CREATE TABLES */
     //Create Employee Table
@@ -57,6 +65,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
 
     //Create Availability Table
+    private String createAvailabilityTable = "CREATE TABLE " + AVAILABILITY_TABLE + "(" +
+            COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_EMPID + " INTEGER," +
+            COL_SUNSHIFT + " INTEGER," + COL_MONSHIFT + " INTEGER," +
+            COL_TUESHIFT + " INTEGER," + COL_WEDSHIFT + " INTEGER," +
+            COL_THURSSHIFT + " INTEGER," + COL_FRISHIFT + " INTEGER," +
+            COL_SATSHIFT + " INTEGER," +
+            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
+
     //Create the Qualifications Table
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -80,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //create the Shift table
         db.execSQL(createShiftTable);
         //create the Availability table
+        db.execSQL(createAvailabilityTable);
         //create the Qualifications table
         db.execSQL(createQualificationsTable);
     }
