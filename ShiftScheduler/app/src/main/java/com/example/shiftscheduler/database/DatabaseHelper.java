@@ -59,28 +59,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COL_EMPID + " INTEGER," +
             COL_SHIFTTYPE + " TEXT," +
-            COL_DATE + " TEXT," +
-            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
+            COL_DATE + " TEXT)";
 
     //Create Availability Table
     private String createAvailabilityTable = "CREATE TABLE " + AVAILABILITY_TABLE + "(" +
-            COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_EMPID + " INTEGER," +
+            COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_SUNSHIFT + " INTEGER," + COL_MONSHIFT + " INTEGER," +
             COL_TUESHIFT + " INTEGER," + COL_WEDSHIFT + " INTEGER," +
             COL_THURSSHIFT + " INTEGER," + COL_FRISHIFT + " INTEGER," +
-            COL_SATSHIFT + " INTEGER," +
-            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
+            COL_SATSHIFT + " INTEGER)";
 
     //Create the Qualifications Table
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COL_EMPID + " INTEGER," +
             COL_MORNING + " INTEGER," +
             COL_EVENING + " INTEGER," +
-            COL_FULLDAY + " INTEGER," +
-            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
+            COL_FULLDAY + " INTEGER)";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
