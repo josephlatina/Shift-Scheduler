@@ -9,7 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.ShiftModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SHIFT_TABLE = "SHIFT_TABLE";
     public static final String AVAILABILITY_TABLE = "AVAILABILITY_TABLE";
     public static final String QUALIFICATIONS_TABLE = "QUALIFICATIONS_TABLE";
+    public static final String WORK_TABLE = "WORK_TABLE";
     public static final String COL_EMPID = "EMPID";
     public static final String COL_SHIFTID = "SHIFTID";
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
@@ -45,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_THURSSHIFT = "THURSSHIFT";
     public static final String COL_FRISHIFT = "FRISHIFT";
     public static final String COL_SATSHIFT = "SATSHIFT";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
 
     /* QUERY STRINGS TO CREATE TABLES */
     //Create Employee Table
@@ -55,32 +59,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
-            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT ," + COL_ISACTIVE + " INTEGER)";
+            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER," +
+            "FOREIGN KEY (" + COL_QUALIFICATIONID + ") REFERENCES " + QUALIFICATIONS_TABLE + "(" + COL_QUALIFICATIONID + "), " +
+            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + "))";
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COL_EMPID + " INTEGER," +
             COL_SHIFTTYPE + " TEXT," +
-            COL_DATE + " TEXT," +
-            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
-
+            COL_DATE + " TEXT)";
+    //Create WorkedBy Table
+    private String createWorkTable = "CREATE TABLE " + WORK_TABLE + "(" +
+            COL_EMPID + " INTEGER," +
+            COL_SHIFTID + " INTEGER," +
+            "FOREIGN KEY (" + COL_EMPID + ") REFERENCES " + EMPLOYEE_TABLE + "(" + COL_EMPID + "), " +
+            "FOREIGN KEY (" + COL_SHIFTID + ") REFERENCES " + SHIFT_TABLE + "(" + COL_SHIFTID + "), " +
+            "PRIMARY KEY (" + COL_EMPID + ", " + COL_SHIFTID + "))";
     //Create Availability Table
     private String createAvailabilityTable = "CREATE TABLE " + AVAILABILITY_TABLE + "(" +
-            COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," + COL_EMPID + " INTEGER," +
+            COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_SUNSHIFT + " INTEGER," + COL_MONSHIFT + " INTEGER," +
             COL_TUESHIFT + " INTEGER," + COL_WEDSHIFT + " INTEGER," +
             COL_THURSSHIFT + " INTEGER," + COL_FRISHIFT + " INTEGER," +
-            COL_SATSHIFT + " INTEGER," +
-            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
-
+            COL_SATSHIFT + " INTEGER)";
     //Create the Qualifications Table
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COL_EMPID + " INTEGER," +
             COL_MORNING + " INTEGER," +
             COL_EVENING + " INTEGER," +
-            COL_FULLDAY + " INTEGER," +
-            "CONSTRAINT FK_EMPLOYEE FOREIGN KEY (" + COL_EMPID + ") REFERENCES EMPLOYEE(" + COL_EMPID + "))";
+            COL_FULLDAY + " INTEGER)";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -105,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    //Inserts new entry into the database.
+    //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
@@ -123,6 +129,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_EMAIL, employeeModel.getEmail());
         cv.put(COL_ISACTIVE, "1");
 
+        //Create empty entry for Qualifications and Availability Tables corresponding to new employee
+        String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
+        String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
+        db.execSQL(addQualifications);
+        db.execSQL(addAvailability);
 
 
         //check if inserting into the database was successful or not
@@ -132,6 +143,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             return true;
         }
+    }
+
+    //Inserts new Shift entry into the database
+    public boolean addShift(ShiftModel shiftModel) {
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+
+        //Fill in the data for each column
+        cv.put(COL_DATE, simpleDateFormat.format(shiftModel.getDate()));
+        cv.put(COL_SHIFTTYPE, shiftModel.getTime().toString());
+
+        //check if inserting into the database was successful or not
+        long success = db.insert(SHIFT_TABLE,null,cv);
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //Update Qualification Table with the employeeID, and boolean values for morning, evening and fullDay
+    public void updateQualification(int employeeID, int morning, int evening, int fullDay) {
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+
+        String queryString = "UPDATE " + QUALIFICATIONS_TABLE + " SET " + COL_MORNING + " = " + morning +
+                ", " + COL_EVENING + " = " + evening + ", " + COL_FULLDAY + " = " + fullDay +
+                " WHERE " + COL_QUALIFICATIONID + " = " + employeeID;
+
+        db.execSQL(queryString);
     }
 
     // retrieve data from the Employee table
