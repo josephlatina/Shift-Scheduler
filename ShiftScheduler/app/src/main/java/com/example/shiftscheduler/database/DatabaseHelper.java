@@ -59,7 +59,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
-            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT ," + COL_ISACTIVE + " INTEGER)";
+            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER," +
+            "FOREIGN KEY (" + COL_QUALIFICATIONID + ") REFERENCES " + QUALIFICATIONS_TABLE + "(" + COL_QUALIFICATIONID + "), " +
+            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + "))";
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -69,9 +71,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String createWorkTable = "CREATE TABLE " + WORK_TABLE + "(" +
             COL_EMPID + " INTEGER," +
             COL_SHIFTID + " INTEGER," +
-            "FOREIGN KEY (" + COL_EMPID + ") REFERENCES " + EMPLOYEE_TABLE + "(" + COL_EMPID + ")" +
-            "FOREIGN KEY (" + COL_SHIFTID + ") REFERENCES " + SHIFT_TABLE + "(" + COL_SHIFTID + ")" +
-            "PRIMARY KEY (" + COL_EMPID + ", " + COL_SHIFTID + ")";
+            "FOREIGN KEY (" + COL_EMPID + ") REFERENCES " + EMPLOYEE_TABLE + "(" + COL_EMPID + "), " +
+            "FOREIGN KEY (" + COL_SHIFTID + ") REFERENCES " + SHIFT_TABLE + "(" + COL_SHIFTID + "), " +
+            "PRIMARY KEY (" + COL_EMPID + ", " + COL_SHIFTID + "))";
     //Create Availability Table
     private String createAvailabilityTable = "CREATE TABLE " + AVAILABILITY_TABLE + "(" +
             COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -126,6 +128,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_PHONENUM, employeeModel.getPhoneNum());
         cv.put(COL_EMAIL, employeeModel.getEmail());
         cv.put(COL_ISACTIVE, "1");
+
+        //Create empty entry for Qualifications and Availability Tables corresponding to new employee
+        String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
+        String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
+        db.execSQL(addQualifications);
+        db.execSQL(addAvailability);
+
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
