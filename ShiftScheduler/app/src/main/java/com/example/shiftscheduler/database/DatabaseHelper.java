@@ -9,7 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.ShiftModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_THURSSHIFT = "THURSSHIFT";
     public static final String COL_FRISHIFT = "FRISHIFT";
     public static final String COL_SATSHIFT = "SATSHIFT";
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
 
     /* QUERY STRINGS TO CREATE TABLES */
     //Create Employee Table
@@ -106,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
-    //Inserts new entry into the database.
+    //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
@@ -124,8 +127,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_EMAIL, employeeModel.getEmail());
         cv.put(COL_ISACTIVE, "1");
 
-
-
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
         if (success == -1) {
@@ -133,6 +134,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             return true;
         }
+    }
+
+    //Inserts new Shift entry into the database
+    public boolean addShift(ShiftModel shiftModel) {
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+
+        //Fill in the data for each column
+        cv.put(COL_DATE, simpleDateFormat.format(shiftModel.getDate()));
+        cv.put(COL_SHIFTTYPE, shiftModel.getTime().toString());
+
+        //check if inserting into the database was successful or not
+        long success = db.insert(SHIFT_TABLE,null,cv);
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //Update Qualification Table with the employeeID, and boolean values for morning, evening and fullDay
+    public void updateQualification(int employeeID, int morning, int evening, int fullDay) {
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+
+        String queryString = "UPDATE " + QUALIFICATIONS_TABLE + " SET " + COL_MORNING + " = " + morning +
+                ", " + COL_EVENING + " = " + evening + ", " + COL_FULLDAY + " = " + fullDay +
+                " WHERE " + COL_QUALIFICATIONID + " = " + employeeID;
+
+        db.execSQL(queryString);
     }
 
     // retrieve data from the Employee table
