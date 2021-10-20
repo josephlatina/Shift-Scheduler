@@ -19,6 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SHIFT_TABLE = "SHIFT_TABLE";
     public static final String AVAILABILITY_TABLE = "AVAILABILITY_TABLE";
     public static final String QUALIFICATIONS_TABLE = "QUALIFICATIONS_TABLE";
+    public static final String WORK_TABLE = "WORK_TABLE";
     public static final String COL_EMPID = "EMPID";
     public static final String COL_SHIFTID = "SHIFTID";
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
@@ -61,7 +62,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_SHIFTTYPE + " TEXT," +
             COL_DATE + " TEXT)";
-
+    //Create WorkedBy Table
+    private String createWorkTable = "CREATE TABLE " + WORK_TABLE + "(" +
+            COL_EMPID + " INTEGER," +
+            COL_SHIFTID + " INTEGER," +
+            "FOREIGN KEY (" + COL_EMPID + ") REFERENCES " + EMPLOYEE_TABLE + "(" + COL_EMPID + ")" +
+            "FOREIGN KEY (" + COL_SHIFTID + ") REFERENCES " + SHIFT_TABLE + "(" + COL_SHIFTID + ")" +
+            "PRIMARY KEY (" + COL_EMPID + ", " + COL_SHIFTID + ")";
     //Create Availability Table
     private String createAvailabilityTable = "CREATE TABLE " + AVAILABILITY_TABLE + "(" +
             COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -69,7 +76,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_TUESHIFT + " INTEGER," + COL_WEDSHIFT + " INTEGER," +
             COL_THURSSHIFT + " INTEGER," + COL_FRISHIFT + " INTEGER," +
             COL_SATSHIFT + " INTEGER)";
-
     //Create the Qualifications Table
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
