@@ -177,6 +177,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(queryString);
     }
 
+    public List<Boolean> getQualifications(int employeeID) {
+        List<Boolean> returnList = new ArrayList<>();
+
+        //get data from the database
+        String queryString = "SELECT * FROM " + QUALIFICATIONS_TABLE + " WHERE " + COL_QUALIFICATIONID +
+                " = " + employeeID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            boolean Morning = cursor.getInt(1) == 1 ? true : false;
+            boolean Evening = cursor.getInt(2) == 1 ? true : false;
+            boolean FullDay = cursor.getInt(3) == 1 ? true : false;
+
+            returnList.add(Morning);
+            returnList.add(Evening);
+            returnList.add(FullDay);
+        }
+        //close both db and cursor for others to access
+        cursor.close();
+        db.close();
+
+        return returnList;
+    }
+
     // retrieve data from the Employee table
     public List<EmployeeModel> getEmployees(){
         List<EmployeeModel> returnList = new ArrayList<>();
