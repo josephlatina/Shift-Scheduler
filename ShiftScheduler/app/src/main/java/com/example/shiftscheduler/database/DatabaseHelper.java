@@ -153,7 +153,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Fill in the data for each column
         cv.put(COL_DATE, simpleDateFormat.format(shiftModel.getDate()));
-        cv.put(COL_SHIFTTYPE, shiftModel.getTime().toString());
+//        cv.put(COL_SHIFTTYPE, shiftModel.getTime().toString());
 
         //check if inserting into the database was successful or not
         long success = db.insert(SHIFT_TABLE,null,cv);
