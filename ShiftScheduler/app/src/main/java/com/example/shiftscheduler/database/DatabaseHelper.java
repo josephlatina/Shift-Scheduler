@@ -27,9 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
     public static final String COL_AVAILABILITYID = "AVAILABILITYID";
     public static final String COL_SHIFTTYPE = "SHIFTTYPE";
-    public static final String COL_MORNING = "MORNING";
-    public static final String COL_EVENING = "EVENING";
-    public static final String COL_FULLDAY = "FULLDAY";
+    public static final String COL_MORNING = "OPENING";
+    public static final String COL_EVENING = "CLOSING";
     public static final String COL_DATE = "DATE";
     public static final String COL_FNAME = "FNAME";
     public static final String COL_LNAME = "LNAME";
@@ -164,13 +163,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Update Qualification Table with the employeeID, and boolean values for morning, evening and fullDay
-    public void updateQualification(int employeeID, int morning, int evening, int fullDay) {
+    public void updateQualification(int employeeID, int morning, int evening) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
 
         String queryString = "UPDATE " + QUALIFICATIONS_TABLE + " SET " + COL_MORNING + " = " + morning +
-                ", " + COL_EVENING + " = " + evening + ", " + COL_FULLDAY + " = " + fullDay +
+                ", " + COL_EVENING + " = " + evening +
                 " WHERE " + COL_QUALIFICATIONID + " = " + employeeID;
 
         db.execSQL(queryString);
@@ -187,11 +186,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(queryString, null);
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) {
-            boolean Morning = cursor.getInt(1) == 1 ? true : false;
-            boolean Evening = cursor.getInt(2) == 1 ? true : false;
+            boolean Opening = cursor.getInt(1) == 1 ? true : false;
+            boolean Closing = cursor.getInt(2) == 1 ? true : false;
 
-            returnList.add(Morning);
-            returnList.add(Evening);
+            returnList.add(Opening);
+            returnList.add(Closing);
         }
         //close both db and cursor for others to access
         cursor.close();

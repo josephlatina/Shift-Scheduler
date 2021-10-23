@@ -2,6 +2,7 @@ package com.example.shiftscheduler.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -17,12 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeEditForm extends AppCompatActivity {
+
+    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
+
     //references to controls on the layout
     Button save_btn;
     EditText fname, lname, street, city, province, postalCode, dob, phoneNum, email;
     Switch activeEmployee;
     CheckBox opening, closing;
     String empID;
+    int open = 0, close = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +70,36 @@ public class EmployeeEditForm extends AppCompatActivity {
             activeEmployee.setChecked(true);
         }
         for (int i=0; i < 2; i++) {
-            if (i==0 && qualifications.get(i) == true) {
-                opening.setEnabled(true);
+            if (i==0) {
+                if (qualifications.get(i) == true) {
+                    opening.setChecked(true);
+                } else { opening.setChecked(false); }
             }
-            if (i==1 && qualifications.get(i) == true) {
-                closing.setEnabled(true);
+            if (i==1) {
+                if (qualifications.get(i) == true) {
+                    closing.setChecked(true);
+                } else { closing.setChecked(false); }
             }
         }
+
+        //Button listener for save button
+        save_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (opening.isChecked()) {
+                    open = 1;
+                }
+                if (closing.isChecked()) {
+                    close = 1;
+                }
+                DatabaseHelper dbHelper = new DatabaseHelper(EmployeeEditForm.this);
+                dbHelper.updateQualification(Integer.parseInt(empID), open, close);
+
+                Intent myIntent = new Intent(EmployeeEditForm.this, EmployeeInfo.class);
+                myIntent.putExtra(EMPLOYEE_ID, empID);
+                startActivity(myIntent);
+            }
+        });
 
     }
 }
