@@ -213,23 +213,10 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.181"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.881" />
-
-    <Button
-        android:id="@+id/infoDeleteButton"
-        android:layout_width="108dp"
-        android:layout_height="56dp"
-        android:text="@string/save"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/infoEditButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.589"
-        app:layout_constraintStart_toEndOf="@+id/infoEditButton"
-        app:layout_constraintTop_toTopOf="@+id/infoEditButton"
-        app:layout_constraintVertical_bias="0.869" />
+        app:layout_constraintVertical_bias="0.88" />
 
     <CheckBox
         android:id="@+id/openingCheckBox"
