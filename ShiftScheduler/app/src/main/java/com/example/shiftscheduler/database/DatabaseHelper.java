@@ -85,8 +85,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_MORNING + " INTEGER," +
-            COL_EVENING + " INTEGER," +
-            COL_FULLDAY + " INTEGER)";
+            COL_EVENING + " INTEGER)";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -190,11 +189,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             boolean Morning = cursor.getInt(1) == 1 ? true : false;
             boolean Evening = cursor.getInt(2) == 1 ? true : false;
-            boolean FullDay = cursor.getInt(3) == 1 ? true : false;
 
             returnList.add(Morning);
             returnList.add(Evening);
-            returnList.add(FullDay);
         }
         //close both db and cursor for others to access
         cursor.close();

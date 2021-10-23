@@ -23,6 +23,7 @@ public class EmployeeList extends AppCompatActivity{
     public static final String EMPLOYEE_EMAIL = "com.example.shiftscheduler.activities.EMPLOYEE_EMAIL";
     public static final String EMPLOYEE_ADDRESS = "com.example.shiftscheduler.activities.EMPLOYEE_ADDRESS";
     public static final String EMPLOYEE_DOB = "com.example.shiftscheduler.activities.EMPLOYEE_DOB";
+    String empID;
 
 
     //references to controls on the layout
@@ -76,6 +77,7 @@ public class EmployeeList extends AppCompatActivity{
             @Override
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
+                empID = String.valueOf(employee.getEmployeeID());
                 //TBD: fill in logic to open Employee Info page & populate it.
 
                 Intent myIntent = new Intent(EmployeeList.this, EmployeeInfo.class);
@@ -84,7 +86,7 @@ public class EmployeeList extends AppCompatActivity{
                 myIntent.putExtra(EMPLOYEE_EMAIL, employee.getEmail());
                 myIntent.putExtra(EMPLOYEE_ADDRESS, employee.getStreet());
                 myIntent.putExtra(EMPLOYEE_DOB, employee.getDOB());
-                myIntent.putExtra(EMPLOYEE_ID, employee.getEmployeeID());
+                myIntent.putExtra(EMPLOYEE_ID, empID);
                 startActivity(myIntent);
 
                 //temp:

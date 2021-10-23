@@ -12,7 +12,7 @@ import com.example.shiftscheduler.R;
 
 public class EmployeeInfo extends AppCompatActivity {
 
-    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
+    public static final String EDITEMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
 
     EditText name, phoneNumber, email, streetAddress, dateOfBirth;
     Button editbtn;
@@ -43,7 +43,7 @@ public class EmployeeInfo extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(EmployeeInfo.this, EmployeeEditForm.class);
-                myIntent.putExtra(EMPLOYEE_ID, empID);
+                myIntent.putExtra(EDITEMPLOYEE_ID, empID);
                 startActivity(myIntent);
             }
         });
