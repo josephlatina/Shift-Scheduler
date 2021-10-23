@@ -222,7 +222,7 @@
         android:id="@+id/infoDeleteButton"
         android:layout_width="108dp"
         android:layout_height="56dp"
-        android:text="@string/delete"
+        android:text="@string/save"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/infoEditButton"
         app:layout_constraintEnd_toEndOf="parent"
