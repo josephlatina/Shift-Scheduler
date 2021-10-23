@@ -12,7 +12,7 @@ import com.example.shiftscheduler.R;
 public class EmployeeInfo extends AppCompatActivity {
 
     EditText name, phoneNumber, email, streetAddress, dateOfBirth;
-    Button editbtn, deletebtn;
+    Button editbtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,6 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress = (EditText) findViewById(R.id.infoAddress);
         dateOfBirth = (EditText) findViewById(R.id.infoDOB);
         editbtn = (Button) findViewById(R.id.infoEditButton);
-        deletebtn = (Button) findViewById(R.id.infoDeleteButton);
 
         Intent intent = getIntent();
         name.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_NAME));
