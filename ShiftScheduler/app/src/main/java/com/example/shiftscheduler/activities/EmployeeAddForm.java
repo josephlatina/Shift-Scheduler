@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
-public class EmployeeForm extends AppCompatActivity {
+public class EmployeeAddForm extends AppCompatActivity {
     //references to controls on the layout
     Button save_btn;
     EditText fname, lname, street, city, province, postalCode, dob, phoneNum, email;
@@ -43,7 +43,7 @@ public class EmployeeForm extends AppCompatActivity {
         buttonOpenEmployeeForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(EmployeeForm.this, EmployeeList.class);
+                Intent myIntent = new Intent(EmployeeAddForm.this, EmployeeList.class);
                 startActivity(myIntent);
             }
         });
@@ -64,7 +64,7 @@ public class EmployeeForm extends AppCompatActivity {
                 }
                 catch (Exception e) {
                     //If unsuccessful, generate error message and add in an error entry to know error was made
-                    Toast.makeText(EmployeeForm.this, "Error creating employee.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EmployeeAddForm.this, "Error creating employee.", Toast.LENGTH_SHORT).show();
                     employee = new EmployeeModel(-1, -1,-1,
                             "error", "error",
                             "error", "error",
@@ -73,14 +73,14 @@ public class EmployeeForm extends AppCompatActivity {
                 }
 
                 //Initialize database helper object
-                DatabaseHelper dbHelper = new DatabaseHelper(EmployeeForm.this);
+                DatabaseHelper dbHelper = new DatabaseHelper(EmployeeAddForm.this);
                 //Use the addEntry method to insert the new employee object into the database and store result in boolean variable
                 boolean success = dbHelper.addEmployee(employee);
                 //Generate message indicating if insertion was a success or a failure
-                Toast.makeText(EmployeeForm.this, "Success = " + success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(EmployeeAddForm.this, "Success = " + success, Toast.LENGTH_SHORT).show();
 
                 //Go back to the EmployeeList button
-                Intent myIntent = new Intent(EmployeeForm.this, EmployeeList.class);
+                Intent myIntent = new Intent(EmployeeAddForm.this, EmployeeList.class);
                 startActivity(myIntent);
             }
         });

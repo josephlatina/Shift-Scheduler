@@ -46,7 +46,7 @@ public class EmployeeList extends AppCompatActivity{
         buttonOpenEmployeeForm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(EmployeeList.this, EmployeeForm.class);
+                Intent myIntent = new Intent(EmployeeList.this, EmployeeAddForm.class);
                 startActivity(myIntent);
             }
         });
