@@ -203,6 +203,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    // retrieve data from the Employee table for one employee
+    public EmployeeModel getEmployee(int employeeID) {
+        //get data from the database
+        String queryString = "SELECT * FROM " + EMPLOYEE_TABLE + " WHERE " + COL_EMPID +
+                " = " + employeeID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        String fName = "", lName = "", city = "", street = "", province = "", postal = "",
+                dateOfBirth = "", phone = "", email = "";
+        int qualificationID = 0, avaID = 0;
+        boolean isActive = true;
+        if (cursor.moveToFirst()){ //move it to the first of the result set
+            //retrieve employee information
+            qualificationID = cursor.getInt(1);
+            avaID = cursor.getInt(2);
+            fName = cursor.getString(3);
+            lName = cursor.getString(4);
+            city = cursor.getString(5);
+            street = cursor.getString(6);
+            province = cursor.getString(7);
+            postal = cursor.getString(8);
+            dateOfBirth = cursor.getString(9);
+            phone = cursor.getString(10);
+            email = cursor.getString(11);
+            isActive = cursor.getInt(12) == 1 ? true: false;
+
+        } else {
+            // error, nothing added to the list
+        }
+        EmployeeModel employee = new EmployeeModel(employeeID, qualificationID,avaID,
+                fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+        return employee;
+    }
+
     // retrieve data from the Employee table
     public List<EmployeeModel> getEmployees(){
         List<EmployeeModel> returnList = new ArrayList<>();
