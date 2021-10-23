@@ -6,6 +6,7 @@
     <string name="AddEmployeeButton">Add</string>
     <string name="EmployeeListTitle">Employees</string>
 
+    <!-- EmployeeForm strings -->
     <string name="last_name">Last Name</string>
     <string name="first_name">First Name</string>
     <string name="date_of_birth">Date Of Birth</string>
@@ -17,7 +18,9 @@
     <string name="province">Province</string>
     <string name="save">Save</string>
     <string name="back">Back</string>
+    <string name="isActive">Active Status</string>
 
+    <!-- EmployeeInfo strings -->
     <string name="qualifications">Qualifications</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
