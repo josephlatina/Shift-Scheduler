@@ -66,7 +66,7 @@ public class EmployeeInfo extends AppCompatActivity {
         super.onResume();
         Intent intent = getIntent();
         empID = intent.getStringExtra((EmployeeEditForm.EMPLOYEE_ID));
-//        updateProfile(empID);
+        updateProfile(empID);
         updateQualifications(empID);
     }
 
