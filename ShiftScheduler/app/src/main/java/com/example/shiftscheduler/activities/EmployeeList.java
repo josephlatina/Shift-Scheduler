@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public class EmployeeList extends AppCompatActivity{
     //for passing info to employeeInfo
-    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
     public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
     public static final String EMPLOYEE_PHONE_NUMBER = "com.example.shiftscheduler.activities.PHONE_NUMBER";
     public static final String EMPLOYEE_EMAIL = "com.example.shiftscheduler.activities.EMPLOYEE_EMAIL";
@@ -84,6 +84,7 @@ public class EmployeeList extends AppCompatActivity{
                 myIntent.putExtra(EMPLOYEE_EMAIL, employee.getEmail());
                 myIntent.putExtra(EMPLOYEE_ADDRESS, employee.getStreet());
                 myIntent.putExtra(EMPLOYEE_DOB, employee.getDOB());
+                myIntent.putExtra(EMPLOYEE_ID, employee.getEmployeeID());
                 startActivity(myIntent);
 
                 //temp:
