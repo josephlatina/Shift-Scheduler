@@ -22,26 +22,26 @@ public class EmployeeEditForm extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.employee_editForm);
+        setContentView(R.layout.employee_editform);
 
         //Link the layout controls
-        save_btn = findViewById(R.id.save);
-        fname = findViewById(R.id.firstName);
-        lname = findViewById(R.id.lastName);
-        street = findViewById(R.id.streetAddress);
-        city = findViewById(R.id.city);
-        province = findViewById(R.id.province);
-        postalCode = findViewById(R.id.postalCode);
-        dob = findViewById(R.id.DOB);
-        phoneNum = findViewById(R.id.phoneNumber);
-        email = findViewById(R.id.email);
-        activeEmployee = findViewById(R.id.isActive);
-        opening = findViewById(R.id.openingCheckBox);
-        closing = findViewById(R.id.closingCheckBox);
+        save_btn = findViewById(R.id.saveEdit);
+        fname = findViewById(R.id.firstNameEdit);
+        lname = findViewById(R.id.lastNameEdit);
+        street = findViewById(R.id.streetAddressEdit);
+        city = findViewById(R.id.cityEdit);
+        province = findViewById(R.id.provinceEdit);
+        postalCode = findViewById(R.id.postalCodeEdit);
+        dob = findViewById(R.id.DOBEdit);
+        phoneNum = findViewById(R.id.phoneNumberEdit);
+        email = findViewById(R.id.emailEdit);
+        activeEmployee = findViewById(R.id.isActiveEdit);
+        opening = findViewById(R.id.openingCheckBoxEdit);
+        closing = findViewById(R.id.closingCheckBoxEdit);
 
         //Retrieve employee information
         Intent intent = getIntent();
-        empID = intent.getStringExtra((EmployeeList.EMPLOYEE_ID));
+        empID = intent.getStringExtra((EmployeeInfo.EMPLOYEE_ID));
 
     }
 }
