@@ -7,6 +7,21 @@
     tools:context=".activities.EmployeeInfo">
 
     <!--Employee Name-->
+
+    <CheckBox
+        android:id="@+id/closingCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/closing"
+        android:clickable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.65"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.771" />
+
     <ImageView
         android:id="@+id/InfoEmployeeImg"
         android:layout_width="117dp"
@@ -26,22 +41,25 @@
         android:layout_width="287dp"
         android:layout_height="58dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:focusable="false"
+        android:gravity="center"
+        android:inputType="none"
         android:text=""
-        android:textStyle="bold"
         android:textSize="28sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.012"
         tools:ignore="SpeakableTextPresentCheck" />
-<!--Employee Phone Number-->
+    <!--Employee Phone Number-->
     <EditText
         android:id="@+id/infoPhoneLabel"
         android:layout_width="132dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:text="@string/phone_number"
         android:textSize="16sp"
@@ -58,6 +76,7 @@
         android:layout_width="196dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -66,13 +85,14 @@
         app:layout_constraintStart_toEndOf="@+id/infoPhoneLabel"
         app:layout_constraintTop_toTopOf="@+id/infoPhoneLabel"
         tools:ignore="SpeakableTextPresentCheck" />
-<!--Employee Email-->
+    <!--Employee Email-->
 
     <EditText
         android:id="@+id/infoEmailLabel"
         android:layout_width="132dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:text="@string/email"
         android:textSize="16sp"
@@ -89,6 +109,7 @@
         android:layout_width="196dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -97,13 +118,14 @@
         app:layout_constraintStart_toEndOf="@+id/infoEmailLabel"
         app:layout_constraintTop_toTopOf="@+id/infoEmailLabel"
         tools:ignore="SpeakableTextPresentCheck" />
-<!--Employee Address-->
+    <!--Employee Address-->
 
     <EditText
         android:id="@+id/infoAddressLabel"
         android:layout_width="132dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:text="@string/street_address"
         android:textSize="16sp"
@@ -120,6 +142,7 @@
         android:layout_width="196dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -130,13 +153,14 @@
         tools:ignore="SpeakableTextPresentCheck" />
 
 
-<!--Date of Birth-->
+    <!--Date of Birth-->
 
     <EditText
         android:id="@+id/infoDOBLabel"
         android:layout_width="132dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:text="@string/date_of_birth"
         android:textSize="16sp"
@@ -153,6 +177,7 @@
         android:layout_width="196dp"
         android:layout_height="48dp"
         android:ems="10"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -167,10 +192,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:focusable="false"
+        android:gravity="center"
         android:inputType="textPersonName"
-        android:textStyle="bold"
         android:text="@string/qualifications"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -186,22 +213,22 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
+        app:layout_constraintHorizontal_bias="0.514"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.848" />
+        app:layout_constraintVertical_bias="0.88" />
 
-    <Button
-        android:id="@+id/infoDeleteButton"
-        android:layout_width="108dp"
-        android:layout_height="56dp"
-        android:text="@string/delete"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/infoEditButton"
+    <CheckBox
+        android:id="@+id/openingCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:text="@string/opening"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.589"
-        app:layout_constraintStart_toEndOf="@+id/infoEditButton"
-        app:layout_constraintTop_toTopOf="@+id/infoEditButton"
-        app:layout_constraintVertical_bias="0.869" />
+        app:layout_constraintHorizontal_bias="0.299"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.771" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

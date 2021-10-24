@@ -27,9 +27,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
     public static final String COL_AVAILABILITYID = "AVAILABILITYID";
     public static final String COL_SHIFTTYPE = "SHIFTTYPE";
-    public static final String COL_MORNING = "MORNING";
-    public static final String COL_EVENING = "EVENING";
-    public static final String COL_FULLDAY = "FULLDAY";
+    public static final String COL_MORNING = "OPENING";
+    public static final String COL_EVENING = "CLOSING";
     public static final String COL_DATE = "DATE";
     public static final String COL_FNAME = "FNAME";
     public static final String COL_LNAME = "LNAME";
@@ -85,8 +84,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_MORNING + " INTEGER," +
-            COL_EVENING + " INTEGER," +
-            COL_FULLDAY + " INTEGER)";
+            COL_EVENING + " INTEGER)";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -153,7 +151,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Fill in the data for each column
         cv.put(COL_DATE, simpleDateFormat.format(shiftModel.getDate()));
-        cv.put(COL_SHIFTTYPE, shiftModel.getTime().toString());
+//        cv.put(COL_SHIFTTYPE, shiftModel.getTime().toString());
 
         //check if inserting into the database was successful or not
         long success = db.insert(SHIFT_TABLE,null,cv);
@@ -165,16 +163,79 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Update Qualification Table with the employeeID, and boolean values for morning, evening and fullDay
-    public void updateQualification(int employeeID, int morning, int evening, int fullDay) {
+    public void updateQualification(int employeeID, int morning, int evening) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
 
         String queryString = "UPDATE " + QUALIFICATIONS_TABLE + " SET " + COL_MORNING + " = " + morning +
-                ", " + COL_EVENING + " = " + evening + ", " + COL_FULLDAY + " = " + fullDay +
+                ", " + COL_EVENING + " = " + evening +
                 " WHERE " + COL_QUALIFICATIONID + " = " + employeeID;
 
         db.execSQL(queryString);
+    }
+
+    public List<Boolean> getQualifications(int employeeID) {
+        List<Boolean> returnList = new ArrayList<>();
+
+        //get data from the database
+        String queryString = "SELECT * FROM " + QUALIFICATIONS_TABLE + " WHERE " + COL_QUALIFICATIONID +
+                " = " + employeeID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            boolean Opening = cursor.getInt(1) == 1 ? true : false;
+            boolean Closing = cursor.getInt(2) == 1 ? true : false;
+
+            returnList.add(Opening);
+            returnList.add(Closing);
+        }
+        //close both db and cursor for others to access
+        cursor.close();
+        db.close();
+
+        return returnList;
+    }
+
+    // retrieve data from the Employee table for one employee
+    public EmployeeModel getEmployee(int employeeID) {
+        //get data from the database
+        String queryString = "SELECT * FROM " + EMPLOYEE_TABLE + " WHERE " + COL_EMPID +
+                " = " + employeeID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        String fName = "", lName = "", city = "", street = "", province = "", postal = "",
+                dateOfBirth = "", phone = "", email = "";
+        int qualificationID = 0, avaID = 0;
+        boolean isActive = true;
+        if (cursor.moveToFirst()){ //move it to the first of the result set
+            //retrieve employee information
+            qualificationID = cursor.getInt(1);
+            avaID = cursor.getInt(2);
+            fName = cursor.getString(3);
+            lName = cursor.getString(4);
+            city = cursor.getString(5);
+            street = cursor.getString(6);
+            province = cursor.getString(7);
+            postal = cursor.getString(8);
+            dateOfBirth = cursor.getString(9);
+            phone = cursor.getString(10);
+            email = cursor.getString(11);
+            isActive = cursor.getInt(12) == 1 ? true: false;
+
+        } else {
+            // error, nothing added to the list
+        }
+        EmployeeModel employee = new EmployeeModel(employeeID, qualificationID,avaID,
+                fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+        return employee;
     }
 
     // retrieve data from the Employee table
