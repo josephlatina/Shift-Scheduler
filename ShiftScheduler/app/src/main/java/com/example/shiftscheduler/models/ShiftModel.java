@@ -102,8 +102,8 @@ public abstract class ShiftModel {
     /**
      * @return shift time (set by subclass)
      */
-    public ShiftTime getTime() {
-        return time;
+    public String getTime() {
+        return time.toString();
     }
 
     /**
