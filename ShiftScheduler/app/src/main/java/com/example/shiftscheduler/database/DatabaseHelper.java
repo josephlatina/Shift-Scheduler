@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.ShiftModel;
 
@@ -109,6 +110,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
     }
+
+
+
     //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
         //Retrieve the database already created and create an instance of database to hold it
@@ -155,6 +159,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //check if inserting into the database was successful or not
         long success = db.insert(SHIFT_TABLE,null,cv);
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //Inserts new Availability entry into the database
+    public boolean addAvailability(AvailabilityModel availabilityModel){
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+
+        //Fill in the data for each column
+        cv.put(COL_AVAILABILITYID, availabilityModel.getAvailabilityID());
+        cv.put(COL_SUNSHIFT, availabilityModel.getSunShift());
+        cv.put(COL_MONSHIFT, availabilityModel.getMonShift());
+        cv.put(COL_TUESHIFT, availabilityModel.getTueShift());
+        cv.put(COL_WEDSHIFT, availabilityModel.getWedShift());
+        cv.put(COL_THURSSHIFT, availabilityModel.getThursShift());
+        cv.put(COL_FRISHIFT, availabilityModel.getFriShift());
+        cv.put(COL_SATSHIFT, availabilityModel.getSatShift());
+
+        //check if inserting into the database was successful or not
+        long success = db.insert(AVAILABILITY_TABLE,null,cv);
         if (success == -1) {
             return false;
         } else {
@@ -279,8 +308,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    public AvailabilityModel getAvailability(int employeeID) {
+        //get data from the database
+        String queryString = "SELECT * FROM " + AVAILABILITY_TABLE + " WHERE " + COL_AVAILABILITYID
+                + " = " + employeeID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
 
+        //retrieve availability information from this cursor.
+        int availabilityID = cursor.getInt(0);
+        int sunShift = cursor.getInt(1);
+        int monShift = cursor.getInt(2);
+        int tueShift = cursor.getInt(3);
+        int wedShift = cursor.getInt(4);
+        int thurShift = cursor.getInt(5);
+        int friShift = cursor.getInt(6);
+        int satShift = cursor.getInt(7);
 
+        // the availabilityID to be returned is:
+        AvailabilityModel availability = new AvailabilityModel(availabilityID, sunShift,
+                monShift, tueShift, wedShift, thurShift, friShift, satShift);
 
-
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+        return availability;
+    }
 }
