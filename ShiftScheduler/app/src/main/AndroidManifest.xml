@@ -6,8 +6,16 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".activities.ShiftCalendar"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.EmployeeList"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -19,8 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".activities.EmployeeAddForm"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -32,8 +38,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".activities.EmployeeInfo"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -45,7 +49,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.EmployeeEditForm"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -57,8 +60,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>
