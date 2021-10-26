@@ -169,7 +169,7 @@ public abstract class ShiftModel {
      * (possibly don't end up needing this here)
      * @return shift is valid or not
      */
-    public boolean isValid() {
+    public boolean verifyShift() {
         //TBD
         return true; //for now
     }
