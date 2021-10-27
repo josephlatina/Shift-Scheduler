@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/employeeList"
+        android:enabled="true"
+        android:title="Employees"
+        android:icon="@drawable/ic_employee" />
+    <item
+        android:id="@+id/shiftCalendar"
+        android:enabled="true"
+        android:title="Shifts"
+        android:icon="@drawable/ic_calendar"/>
+</menu>
