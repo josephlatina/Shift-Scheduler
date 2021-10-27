@@ -9,21 +9,46 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 /**
- * For creating a medium to interact with database and recyclerview for layout.
- * Holds information regarding the date specified.
+ * Container for all the ShiftModels associated with a specific day.
  */
 public class DayModel {
     private final LocalDate date;
-    private MorningShift morningShift = null;
-    private EveningShift eveningShift = null;
-    private FullShift fullShift = null;
+    private final MorningShift morningShift;
+    private final EveningShift eveningShift;
+    private final FullShift fullShift;
 
     /**
-     * Constructor.
+     * Constructor. 2 shifts (weekday)
      * @param date - LocalDate of day (final)
+     * @param morningShift - MorningShift for date
+     * @param eveningShift - EveningShift for date
      */
-    public DayModel(LocalDate date) {
+    public DayModel(LocalDate date, MorningShift morningShift, EveningShift eveningShift) {
         this.date = date;
+        this.morningShift = morningShift;
+        this.eveningShift = eveningShift;
+        this.fullShift = null;
+    }
+
+    /**
+     * Constructor. 1 shift (weekend)
+     * @param date - LocalDate of day (final)
+     * @param fullShift - FullShift for date
+     */
+    public DayModel(LocalDate date, FullShift fullShift) {
+        this.date = date;
+        this.morningShift = null;
+        this.eveningShift = null;
+        this.fullShift = fullShift;
+    }
+
+    /**
+     * @param otherDay - other DayModel object
+     * @return equality
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O) //for .isEqual()
+    public boolean equals(DayModel otherDay) {
+        return (date.isEqual(otherDay.getDate()));
     }
 
     /**
@@ -55,30 +80,12 @@ public class DayModel {
     }
 
     /**
-     * Adds a shift to this day (once a shift is added it cannot be removed or overwritten).
-     * @param shift - shift of any type
-     * @return successful
-     */
-    public boolean addShift(@NonNull ShiftModel shift) {
-        if (shift.getClass() == MorningShift.class && morningShift == null) {
-            morningShift = shift.toMorning();
-        } else if (shift.getClass() == EveningShift.class && eveningShift == null) {
-            eveningShift = shift.toEvening();
-        } else if (fullShift == null) {
-            fullShift = shift.toFull();
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * Verifies the schedule for this day.
      * @return whether day is valid
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean verifyDay() {
-        // check for proper shift existence based on day of week
+        // check for proper shift existence based on day of week (should be guaranteed by other logic)
         DayOfWeek dow = date.getDayOfWeek();
         if (dow == DayOfWeek.SUNDAY || dow == DayOfWeek.SATURDAY) {
             if (fullShift == null || morningShift != null || eveningShift != null) {
