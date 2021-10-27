@@ -12,9 +12,9 @@
         android:id="@+id/closingCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:minHeight="48dp"
         android:text="@string/closing"
-        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.65"
@@ -22,15 +22,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.771" />
 
+    <!--Employee Phone Number-->
+
     <ImageView
         android:id="@+id/InfoEmployeeImg"
-        android:layout_width="117dp"
-        android:layout_height="98dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="98dp"
+        android:layout_height="82dp"
         android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/infoName"
         app:layout_constraintVertical_bias="0.0"
@@ -49,11 +50,12 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.54"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.012"
+        app:layout_constraintVertical_bias="0.068"
         tools:ignore="SpeakableTextPresentCheck" />
-    <!--Employee Phone Number-->
+
     <EditText
         android:id="@+id/infoPhoneLabel"
         android:layout_width="132dp"
@@ -230,5 +232,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.771" />
+
+    <Button
+        android:id="@+id/info_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.008" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

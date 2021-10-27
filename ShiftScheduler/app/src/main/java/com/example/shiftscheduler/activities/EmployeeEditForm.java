@@ -14,7 +14,6 @@ import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeEditForm extends AppCompatActivity {
@@ -93,7 +92,22 @@ public class EmployeeEditForm extends AppCompatActivity {
                     close = 1;
                 }
                 DatabaseHelper dbHelper = new DatabaseHelper(EmployeeEditForm.this);
+                //update Qualifications Table
                 dbHelper.updateQualification(Integer.parseInt(empID), open, close);
+
+                //update Employee Table
+                boolean status = false;
+                if (activeEmployee.isChecked()) {
+                    status = true;
+                }
+                EmployeeModel modifiedEmployee = new EmployeeModel(Integer.parseInt(empID),
+                        fname.getText().toString(), lname.getText().toString(),
+                        city.getText().toString(), street.getText().toString(),
+                        province.getText().toString(), postalCode.getText().toString(),
+                        dob.getText().toString(), phoneNum.getText().toString(),
+                        email.getText().toString(), status);
+                dbHelper.updateEmployee(modifiedEmployee);
+
 
                 Intent myIntent = new Intent(EmployeeEditForm.this, EmployeeInfo.class);
                 myIntent.putExtra(EMPLOYEE_ID, empID);
