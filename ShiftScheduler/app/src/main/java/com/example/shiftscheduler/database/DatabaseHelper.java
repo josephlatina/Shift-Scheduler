@@ -287,7 +287,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             // error, nothing added to the list
         }
-        EmployeeModel employee = new EmployeeModel(employeeID, qualificationID,avaID,
+        EmployeeModel employee = new EmployeeModel(employeeID,
                 fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
         // close both db and cursor for others to access
         cursor.close();
@@ -322,7 +322,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String email = cursor.getString(11);
                 boolean isActive = cursor.getInt(12) == 1 ? true: false;
 
-                EmployeeModel newEmployee = new EmployeeModel(employeeID, qualificationID,avaID,
+                EmployeeModel newEmployee = new EmployeeModel(employeeID,
                         fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
                 returnList.add(newEmployee);
             } while(cursor.moveToNext());

@@ -1,7 +1,5 @@
 package com.example.shiftscheduler.activities;
 
-import com.example.shiftscheduler.R;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
@@ -55,7 +54,7 @@ public class EmployeeAddForm extends AppCompatActivity {
                 EmployeeModel employee;
                 //Try creating an employee object
                 try {
-                    employee = new EmployeeModel(-1, -1,-1,
+                    employee = new EmployeeModel(-1,
                             fname.getText().toString(), lname.getText().toString(),
                             city.getText().toString(), street.getText().toString(),
                             province.getText().toString(), postalCode.getText().toString(),
@@ -65,7 +64,7 @@ public class EmployeeAddForm extends AppCompatActivity {
                 catch (Exception e) {
                     //If unsuccessful, generate error message and add in an error entry to know error was made
                     Toast.makeText(EmployeeAddForm.this, "Error creating employee.", Toast.LENGTH_SHORT).show();
-                    employee = new EmployeeModel(-1, -1,-1,
+                    employee = new EmployeeModel(-1,
                             "error", "error",
                             "error", "error",
                             "error", "error",

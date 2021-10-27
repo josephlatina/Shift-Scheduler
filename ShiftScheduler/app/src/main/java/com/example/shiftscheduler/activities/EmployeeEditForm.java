@@ -14,7 +14,6 @@ import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeEditForm extends AppCompatActivity {
