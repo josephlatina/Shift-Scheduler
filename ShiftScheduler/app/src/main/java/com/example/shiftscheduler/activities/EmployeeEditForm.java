@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -92,7 +93,23 @@ public class EmployeeEditForm extends AppCompatActivity {
                     close = 1;
                 }
                 DatabaseHelper dbHelper = new DatabaseHelper(EmployeeEditForm.this);
+                //update Qualifications Table
                 dbHelper.updateQualification(Integer.parseInt(empID), open, close);
+
+                //update Employee Table
+                boolean status = false;
+                if (activeEmployee.isChecked()) {
+                    status = true;
+                }
+                EmployeeModel modifiedEmployee = new EmployeeModel(Integer.parseInt(empID),
+                        fname.getText().toString(), lname.getText().toString(),
+                        city.getText().toString(), street.getText().toString(),
+                        province.getText().toString(), postalCode.getText().toString(),
+                        dob.getText().toString(), phoneNum.getText().toString(),
+                        email.getText().toString(), status);
+                boolean success = dbHelper.updateEmployee(modifiedEmployee);
+                //Generate message indicating if insertion was a success or a failure
+                Toast.makeText(EmployeeEditForm.this, modifiedEmployee.toString(), Toast.LENGTH_SHORT).show();
 
                 Intent myIntent = new Intent(EmployeeEditForm.this, EmployeeInfo.class);
                 myIntent.putExtra(EMPLOYEE_ID, empID);

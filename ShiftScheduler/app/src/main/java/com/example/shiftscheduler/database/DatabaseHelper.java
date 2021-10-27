@@ -167,7 +167,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int empID = employeeModel.getEmployeeID();
 
         //check if inserting into the database was successful or not
-        long success = db.update(EMPLOYEE_TABLE,cv, "id" + " = ?", new String[] {String.valueOf(empID)});
+        long success = db.update(EMPLOYEE_TABLE,cv, COL_EMPID + " = ?", new String[] {String.valueOf(empID)});
         if (success == -1) {
             return false;
         } else {
