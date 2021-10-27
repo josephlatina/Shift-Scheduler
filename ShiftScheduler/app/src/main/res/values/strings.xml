@@ -26,8 +26,8 @@
     <string name="delete">Delete</string>
     <string name="opening">Opening</string>
     <string name="closing">Closing</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- ShiftCalendar strings -->
+    <string name="calendarText">Select a day to get started</string>
 
 </resources>
