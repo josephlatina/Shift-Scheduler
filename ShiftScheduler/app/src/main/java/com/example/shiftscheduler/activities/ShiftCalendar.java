@@ -1,5 +1,6 @@
 package com.example.shiftscheduler.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.CalendarView;
 
@@ -26,6 +27,9 @@ public class ShiftCalendar extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 String date = year + "-" + month + "-" + dayOfMonth;
 
+                Intent myIntent = new Intent(ShiftCalendar.this, ShiftDay.class);
+                myIntent.putExtra("date", date);
+                startActivity(myIntent);
             }
         });
     }
