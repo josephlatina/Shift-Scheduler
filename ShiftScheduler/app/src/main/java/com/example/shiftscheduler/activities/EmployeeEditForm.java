@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -107,9 +106,8 @@ public class EmployeeEditForm extends AppCompatActivity {
                         province.getText().toString(), postalCode.getText().toString(),
                         dob.getText().toString(), phoneNum.getText().toString(),
                         email.getText().toString(), status);
-                boolean success = dbHelper.updateEmployee(modifiedEmployee);
-                //Generate message indicating if insertion was a success or a failure
-                Toast.makeText(EmployeeEditForm.this, modifiedEmployee.toString(), Toast.LENGTH_SHORT).show();
+                dbHelper.updateEmployee(modifiedEmployee);
+
 
                 Intent myIntent = new Intent(EmployeeEditForm.this, EmployeeInfo.class);
                 myIntent.putExtra(EMPLOYEE_ID, empID);

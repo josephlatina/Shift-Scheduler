@@ -1,7 +1,5 @@
 package com.example.shiftscheduler.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +7,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class EmployeeInfo extends AppCompatActivity {
@@ -21,7 +20,7 @@ public class EmployeeInfo extends AppCompatActivity {
     public static final String EDITEMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
 
     EditText name, phoneNumber, email, streetAddress, dateOfBirth;
-    Button editbtn;
+    Button editbtn, backbtn;
     String empID;
     CheckBox opening, closing;
 
@@ -37,6 +36,7 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress = (EditText) findViewById(R.id.infoAddress);
         dateOfBirth = (EditText) findViewById(R.id.infoDOB);
         editbtn = (Button) findViewById(R.id.infoEditButton);
+        backbtn = (Button) findViewById(R.id.info_back);
         opening = (CheckBox) findViewById(R.id.openingCheckBox);
         closing = (CheckBox) findViewById(R.id.closingCheckBox);
         opening.setEnabled(false);
@@ -57,6 +57,15 @@ public class EmployeeInfo extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(EmployeeInfo.this, EmployeeEditForm.class);
                 myIntent.putExtra(EDITEMPLOYEE_ID, empID);
+                startActivity(myIntent);
+            }
+        });
+
+        //Button listener for back
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(EmployeeInfo.this, EmployeeList.class);
                 startActivity(myIntent);
             }
         });
