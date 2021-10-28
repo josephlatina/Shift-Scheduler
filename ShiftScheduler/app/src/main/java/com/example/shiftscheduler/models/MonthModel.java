@@ -4,6 +4,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -57,7 +58,7 @@ public class MonthModel {
      * @param employees - ArrayList of all current working EmployeeModels
      * @return verified
      */
-    @RequiresApi(api = Build.VERSION_CODES.O)
+    @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
     public boolean verifyMonth(ArrayList<EmployeeModel> employees) {
         // verify all days individually
         for (DayModel day : days) {
@@ -66,12 +67,63 @@ public class MonthModel {
             }
         }
 
-        // verify all employees work every week (TBD)
-            // find the Sunday at/before startDate
-            // find the Saturday at/after the last day of the month
-            // ensure every available employee works one shift on every week
+        // verify all employees work every week
+        if (!verifyEmployeesWorkWeekly(employees)) {
+            return false;
+        }
 
         // month has passed verification
+        return true;
+    }
+
+    /**
+     * Checks every employee to ensure each one works every week involved in this month.
+     * @param employees - ArrayList of all current (active) employees
+     * @return verified
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
+    private boolean verifyEmployeesWorkWeekly(ArrayList<EmployeeModel> employees){
+        // 1. find the Sunday at/before startDate
+        LocalDate firstSunday = startDate;
+        while (firstSunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            firstSunday = firstSunday.minusDays(1);
+        }
+
+        // 2. find the Saturday at/after the last day of the month
+        LocalDate lastSaturday = startDate.plusMonths(1).minusDays(1);
+        while (lastSaturday.getDayOfWeek() != DayOfWeek.SATURDAY) {
+            lastSaturday = lastSaturday.plusDays(1);
+        }
+
+        // 3. ensure every available employee works at least one shift on every week between them
+        for (EmployeeModel currentEmployee : employees) {
+            LocalDate cursor = firstSunday;
+            boolean employeeWorks = false;
+
+            while (!cursor.isEqual(lastSaturday.plusDays(1))) {
+                if (!employeeWorks) { //locks employeeWorks as true if it is ever true
+                    employeeWorks = this.getDay(cursor).containsEmployee(currentEmployee);
+                }
+
+                if (cursor.getDayOfWeek() == DayOfWeek.SATURDAY) { //reaches end of week
+                    if (!employeeWorks) { //employee hasn't worked this week
+                        boolean employeeAvailable = false;
+                        for (int i = 6; i >= 0; i--) { //check for availability this week
+                            if (!employeeAvailable) {
+                                  employeeAvailable = currentEmployee.isAvailable(cursor.minusDays(i));
+                            }
+                        }
+                        if (employeeAvailable) { //employee is available and hasn't worked this week
+                            return false;
+                        }
+                    }
+                    //employee has worked (passes for this week)
+                    employeeWorks = false; //reset employeeWorks for the next week
+                }
+
+                cursor = cursor.plusDays(1); //point cursor to the next day
+            }
+        }
         return true;
     }
 }

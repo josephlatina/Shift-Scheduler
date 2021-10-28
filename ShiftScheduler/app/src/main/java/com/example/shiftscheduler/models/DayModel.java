@@ -80,6 +80,20 @@ public class DayModel {
     }
 
     /**
+     * Checks this day's shifts for a specific employee.
+     * @param employee - desired EmployeeModel
+     * @return found employee
+     */
+    public boolean containsEmployee(EmployeeModel employee) {
+        if (fullShift != null) {
+            return fullShift.getEmployees().contains(employee);
+        } else {
+            return (morningShift.getEmployees().contains(employee) ||
+                    getEveningShift().getEmployees().contains(employee));
+        }
+    }
+
+    /**
      * Verifies the schedule for this day.
      * @return whether day is valid
      */
