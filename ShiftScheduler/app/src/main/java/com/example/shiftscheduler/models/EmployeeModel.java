@@ -1,9 +1,10 @@
 package com.example.shiftscheduler.models;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class EmployeeModel {
-    private int employeeID;
+    private final int employeeID;
     private String fName;
     private String lName;
     private String city;
@@ -71,10 +72,6 @@ public class EmployeeModel {
 
     public boolean getStatus() { return isActive; }
 
-    public void setEmployeeID(Integer employeeID) {
-        this.employeeID = employeeID;
-    }
-
     public void setfName(String fName) {
         this.fName = fName;
     }
@@ -139,5 +136,26 @@ public class EmployeeModel {
                 ", email='" + email + '\'' +
                 ", isActive=" + isActive +
                 '}';
+    }
+
+    /**
+     * Checks this employee's availability on a given day.
+     * @param date - requested LocalDate
+     * @return available
+     */
+    public boolean isAvailable(LocalDate date) {
+        // check this employee's availability at ANY point on this date
+        return false; //if not available
+    }
+
+    /**
+     * Checks this employee's availability on a given day at a specific time.
+     * @param date - requested LocalDate
+     * @param time - requested ShiftTime
+     * @return available
+     */
+    public boolean isAvailable(LocalDate date, ShiftTime time) {
+        // check this employee's availability on this date/time
+        return false; //if not available
     }
 }

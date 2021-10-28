@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.example.shiftscheduler.R;
 
 import java.time.LocalDate;
+import java.util.NavigableSet;
 import java.util.Set;
 
 /**
@@ -22,11 +23,11 @@ enum ShiftTime {
  */
 public abstract class ShiftModel {
     private final int shiftID;
-    private LocalDate date;
-    private Set<EmployeeModel> employees;
-    private int maxEmployeeCount;
-    private ShiftTime time = null;
-    private int icon = 0;
+    private final LocalDate date;
+    private NavigableSet<EmployeeModel> employees;
+    private int employeesNeeded;
+    private final ShiftTime time = null;
+    private final int icon = 0;
 
     /**
      * Constructor. (custom maxEmployeeCount)
@@ -34,11 +35,11 @@ public abstract class ShiftModel {
      * @param date - date of shift
      * @param employees - set of the assigned employee (set prevents duplicates)
      */
-    public ShiftModel(int shiftID, LocalDate date, Set<EmployeeModel> employees, int maxEmployeeCount) {
+    public ShiftModel(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees, int employeesNeeded) {
         this.shiftID = shiftID;
         this.date = date;
         this.employees = employees;
-        this.maxEmployeeCount = maxEmployeeCount;
+        this.employeesNeeded = employeesNeeded;
     }
 
     /**
@@ -78,14 +79,6 @@ public abstract class ShiftModel {
     }
 
     /**
-     * Changes date
-     * @param date - LocalDate object the shift occurs on
-     */
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    /**
      * @return set of assigned employees
      */
     public Set<EmployeeModel> getEmployees() {
@@ -98,7 +91,7 @@ public abstract class ShiftModel {
      * @return successful
      */
     public boolean addEmployee(EmployeeModel employee) {
-        if (employees.size() < maxEmployeeCount) {
+        if (employees.size() < employeesNeeded) {
             return employees.add(employee);
         } else {
             return false;
@@ -117,16 +110,20 @@ public abstract class ShiftModel {
     /**
      * @return maximum number of employees allowed on this shift
      */
-    public int getMaxEmployeeCount() {
-        return maxEmployeeCount;
+    public int getEmployeesNeeded() {
+        return employeesNeeded;
     }
 
     /**
      * Changes maximum employee count
-     * @param maxEmployeeCount - new maximum employees allowed
+     * @param employeesNeeded - new maximum employees allowed
      */
-    public void setMaxEmployeeCount(int maxEmployeeCount) {
-        this.maxEmployeeCount = maxEmployeeCount;
+    public void setEmployeesNeeded(int employeesNeeded) {
+        this.employeesNeeded = employeesNeeded;
+        // remove excess employees that no longer fit in this shift
+        while (employees.size() > employeesNeeded) {
+            employees.pollLast();
+        }
     }
 
     /**
@@ -147,31 +144,59 @@ public abstract class ShiftModel {
      * @return current shift as a morning shift
      */
     public MorningShift toMorning() {
-        return new MorningShift(shiftID, date, employees, maxEmployeeCount);
+        return new MorningShift(shiftID, date, employees, employeesNeeded);
     }
 
     /**
      * @return current shift as an evening shift
      */
     public EveningShift toEvening() {
-        return new EveningShift(shiftID, date, employees, maxEmployeeCount);
+        return new EveningShift(shiftID, date, employees, employeesNeeded);
     }
 
     /**
      * @return current shift as a full day shift
      */
     public FullShift toFull() {
-        return new FullShift(shiftID, date, employees, maxEmployeeCount);
+        return new FullShift(shiftID, date, employees, employeesNeeded);
     }
 
     /**
      * Evaluates whether the shift meets the specified criteria
-     * (possibly don't end up needing this here)
-     * @return shift is valid or not
+     * @return verified
      */
     public boolean verifyShift() {
-        //TBD
-        return true; //for now
+        // check if shift is full
+        if (!(employees.size() == employeesNeeded)) {
+            return false;
+        }
+
+        // check employee availability
+        if (!this.verifyEmployeeAvailability()) {
+            return false;
+        }
+
+        // check employee qualifications
+        if (!this.verifyEmployeeQualifications()) {
+            return false;
+        }
+
+        // shift passes verification
+        return true;
     }
+
+    /**
+     * Verifies that all employees are available for this shift
+     * (set in subclasses)
+     * @return verified
+     */
+    protected abstract boolean verifyEmployeeAvailability();
+
+    /**
+     * Verifies employees' qualifications according to the specification
+     * (set in subclasses)
+     * @return verified
+     */
+    protected abstract boolean verifyEmployeeQualifications();
 }
 
