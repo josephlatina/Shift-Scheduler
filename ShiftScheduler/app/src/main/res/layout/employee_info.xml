@@ -1,248 +1,515 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.EmployeeInfo">
+    android:layout_height="match_parent">
 
-    <!--Employee Name-->
-
-    <CheckBox
-        android:id="@+id/closingCheckBox"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="false"
-        android:minHeight="48dp"
-        android:text="@string/closing"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.65"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.771" />
-
-    <!--Employee Phone Number-->
-
-    <ImageView
-        android:id="@+id/InfoEmployeeImg"
-        android:layout_width="98dp"
-        android:layout_height="82dp"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/infoName"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_account_circle" />
-
-    <EditText
-        android:id="@+id/infoName"
-        android:layout_width="287dp"
-        android:layout_height="58dp"
-        android:ems="10"
-        android:focusable="false"
-        android:gravity="center"
-        android:inputType="none"
-        android:text=""
-        android:textSize="28sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.54"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.068"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <EditText
-        android:id="@+id/infoPhoneLabel"
-        android:layout_width="132dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="@string/phone_number"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.063"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.31"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <EditText
-        android:id="@+id/infoPhone"
-        android:layout_width="196dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/infoPhoneLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/infoPhoneLabel"
-        app:layout_constraintTop_toTopOf="@+id/infoPhoneLabel"
-        tools:ignore="SpeakableTextPresentCheck" />
-    <!--Employee Email-->
-
-    <EditText
-        android:id="@+id/infoEmailLabel"
-        android:layout_width="132dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="@string/email"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.063"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.391"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <EditText
-        android:id="@+id/infoEmail"
-        android:layout_width="196dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/infoEmailLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/infoEmailLabel"
-        app:layout_constraintTop_toTopOf="@+id/infoEmailLabel"
-        tools:ignore="SpeakableTextPresentCheck" />
-    <!--Employee Address-->
-
-    <EditText
-        android:id="@+id/infoAddressLabel"
-        android:layout_width="132dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="@string/street_address"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.063"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.472"
-        tools:ignore="TouchTargetSizeCheck" />
-
-    <EditText
-        android:id="@+id/infoAddress"
-        android:layout_width="196dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/infoAddressLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/infoAddressLabel"
-        app:layout_constraintTop_toTopOf="@+id/infoAddressLabel"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:context=".activities.EmployeeInfo">
 
 
-    <!--Date of Birth-->
+        <!--Employee Phone Number-->
 
-    <EditText
-        android:id="@+id/infoDOBLabel"
-        android:layout_width="132dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="@string/date_of_birth"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.063"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.554"
-        tools:ignore="TouchTargetSizeCheck" />
+        <!--Employee Name-->
 
-    <EditText
-        android:id="@+id/infoDOB"
-        android:layout_width="196dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/infoDOBLabel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/infoDOBLabel"
-        app:layout_constraintTop_toTopOf="@+id/infoDOBLabel"
-        tools:ignore="SpeakableTextPresentCheck" />
+        <CheckBox
+            android:id="@+id/closingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:clickable="false"
+            android:minHeight="48dp"
+            android:text="@string/closing"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.34"
+            app:layout_constraintStart_toEndOf="@+id/openingCheckBox"
+            app:layout_constraintTop_toBottomOf="@+id/infoQualificationsLabel" />
 
-    <EditText
-        android:id="@+id/infoQualificationsLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:focusable="false"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:text="@string/qualifications"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.664"
-        tools:ignore="SpeakableTextPresentCheck" />
+        <ImageView
+            android:id="@+id/InfoEmployeeImg"
+            android:layout_width="113dp"
+            android:layout_height="101dp"
+            android:text=""
+            app:layout_constraintBottom_toTopOf="@+id/infoName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.615"
+            app:srcCompat="@drawable/ic_account_circle" />
 
-    <Button
-        android:id="@+id/infoEditButton"
-        android:layout_width="108dp"
-        android:layout_height="56dp"
-        android:text="@string/edit"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.514"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.88" />
+        <EditText
+            android:id="@+id/infoName"
+            android:layout_width="287dp"
+            android:layout_height="58dp"
+            android:layout_marginTop="108dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="none"
+            android:text=""
+            android:textSize="28sp"
 
-    <CheckBox
-        android:id="@+id/openingCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/opening"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.299"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.771" />
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-    <Button
-        android:id="@+id/info_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.03"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.008" />
+        <EditText
+            android:id="@+id/infoPhoneLabel"
+            android:layout_width="132dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="176dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:text="@string/phone_number"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/infoDOBLabel"
+            android:layout_width="132dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="324dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:text="@string/date_of_birth"
+
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/infoAddressLabel"
+            android:layout_width="132dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="276dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:text="@string/street_address"
+
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/infoEmailLabel"
+            android:layout_width="132dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="224dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:text="@string/email"
+
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.057"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <EditText
+            android:id="@+id/infoPhone"
+            android:layout_width="196dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/infoPhoneLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/infoPhoneLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoPhoneLabel"
+            tools:ignore="SpeakableTextPresentCheck" />
+        <!--Employee Email-->
+
+        <EditText
+            android:id="@+id/infoEmail"
+            android:layout_width="196dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/infoEmailLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/infoEmailLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoEmailLabel"
+            tools:ignore="SpeakableTextPresentCheck" />
+        <!--Employee Address-->
+
+        <EditText
+            android:id="@+id/infoAddress"
+            android:layout_width="196dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/infoAddressLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/infoAddressLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoAddressLabel"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+
+        <!--Date of Birth-->
+
+        <EditText
+            android:id="@+id/infoDOB"
+            android:layout_width="196dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:focusable="false"
+            android:inputType="textPersonName"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/infoDOBLabel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toEndOf="@+id/infoDOBLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoDOBLabel"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/infoQualificationsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="380dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="@string/qualifications"
+            android:textSize="24sp"
+
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <EditText
+            android:id="@+id/infoAvailibilityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="484dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="@string/availability"
+            android:textSize="24sp"
+
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/infoEditButton"
+            android:layout_width="108dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="750dp"
+            android:text="@string/edit"
+
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.508"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/openingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:minHeight="48dp"
+            android:text="@string/opening"
+            android:clickable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.272"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoQualificationsLabel" />
+
+        <ImageButton
+            android:id="@+id/info_back"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.038"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_arrow" />
+
+        <TextView
+            android:id="@+id/infoMorningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:text="@string/morning"
+            app:layout_constraintStart_toEndOf="@+id/infoMondayLabel"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
+
+        <TextView
+            android:id="@+id/infoMondayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/monday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoMorningLabel" />
+
+        <TextView
+            android:id="@+id/infoWednesdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/wednesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoTuesdayLabel" />
+
+        <TextView
+            android:id="@+id/infoThursdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/thursday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoWednesdayLabel" />
+
+        <TextView
+            android:id="@+id/infoFridayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/friday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoThursdayLabel" />
+
+        <TextView
+            android:id="@+id/infoSaturdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/saturday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoFridayLabel" />
+
+        <TextView
+            android:id="@+id/infoSundayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/sunday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoSaturdayLabel" />
+
+        <TextView
+            android:id="@+id/infoTuesdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/tuesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoMondayLabel" />
+
+        <TextView
+            android:id="@+id/infoEveningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/evening"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.366"
+            app:layout_constraintStart_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
+
+        <CheckBox
+            android:id="@+id/infoAvialMonMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoMondayLabel" />
+
+        <CheckBox
+            android:id="@+id/InfoAvailTuesMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailWedMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoWednesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoWednesdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailThursMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoThursdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoThursdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailFriMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoFridayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoFridayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailSat"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoSaturdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoSaturdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailSun"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoSundayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoSundayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailMonEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoMondayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/InfoAvailTuesEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="7dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailWedEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoWednesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoWednesdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailThursEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoThursdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoThursdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailFriEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoFridayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoFridayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

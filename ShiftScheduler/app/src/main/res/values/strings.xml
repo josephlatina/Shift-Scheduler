@@ -24,8 +24,9 @@
     <string name="qualifications">Qualifications</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="opening">Opening</string>
     <string name="closing">Closing</string>
+    <string name="availability">Availability</string>
+
 
     <!-- ShiftCalendar strings -->
     <string name="calendarText">Select a day to get started</string>
@@ -33,6 +34,16 @@
     <string name="closingShift">Closing Shift</string>
     <string name="addOpening">Add \n Opening Employee</string>
     <string name="addClosing">Add \n Closing Employee</string>
+    <string name="opening">Opening</string>
+    <string name="saturday">Saturday</string>
+    <string name="evening">Evening</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="sunday">Sunday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="monday">Monday</string>
+    <string name="morning">Morning</string>
 
 
 </resources>
