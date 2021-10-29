@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +21,8 @@ public class EmployeeInfo extends AppCompatActivity {
     public static final String EDITEMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
 
     EditText name, phoneNumber, email, streetAddress, dateOfBirth;
-    Button editbtn, backbtn;
+    Button editbtn;
+    ImageButton backbtn;
     String empID;
     CheckBox opening, closing;
 
@@ -36,7 +38,7 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress = (EditText) findViewById(R.id.infoAddress);
         dateOfBirth = (EditText) findViewById(R.id.infoDOB);
         editbtn = (Button) findViewById(R.id.infoEditButton);
-        backbtn = (Button) findViewById(R.id.info_back);
+        backbtn = (ImageButton) findViewById(R.id.info_back);
         opening = (CheckBox) findViewById(R.id.openingCheckBox);
         closing = (CheckBox) findViewById(R.id.closingCheckBox);
         opening.setEnabled(false);

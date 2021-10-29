@@ -26,6 +26,8 @@
     <string name="delete">Delete</string>
     <string name="opening">Opening</string>
     <string name="closing">Closing</string>
+    <string name="availability">Availibility</string>
+
 
     <!-- ShiftCalendar strings -->
     <string name="calendarText">Select a day to get started</string>
