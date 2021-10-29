@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:clickable="false"
-
             android:minHeight="48dp"
             android:text="@string/closing"
             app:layout_constraintEnd_toEndOf="parent"
@@ -237,7 +236,7 @@
             android:id="@+id/infoEditButton"
             android:layout_width="108dp"
             android:layout_height="56dp"
-            android:layout_marginTop="656dp"
+            android:layout_marginTop="750dp"
             android:text="@string/edit"
 
             android:textSize="18sp"
@@ -251,9 +250,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-
             android:minHeight="48dp"
             android:text="@string/opening"
+            android:clickable="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.272"
             app:layout_constraintStart_toStartOf="parent"
@@ -269,6 +268,246 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/back_arrow" />
+
+        <TextView
+            android:id="@+id/infoMorningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:text="@string/morning"
+            app:layout_constraintStart_toEndOf="@+id/infoMondayLabel"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
+
+        <TextView
+            android:id="@+id/infoMondayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/monday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoMorningLabel" />
+
+        <TextView
+            android:id="@+id/infoWednesdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/wednesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoTuesdayLabel" />
+
+        <TextView
+            android:id="@+id/infoThursdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/thursday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoWednesdayLabel" />
+
+        <TextView
+            android:id="@+id/infoFridayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/friday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoThursdayLabel" />
+
+        <TextView
+            android:id="@+id/infoSaturdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/saturday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoFridayLabel" />
+
+        <TextView
+            android:id="@+id/infoSundayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/sunday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoSaturdayLabel" />
+
+        <TextView
+            android:id="@+id/infoTuesdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/tuesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoMondayLabel" />
+
+        <TextView
+            android:id="@+id/infoEveningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/evening"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.366"
+            app:layout_constraintStart_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
+
+        <CheckBox
+            android:id="@+id/infoAvialMonMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoMondayLabel" />
+
+        <CheckBox
+            android:id="@+id/InfoAvailTuesMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailWedMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoWednesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoWednesdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailThursMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoThursdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoThursdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailFriMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoFridayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoFridayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailSat"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoSaturdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoSaturdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailSun"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoSundayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoSundayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailMonEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoMondayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/InfoAvailTuesEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="7dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoTuesdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailWedEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoWednesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoWednesdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailThursEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoThursdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoThursdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/infoAvailFriEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="@+id/infoFridayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/infoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/infoFridayLabel"
+            app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
