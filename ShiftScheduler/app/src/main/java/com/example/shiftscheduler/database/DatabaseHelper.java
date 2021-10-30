@@ -5,15 +5,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.models.AvailabilityModel;
+import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.ShiftModel;
 
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -293,6 +299,61 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return employee;
+    }
+
+    // retrieve employees with availability open for the given shift
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<EmployeeModel> getAvailableEmployees(ShiftModel shift) {
+        //Initialize Lists
+        List<Integer> employeeIDs = new ArrayList<>();
+        List<EmployeeModel> employees = new ArrayList<>();
+        //extract day of the week and store result in ShiftDay
+        LocalDate date = shift.getDate();
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        List<String> ShiftDay = new ArrayList<>();
+        switch (dayOfWeek) {
+            case 1: ShiftDay.add(COL_MONSHIFT); break;
+            case 2: ShiftDay.add(COL_TUESHIFT); break;
+            case 3: ShiftDay.add(COL_WEDSHIFT); break;
+            case 4: ShiftDay.add(COL_THURSSHIFT); break;
+            case 5: ShiftDay.add(COL_FRISHIFT); break;
+            case 6: ShiftDay.add(COL_SATSHIFT); break;
+            case 7: ShiftDay.add(COL_SUNSHIFT); break;
+        }
+        //extract shift time
+        String time = shift.getTime();
+        int ShiftTime = 0;
+        switch (time) {
+            case "MORNING": ShiftTime = 1; break;
+            case "EVENING": ShiftTime = 2; break;
+            case "FULL": ShiftTime = 1; break;
+        }
+        //create query string
+        String queryString = "SELECT * FROM " + AVAILABILITY_TABLE + " WHERE " + ShiftDay.get(0) +
+                " = " + ShiftTime;
+        //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
+        if (dayOfWeek != 6 && dayOfWeek != 7) {
+            queryString += " OR " + ShiftDay.get(0) + " = 3";
+        }
+        //access database
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) { //move it to the first of the result set
+            //loop through the results
+            do {
+                int employeeID = cursor.getInt(0);
+                employeeIDs.add(employeeID);    //add employeeID to the list
+            } while (cursor.moveToNext());
+        }
+        //loop to fill in resulting list of the retrieved employees
+        for (int i=0; i < employeeIDs.size(); i++) {
+            int empID = employeeIDs.get(i);
+            employees.add(getEmployee(empID));
+        }
+
+        return employees;
     }
 
     // retrieve data from the Employee table
