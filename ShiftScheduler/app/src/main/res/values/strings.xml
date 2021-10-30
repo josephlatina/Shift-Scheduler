@@ -44,6 +44,8 @@
     <string name="tuesday">Tuesday</string>
     <string name="monday">Monday</string>
     <string name="morning">Morning</string>
+    <string name="availableEmployees">Available Employees</string>
+    <string name="scheduledEmployees">Scheduled Employees</string>
 
 
 </resources>
