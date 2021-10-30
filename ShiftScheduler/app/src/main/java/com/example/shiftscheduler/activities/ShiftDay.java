@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class ShiftDay extends AppCompatActivity {
 
     //references to layout controls
-    Button backbtn;
+    Button backbtn, addopenbtn, addclosebtn;
     EditText shiftdate;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> employeeList;
@@ -46,6 +46,8 @@ public class ShiftDay extends AppCompatActivity {
 
         //Link the layout controls
         backbtn = (Button) findViewById(R.id.dayBack);
+        addopenbtn = (Button) findViewById(R.id.addOpening);
+        addclosebtn = (Button) findViewById(R.id.addClosing);
         shiftdate = (EditText) findViewById(R.id.shiftDate);
         schedOpenRecyclerView = findViewById(R.id.scheduledOpeningEmployees);
         schedCloseRecyclerView = findViewById(R.id.scheduledClosingEmployees);
@@ -58,6 +60,9 @@ public class ShiftDay extends AppCompatActivity {
         shiftdate.setText(date);
         LocalDate localDate = LocalDate.parse(date);
 
+        updateEmployeeList(localDate);
+        buildAllRecyclerViews();
+
         //Button listener for back
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,14 +72,35 @@ public class ShiftDay extends AppCompatActivity {
             }
         });
 
-        updateEmployeeList(localDate);
-        buildAllRecyclerViews();
+        /* Assume that day objects and shift objects are already pre-created */
+        //Button listener for Adding Opening Employees
+        addopenbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //check for the shift objects that have the date and shift type. (addShift) return the shift object
+                //schedule an employee for that shift (scheduleEmployee) will update the database
+
+                updateEmployeeList(localDate);
+                buildAllRecyclerViews();
+            }
+        });
+        //Button listener for Adding Closing Employees
+        addclosebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                updateEmployeeList(localDate);
+                buildAllRecyclerViews();
+            }
+        });
+
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateEmployeeList(LocalDate localDate) {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftDay.this);
+        //dummy shift objects. It just needs the shift type and local date to get the query
         ShiftModel morningShift = new MorningShift(0, localDate, null, 0);
         ShiftModel eveningShift = new EveningShift(0, localDate, null, 0);
         availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(morningShift);
