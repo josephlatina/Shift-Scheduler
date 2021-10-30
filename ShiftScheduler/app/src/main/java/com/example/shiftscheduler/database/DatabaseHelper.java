@@ -60,14 +60,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Create Employee Table
     private String createEmployeeTable = "CREATE TABLE " + EMPLOYEE_TABLE + "(" +
             COL_EMPID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COL_QUALIFICATIONID + " INTEGER," +
-            COL_AVAILABILITYID + " INTEGER," +
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
-            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER," +
-            "FOREIGN KEY (" + COL_QUALIFICATIONID + ") REFERENCES " + QUALIFICATIONS_TABLE + "(" + COL_QUALIFICATIONID + "), " +
-            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + "))";
+            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER)";
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -273,22 +269,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //check if the result successfully brought back from the database
         String fName = "", lName = "", city = "", street = "", province = "", postal = "",
                 dateOfBirth = "", phone = "", email = "";
-        int qualificationID = 0, avaID = 0;
         boolean isActive = true;
         if (cursor.moveToFirst()){ //move it to the first of the result set
             //retrieve employee information
-            qualificationID = cursor.getInt(1);
-            avaID = cursor.getInt(2);
-            fName = cursor.getString(3);
-            lName = cursor.getString(4);
-            city = cursor.getString(5);
-            street = cursor.getString(6);
-            province = cursor.getString(7);
-            postal = cursor.getString(8);
-            dateOfBirth = cursor.getString(9);
-            phone = cursor.getString(10);
-            email = cursor.getString(11);
-            isActive = cursor.getInt(12) == 1 ? true: false;
+            fName = cursor.getString(1);
+            lName = cursor.getString(2);
+            city = cursor.getString(3);
+            street = cursor.getString(4);
+            province = cursor.getString(5);
+            postal = cursor.getString(6);
+            dateOfBirth = cursor.getString(7);
+            phone = cursor.getString(8);
+            email = cursor.getString(9);
+            isActive = cursor.getInt(10) == 1 ? true: false;
 
         } else {
             // error, nothing added to the list
@@ -370,18 +363,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //loop through the results
             do{
                 int employeeID = cursor.getInt(0);
-                int qualificationID = cursor.getInt(1);
-                int avaID = cursor.getInt(2);
-                String fName = cursor.getString(3);
-                String lName = cursor.getString(4);
-                String city = cursor.getString(5);
-                String street = cursor.getString(6);
-                String province = cursor.getString(7);
-                String postal = cursor.getString(8);
-                String dateOfBirth = cursor.getString(9);
-                String phone = cursor.getString(10);
-                String email = cursor.getString(11);
-                boolean isActive = cursor.getInt(12) == 1 ? true: false;
+                String fName = cursor.getString(1);
+                String lName = cursor.getString(2);
+                String city = cursor.getString(3);
+                String street = cursor.getString(4);
+                String province = cursor.getString(5);
+                String postal = cursor.getString(6);
+                String dateOfBirth = cursor.getString(7);
+                String phone = cursor.getString(8);
+                String email = cursor.getString(9);
+                boolean isActive = cursor.getInt(10) == 1 ? true: false;
 
                 EmployeeModel newEmployee = new EmployeeModel(employeeID,
                         fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
