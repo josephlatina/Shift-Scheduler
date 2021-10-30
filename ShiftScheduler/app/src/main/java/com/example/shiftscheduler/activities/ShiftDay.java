@@ -1,11 +1,13 @@
 package com.example.shiftscheduler.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +15,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.EveningShift;
+import com.example.shiftscheduler.models.MorningShift;
+import com.example.shiftscheduler.models.ShiftModel;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ShiftDay extends AppCompatActivity {
@@ -23,6 +29,8 @@ public class ShiftDay extends AppCompatActivity {
     EditText shiftdate;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> employeeList;
+    private ArrayList<EmployeeModel> availOpenEmployeeList;
+    private ArrayList<EmployeeModel> availCloseEmployeeList;
     private RecyclerView schedOpenRecyclerView;
     private RecyclerView schedCloseRecyclerView;
     private RecyclerView availOpenRecyclerView;
@@ -30,6 +38,7 @@ public class ShiftDay extends AppCompatActivity {
     private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +56,7 @@ public class ShiftDay extends AppCompatActivity {
         Intent incomingIntent = getIntent();
         String date = incomingIntent.getStringExtra("date");
         shiftdate.setText(date);
+        LocalDate localDate = LocalDate.parse(date);
 
         //Button listener for back
         backbtn.setOnClickListener(new View.OnClickListener() {
@@ -57,20 +67,25 @@ public class ShiftDay extends AppCompatActivity {
             }
         });
 
+        updateEmployeeList(localDate);
         buildAllRecyclerViews();
 
     }
 
-    public void updateEmployeeList() {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void updateEmployeeList(LocalDate localDate) {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftDay.this);
-        employeeList = (ArrayList) dbHelper.getEmployees();
+        ShiftModel morningShift = new MorningShift(0, localDate, null, 0);
+        ShiftModel eveningShift = new EveningShift(0, localDate, null, 0);
+        availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(morningShift);
+        availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(eveningShift);
     }
 
     public void buildAllRecyclerViews() {
         buildRecyclerView(schedOpenRecyclerView, employeeList);
         buildRecyclerView(schedCloseRecyclerView, employeeList);
-        buildRecyclerView(availOpenRecyclerView, employeeList);
-        buildRecyclerView(availCloseRecyclerView, employeeList);
+        buildRecyclerView(availOpenRecyclerView, availOpenEmployeeList);
+        buildRecyclerView(availCloseRecyclerView, availCloseEmployeeList);
     }
 
     public void buildRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {

@@ -11,15 +11,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.models.AvailabilityModel;
-import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.ShiftModel;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -106,6 +103,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createAvailabilityTable);
         //create the Qualifications table
         db.execSQL(createQualificationsTable);
+        //create the WorkedBy table
+        db.execSQL(createWorkTable);
     }
     //called to modify the schema for the database. Used when the database version number changes
     @Override
@@ -322,12 +321,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case "FULL": ShiftTime = 1; break;
         }
         //create query string
-        String queryString = "SELECT * FROM " + AVAILABILITY_TABLE + " WHERE " + ShiftDay.get(0) +
+        String queryString = "SELECT " + COL_AVAILABILITYID + " FROM " + AVAILABILITY_TABLE + " WHERE " + ShiftDay.get(0) +
                 " = " + ShiftTime;
         //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
         if (dayOfWeek != 6 && dayOfWeek != 7) {
             queryString += " OR " + ShiftDay.get(0) + " = 3";
         }
+        //check for employees that are already working in the given shift
+        queryString += "AND " + COL_AVAILABILITYID + " NOT IN ( SELECT W." + COL_EMPID + " FROM " + WORK_TABLE +
+                " AS W, " + SHIFT_TABLE + " AS S WHERE W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND S." +
+                COL_DATE + " = " + simpleDateFormat.format(date) + " AND S." + COL_SHIFTTYPE + " = " + time;
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
