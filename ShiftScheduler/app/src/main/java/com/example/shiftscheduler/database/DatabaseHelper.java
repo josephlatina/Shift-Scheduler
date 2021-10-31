@@ -263,7 +263,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
-    
+
     //Update Qualification Table with the employeeID, and boolean values for morning, evening and fullDay
     public void updateQualification(int employeeID, int morning, int evening) {
         //Retrieve the database already created and create an instance of database to hold it
@@ -416,6 +416,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return employees;
+    }
+
+    //retrieve employees that work in a specific shift
+    public List<EmployeeModel> getScheduledEmployees(LocalDate date, String time) {
+        //Initialize List
+        List<EmployeeModel> employees = new ArrayList<>();
+
+        //get data from the database
+        String queryString = "SELECT * FROM " + EMPLOYEE_TABLE + " AS E, " + WORK_TABLE + " AS W, " +
+                SHIFT_TABLE + " AS E WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID +
+                " = S." + COL_SHIFTID + " AND S." + COL_SHIFTTYPE + " = " + time + " AND S." + COL_DATE +
+                " = " + simpleDateFormat.format(date);
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()){ //move it to the first of the result set
+            //loop through the results
+            do{
+                int employeeID = cursor.getInt(0);
+                String fName = cursor.getString(1);
+                String lName = cursor.getString(2);
+                String city = cursor.getString(3);
+                String street = cursor.getString(4);
+                String province = cursor.getString(5);
+                String postal = cursor.getString(6);
+                String dateOfBirth = cursor.getString(7);
+                String phone = cursor.getString(8);
+                String email = cursor.getString(9);
+                boolean isActive = cursor.getInt(10) == 1 ? true: false;
+
+                EmployeeModel newEmployee = new EmployeeModel(employeeID,
+                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+                employees.add(newEmployee);
+            } while(cursor.moveToNext());
+        } else {
+            // error, nothing added to the list
+        }
+
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+        return employees;
+
     }
 
     // retrieve data from the Employee table
