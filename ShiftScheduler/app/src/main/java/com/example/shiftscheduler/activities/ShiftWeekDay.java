@@ -77,9 +77,10 @@ public class ShiftWeekDay extends AppCompatActivity {
         addopenbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //check for the shift objects that have the date and shift type. (addShift) return the shift object
                 //schedule an employee for that shift (scheduleEmployee) will update the database
-
+                int employeeID = Integer.parseInt(selectedemp.getText().toString());
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                dbHelper.scheduleEmployee(employeeID, localDate, "MORNING");
 
                 //update Recycler Views
                 updateEmployeeList(localDate);
@@ -90,7 +91,12 @@ public class ShiftWeekDay extends AppCompatActivity {
         addclosebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //schedule an employee for that shift (scheduleEmployee) will update the database
+                int employeeID = Integer.parseInt(selectedemp.getText().toString());
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                dbHelper.scheduleEmployee(employeeID, localDate, "MORNING");
 
+                //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
             }
@@ -125,8 +131,8 @@ public class ShiftWeekDay extends AppCompatActivity {
             @Override
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
-                String fullName = employee.getFName() + " " + employee.getLName();
-                selectedemp.setText(fullName);
+                int empID = employee.getEmployeeID();
+                selectedemp.setText(empID);
 
             }
         });
