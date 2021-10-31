@@ -229,6 +229,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //Inserts new Work entry into the database
+    public boolean scheduleEmployee(int empID, LocalDate date, String time) {
+        int shiftID = 0;
+        //get data from the database
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE " + COL_DATE +
+                " = " + simpleDateFormat.format(date) + " AND " + COL_SHIFTTYPE + " = " + time;
+        SQLiteDatabase rdb = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = rdb.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            shiftID = cursor.getInt(0);
+        }
+        //close both db and cursor for others to access
+        cursor.close();
+        rdb.close();
+
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase wdb = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+
+        cv.put(COL_EMPID, empID);
+        cv.put(COL_SHIFTID, shiftID);
+
+        long success = wdb.insert(WORK_TABLE, null, cv);
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     /*********************************************************************************************
       Update methods
      *********************************************************************************************/
