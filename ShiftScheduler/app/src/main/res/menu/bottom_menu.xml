@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item
-        android:id="@+id/employeeList"
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_bar_behaviour">
+    <item android:title="Employees"
+        android:id="@+id/employeeFragment"
         android:enabled="true"
-        android:title="Employees"
-        android:icon="@drawable/ic_employee" />
-    <item
-        android:id="@+id/shiftCalendar"
+        android:icon="@drawable/ic_employee"/>
+    <item android:title="Schedule"
+        android:id="@+id/scheduleFragment"
         android:enabled="true"
-        android:title="Shifts"
         android:icon="@drawable/ic_calendar"/>
+    <item android:title="Settings"
+        android:id="@+id/settingsFragment"
+        android:enabled="true"
+        android:icon="@drawable/settings_icon"/>
 </menu>
