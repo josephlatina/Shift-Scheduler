@@ -1,18 +1,19 @@
 package com.example.shiftscheduler.activities;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
-
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 
 public class EmployeeList extends AppCompatActivity{
@@ -35,6 +36,9 @@ public class EmployeeList extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.employee_list);
 
@@ -51,7 +55,30 @@ public class EmployeeList extends AppCompatActivity{
                 startActivity(myIntent);
             }
         });
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch(item.getItemId()) {
+                        case R.id.employeeFragment:
+                            break;
+                        case R.id.settingsFragment:
+                            break;
+                        case R.id.scheduleFragment:
+                            Intent scheudleIntent = new Intent(EmployeeList.this, ShiftCalendar.class);
+                            startActivity(scheudleIntent);
+                            break;
+                    }
+                    return false;
+                }
+
+            };
 
     public void onResume() {
         super.onResume();
