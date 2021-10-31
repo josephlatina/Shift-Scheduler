@@ -14,6 +14,7 @@ import com.example.shiftscheduler.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ShiftCalendar extends AppCompatActivity {
     //references to layout controls
@@ -31,8 +32,8 @@ public class ShiftCalendar extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String date = year + "-" + month + "-" + dayOfMonth;
-                LocalDate localDate = LocalDate.parse(date);
+                String date = year + "-" + (month+1) + "-" + dayOfMonth;
+                LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
                 int dayOfWeek = localDate.getDayOfWeek().getValue();
 
                 //If It's a weekend, switch to the ShiftWeekEnd Activity. Otherwise, switch to ShiftWeekDay

@@ -14,6 +14,7 @@ import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.ShiftModel;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -164,7 +165,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         //Fill in the data for each column
-        cv.put(COL_DATE, simpleDateFormat.format(shiftModel.getDate()));
+        LocalDate date = shiftModel.getDate();
+        cv.put(COL_DATE, Date.valueOf(date.toString()).toString());
         cv.put(COL_SHIFTTYPE, shiftModel.getTime());
 
         //check if inserting into the database was successful or not
@@ -206,7 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int shiftID = 0;
         //get data from the database
         String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE " + COL_DATE +
-                " = " + simpleDateFormat.format(date) + " AND " + COL_SHIFTTYPE + " = " + time;
+                " = " + Date.valueOf(date.toString()) + " AND " + COL_SHIFTTYPE + " = " + time;
         SQLiteDatabase rdb = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
         Cursor cursor = rdb.rawQuery(queryString, null);
@@ -394,9 +396,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             queryString += " OR " + ShiftDay.get(0) + " = 3";
         }
         //check for employees that are already working in the given shift
-        queryString += "AND " + COL_AVAILABILITYID + " NOT IN ( SELECT W." + COL_EMPID + " FROM " + WORK_TABLE +
+        queryString += " AND " + COL_AVAILABILITYID + " NOT IN ( SELECT W." + COL_EMPID + " FROM " + WORK_TABLE +
                 " AS W, " + SHIFT_TABLE + " AS S WHERE W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND S." +
-                COL_DATE + " = " + simpleDateFormat.format(date) + " AND S." + COL_SHIFTTYPE + " = " + time;
+                COL_DATE + " = " + Date.valueOf(date.toString()) + " AND S." + COL_SHIFTTYPE + " = " + time + ")";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
@@ -427,7 +429,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String queryString = "SELECT * FROM " + EMPLOYEE_TABLE + " AS E, " + WORK_TABLE + " AS W, " +
                 SHIFT_TABLE + " AS E WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID +
                 " = S." + COL_SHIFTID + " AND S." + COL_SHIFTTYPE + " = " + time + " AND S." + COL_DATE +
-                " = " + simpleDateFormat.format(date);
+                " = " + Date.valueOf(date.toString());
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
         Cursor cursor = db.rawQuery(queryString, null);
