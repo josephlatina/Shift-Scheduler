@@ -5,6 +5,8 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.example.shiftscheduler.database.DatabaseHelper;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
@@ -95,10 +97,11 @@ public class DayModel {
 
     /**
      * Verifies the schedule for this day.
+     * @param database - DatabaseHelper object for the current session
      * @return whether day is valid
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public boolean verifyDay() {
+    public boolean verifyDay(DatabaseHelper database) {
         // check for proper shift existence based on day of week (should be guaranteed by other logic)
         DayOfWeek dow = date.getDayOfWeek();
         if (dow == DayOfWeek.SUNDAY || dow == DayOfWeek.SATURDAY) {
@@ -110,9 +113,9 @@ public class DayModel {
         }
 
         // check shifts themselves
-        if (morningShift != null && !morningShift.verifyShift()) {return false;}
-        if (eveningShift != null && !eveningShift.verifyShift()) {return false;}
-        if (fullShift != null && !fullShift.verifyShift()) {return false;}
+        if (morningShift != null && !morningShift.verifyShift(database)) {return false;}
+        if (eveningShift != null && !eveningShift.verifyShift(database)) {return false;}
+        if (fullShift != null && !fullShift.verifyShift(database)) {return false;}
 
         // day has passed verification
         return true;

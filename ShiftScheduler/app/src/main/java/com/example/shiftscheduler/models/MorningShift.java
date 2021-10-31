@@ -1,8 +1,15 @@
 package com.example.shiftscheduler.models;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
@@ -30,29 +37,18 @@ public class MorningShift extends ShiftModel {
     }
 
     /**
-     * Verifies all employees are available for this shift
-     * @return verified
-     */
-    @Override
-    protected boolean verifyEmployeeAvailability() {
-        // check all employees are available
-        for (EmployeeModel employee : getEmployees()) {
-            if (!employee.isAvailable(getDate(), time)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
      * Verifies this morning shift's employees' qualifications according to specifications
+     * @param database - DatabaseHelper object for the current session
      * @return verified
      */
     @Override
-    protected boolean verifyEmployeeQualifications() {
-        // check that at least one employee is qualified to open
+    protected boolean verifyEmployeeQualifications(DatabaseHelper database) {
+        List<Boolean> employeeQualifications;
         for (EmployeeModel employee : getEmployees()) {
-            // if this employee is qualified to open → return true
+            employeeQualifications = database.getQualifications(employee.getEmployeeID());
+            if (employeeQualifications.get(0)) { //employee is qualified to open
+                return true;
+            }
         }
         return false;
     }

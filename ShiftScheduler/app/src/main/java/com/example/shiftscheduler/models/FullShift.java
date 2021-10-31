@@ -1,9 +1,13 @@
 package com.example.shiftscheduler.models;
 
+import android.provider.ContactsContract;
+
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
@@ -31,31 +35,24 @@ public class FullShift extends ShiftModel {
     }
 
     /**
-     * Verifies all employees are available for this shift
+     * Verifies this full day shift's employees' qualifications according to specifications
+     * @param database - DatabaseHelper object for the current session
      * @return verified
      */
     @Override
-    protected boolean verifyEmployeeAvailability() {
-        // check that each employee is available
-        return true;
-    }
-
-    /**
-     * Verifies this morning shift's employees' qualifications according to specifications
-     * @return verified
-     */
-    @Override
-    protected boolean verifyEmployeeQualifications() {
+    protected boolean verifyEmployeeQualifications(DatabaseHelper database) {
         boolean openQualified = false;
         boolean closeQualified = false;
+        List<Boolean> employeeQualifications;
         // check that at least one employee is qualified to open
         // and that at least one employee is qualified to close
         for (EmployeeModel employee : getEmployees()) {
+            employeeQualifications = database.getQualifications(employee.getEmployeeID());
             if (!openQualified) {
-                //openQualified = (employee is qualified to open);
+                openQualified = employeeQualifications.get(0);
             }
             if (!closeQualified) {
-                //closeQualified = (employee is qualified to close);
+                closeQualified = employeeQualifications.get(1);
             }
             if (openQualified && closeQualified) {
                 return true;
