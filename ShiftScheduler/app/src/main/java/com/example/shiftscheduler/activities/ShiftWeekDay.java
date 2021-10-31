@@ -28,6 +28,8 @@ public class ShiftWeekDay extends AppCompatActivity {
     private ArrayList<EmployeeModel> employeeList;
     private ArrayList<EmployeeModel> availOpenEmployeeList;
     private ArrayList<EmployeeModel> availCloseEmployeeList;
+    private ArrayList<EmployeeModel> schedOpenEmployeeList;
+    private ArrayList<EmployeeModel> schedCloseEmployeeList;
     private RecyclerView schedOpenRecyclerView;
     private RecyclerView schedCloseRecyclerView;
     private RecyclerView availOpenRecyclerView;
@@ -77,6 +79,8 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //check for the shift objects that have the date and shift type. (addShift) return the shift object
                 //schedule an employee for that shift (scheduleEmployee) will update the database
 
+
+                //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
             }
@@ -99,13 +103,15 @@ public class ShiftWeekDay extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
         availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "MORNING");
         availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "EVENING");
+        schedOpenEmployeeList = (ArrayList) dbHelper.getScheduledEmployees(localDate, "MORNING");
+        schedCloseEmployeeList = (ArrayList) dbHelper.getScheduledEmployees(localDate, "EVENING");
     }
 
     public void buildAllRecyclerViews() {
-        buildRecyclerView(schedOpenRecyclerView, employeeList);
-        buildRecyclerView(schedCloseRecyclerView, employeeList);
         buildRecyclerView(availOpenRecyclerView, availOpenEmployeeList);
         buildRecyclerView(availCloseRecyclerView, availCloseEmployeeList);
+        buildRecyclerView(schedOpenRecyclerView, schedOpenEmployeeList);
+        buildRecyclerView(schedCloseRecyclerView, schedCloseEmployeeList);
     }
 
     public void buildRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
@@ -115,5 +121,13 @@ public class ShiftWeekDay extends AppCompatActivity {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnEmployeeClickListener(new EmployeeListAdapter.OnEmployeeClickListener() {
+            @Override
+            public void onEmployeeClick(int position) {
+                EmployeeModel employee = employeeList.get(position);
+//                empID = String.valueOf(employee.getEmployeeID());
+            }
+        });
     }
 }
