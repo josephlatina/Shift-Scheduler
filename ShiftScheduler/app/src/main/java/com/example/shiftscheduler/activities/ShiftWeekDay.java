@@ -23,7 +23,7 @@ public class ShiftWeekDay extends AppCompatActivity {
 
     //references to layout controls
     Button backbtn, addopenbtn, addclosebtn;
-    EditText shiftdate;
+    EditText shiftdate, selectedemp;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> employeeList;
     private ArrayList<EmployeeModel> availOpenEmployeeList;
@@ -48,6 +48,7 @@ public class ShiftWeekDay extends AppCompatActivity {
         addopenbtn = (Button) findViewById(R.id.addOpening);
         addclosebtn = (Button) findViewById(R.id.addClosing);
         shiftdate = (EditText) findViewById(R.id.shiftDate);
+        selectedemp = (EditText) findViewById(R.id.selectedEmployee);
         schedOpenRecyclerView = findViewById(R.id.scheduledOpeningEmployees);
         schedCloseRecyclerView = findViewById(R.id.scheduledClosingEmployees);
         availOpenRecyclerView = findViewById(R.id.availableOpeningEmployees);
@@ -94,8 +95,6 @@ public class ShiftWeekDay extends AppCompatActivity {
                 buildAllRecyclerViews();
             }
         });
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -108,13 +107,13 @@ public class ShiftWeekDay extends AppCompatActivity {
     }
 
     public void buildAllRecyclerViews() {
-        buildRecyclerView(availOpenRecyclerView, availOpenEmployeeList);
-        buildRecyclerView(availCloseRecyclerView, availCloseEmployeeList);
-        buildRecyclerView(schedOpenRecyclerView, schedOpenEmployeeList);
-        buildRecyclerView(schedCloseRecyclerView, schedCloseEmployeeList);
+        buildAvailRecyclerView(availOpenRecyclerView, availOpenEmployeeList);
+        buildAvailRecyclerView(availCloseRecyclerView, availCloseEmployeeList);
+        buildSchedRecyclerView(schedOpenRecyclerView, schedOpenEmployeeList);
+        buildSchedRecyclerView(schedCloseRecyclerView, schedCloseEmployeeList);
     }
 
-    public void buildRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
+    public void buildAvailRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         adapter = new EmployeeListAdapter(employeeList);
@@ -126,7 +125,28 @@ public class ShiftWeekDay extends AppCompatActivity {
             @Override
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
-//                empID = String.valueOf(employee.getEmployeeID());
+                String fullName = employee.getFName() + " " + employee.getLName();
+                selectedemp.setText(fullName);
+
+            }
+        });
+    }
+
+    public void buildSchedRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        adapter = new EmployeeListAdapter(employeeList);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+
+        adapter.setOnEmployeeClickListener(new EmployeeListAdapter.OnEmployeeClickListener() {
+            @Override
+            public void onEmployeeClick(int position) {
+//                EmployeeModel employee = employeeList.get(position);
+//                String fullName = employee.getFName() + " " + employee.getLName();
+//                selectedemp.setText(fullName);
+
             }
         });
     }

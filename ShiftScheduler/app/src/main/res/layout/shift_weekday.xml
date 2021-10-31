@@ -45,7 +45,7 @@
         app:layout_constraintHorizontal_bias="0.061"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.586" />
+        app:layout_constraintVertical_bias="0.572" />
 
     <Button
         android:id="@+id/dayBack"
@@ -148,20 +148,28 @@
 
     <EditText
         android:id="@+id/selectedEmployee"
-        android:layout_width="125dp"
+        android:layout_width="104dp"
         android:layout_height="48dp"
-        android:layout_marginStart="143dp"
-        android:layout_marginTop="455dp"
-        android:layout_marginEnd="143dp"
-        android:layout_marginBottom="234dp"
         android:ems="10"
-        android:gravity="center"
-        android:inputType="textPersonName"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.637"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+    <TextView
+        android:id="@+id/availableEmpID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empID"
         android:textSize="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:layout_constraintVertical_bias="0.672" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

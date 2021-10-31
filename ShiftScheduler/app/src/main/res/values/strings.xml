@@ -46,6 +46,7 @@
     <string name="morning">Morning</string>
     <string name="availableEmployees">Available Employees</string>
     <string name="scheduledEmployees">Scheduled Employees</string>
+    <string name="empID">Employee ID</string>
 
 
 </resources>
