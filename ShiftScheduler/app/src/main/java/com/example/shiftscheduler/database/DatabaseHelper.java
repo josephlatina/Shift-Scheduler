@@ -53,7 +53,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_SATSHIFT = "SATSHIFT";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
 
-    /* QUERY STRINGS TO CREATE TABLES */
+    /***********************************************************************************
+     QUERY STRINGS TO CREATE TABLES
+     **********************************************************************************/
+
     //Create Employee Table
     private String createEmployeeTable = "CREATE TABLE " + EMPLOYEE_TABLE + "(" +
             COL_EMPID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -92,7 +95,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, "shiftscheduler.db", null, 1);
     }
 
-    //When App launches, method called to create a new database. Also automatically called when app requests or inputs new data
+    /*********************************************************************************************
+     When App launches, method called to create a new database. Also automatically called
+     when app requests or inputs new data
+   **********************************************************************************************/
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         //create the Employee table
@@ -112,7 +119,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-
+    /*********************************************************************************************
+     Add/Insert methods
+     *********************************************************************************************/
 
     //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
@@ -220,6 +229,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /*********************************************************************************************
+      Update methods
+     *********************************************************************************************/
+
     //Update Qualification Table with the employeeID, and boolean values for morning, evening and fullDay
     public void updateQualification(int employeeID, int morning, int evening) {
         //Retrieve the database already created and create an instance of database to hold it
@@ -233,6 +246,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(queryString);
     }
 
+    //Update Availability Table with the employeeID,
+    public void updateAvailability(int employeeID, int sunShift, int monShift,
+                                   int tueShift, int wedShift, int thursShift,
+                                   int friShift, int satShift) {
+        // retrieve the database already created and create an instance if database
+        SQLiteDatabase db = this.getWritableDatabase(); //open the database from db
+        ContentValues cv = new ContentValues();
+
+        String queryString = "UPDATE " + AVAILABILITY_TABLE + " SET " +
+                COL_SUNSHIFT + " = " + sunShift + ", " +
+                COL_MONSHIFT + " = " + monShift + ", " +
+                COL_TUESHIFT + " = " + tueShift + ", " +
+                COL_WEDSHIFT + " = " + wedShift + ", " +
+                COL_THURSSHIFT + " = " + thursShift + ", " +
+                COL_FRISHIFT + " = " + friShift + ", " +
+                COL_SATSHIFT + " = " + satShift +
+                " WHERE " + COL_AVAILABILITYID + " = " + employeeID;
+
+        db.execSQL(queryString);
+    }
+
+    /*********************************************************************************************
+     Get methods
+     *********************************************************************************************/
     public List<Boolean> getQualifications(int employeeID) {
         List<Boolean> returnList = new ArrayList<>();
 
@@ -391,6 +428,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return returnList;
     }
 
+    // retrieve data from availability table
     public AvailabilityModel getAvailability(int employeeID) {
         //get data from the database
         String queryString = "SELECT * FROM " + AVAILABILITY_TABLE + " WHERE " + COL_AVAILABILITYID
