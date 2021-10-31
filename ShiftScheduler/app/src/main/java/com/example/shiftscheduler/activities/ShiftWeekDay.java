@@ -15,9 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
-import com.example.shiftscheduler.models.EveningShift;
-import com.example.shiftscheduler.models.MorningShift;
-import com.example.shiftscheduler.models.ShiftModel;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -100,9 +97,6 @@ public class ShiftWeekDay extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateEmployeeList(LocalDate localDate) {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-        //dummy shift objects. It just needs the shift type and local date to get the query
-        ShiftModel morningShift = new MorningShift(0, localDate, null, 0);
-        ShiftModel eveningShift = new EveningShift(0, localDate, null, 0);
         availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "MORNING");
         availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "EVENING");
     }
