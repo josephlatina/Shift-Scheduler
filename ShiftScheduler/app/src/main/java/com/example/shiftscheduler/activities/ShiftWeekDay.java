@@ -22,7 +22,7 @@ import com.example.shiftscheduler.models.ShiftModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class ShiftDay extends AppCompatActivity {
+public class ShiftWeekDay extends AppCompatActivity {
 
     //references to layout controls
     Button backbtn, addopenbtn, addclosebtn;
@@ -42,7 +42,7 @@ public class ShiftDay extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.shift_day);
+        setContentView(R.layout.shift_weekday);
 
         //Link the layout controls
         backbtn = (Button) findViewById(R.id.dayBack);
@@ -67,7 +67,7 @@ public class ShiftDay extends AppCompatActivity {
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(ShiftDay.this, ShiftCalendar.class);
+                Intent myIntent = new Intent(ShiftWeekDay.this, ShiftCalendar.class);
                 startActivity(myIntent);
             }
         });
@@ -99,7 +99,7 @@ public class ShiftDay extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateEmployeeList(LocalDate localDate) {
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftDay.this);
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
         //dummy shift objects. It just needs the shift type and local date to get the query
         ShiftModel morningShift = new MorningShift(0, localDate, null, 0);
         ShiftModel eveningShift = new EveningShift(0, localDate, null, 0);

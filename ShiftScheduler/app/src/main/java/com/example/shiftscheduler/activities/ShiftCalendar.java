@@ -27,7 +27,7 @@ public class ShiftCalendar extends AppCompatActivity {
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 String date = year + "-" + month + "-" + dayOfMonth;
 
-                Intent myIntent = new Intent(ShiftCalendar.this, ShiftDay.class);
+                Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekDay.class);
                 myIntent.putExtra("date", date);
                 startActivity(myIntent);
             }
