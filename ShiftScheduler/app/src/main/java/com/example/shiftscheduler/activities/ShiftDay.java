@@ -103,8 +103,8 @@ public class ShiftDay extends AppCompatActivity {
         //dummy shift objects. It just needs the shift type and local date to get the query
         ShiftModel morningShift = new MorningShift(0, localDate, null, 0);
         ShiftModel eveningShift = new EveningShift(0, localDate, null, 0);
-        availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(morningShift);
-        availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(eveningShift);
+        availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "MORNING");
+        availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "EVENING");
     }
 
     public void buildAllRecyclerViews() {

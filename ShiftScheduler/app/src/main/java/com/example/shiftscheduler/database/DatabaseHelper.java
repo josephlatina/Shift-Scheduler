@@ -332,12 +332,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // retrieve employees with availability open for the given shift
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public List<EmployeeModel> getAvailableEmployees(ShiftModel shift) {
+    public List<EmployeeModel> getAvailableEmployees(LocalDate date, String time) {
         //Initialize Lists
         List<Integer> employeeIDs = new ArrayList<>();
         List<EmployeeModel> employees = new ArrayList<>();
         //extract day of the week and store result in ShiftDay
-        LocalDate date = shift.getDate();
         int dayOfWeek = date.getDayOfWeek().getValue();
         List<String> ShiftDay = new ArrayList<>();
         switch (dayOfWeek) {
@@ -350,7 +349,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case 7: ShiftDay.add(COL_SUNSHIFT); break;
         }
         //extract shift time
-        String time = shift.getTime();
         int ShiftTime = 0;
         switch (time) {
             case "MORNING": ShiftTime = 1; break;
