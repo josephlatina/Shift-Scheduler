@@ -1,25 +1,19 @@
 package com.example.shiftscheduler.activities;
 
 
-import static androidx.navigation.Navigation.findNavController;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.ArrayList;
 
 public class EmployeeList extends AppCompatActivity{
@@ -63,11 +57,11 @@ public class EmployeeList extends AppCompatActivity{
         });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        bottomNavigationView.setOnNavigationItemSelectedListener(navlistener);
+        bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navlistener =
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -75,12 +69,10 @@ public class EmployeeList extends AppCompatActivity{
                         case R.id.employeeFragment:
                             break;
                         case R.id.settingsFragment:
-                            Intent settingIntent = new Intent(EmployeeList.this, EmployeeAddForm.class);
-                            startActivity(settingIntent);
                             break;
                         case R.id.scheduleFragment:
-                            Intent ScheudleIntent = new Intent(EmployeeList.this, ShiftCalendar.class);
-                            startActivity(ScheudleIntent);
+                            Intent scheudleIntent = new Intent(EmployeeList.this, ShiftCalendar.class);
+                            startActivity(scheudleIntent);
                             break;
                     }
                     return false;
