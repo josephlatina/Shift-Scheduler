@@ -369,7 +369,7 @@
             app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
 
         <CheckBox
-            android:id="@+id/editInfoAvialMonMorn"
+            android:id="@+id/editInfoAvailMonMorn"
             android:layout_width="25dp"
             android:layout_height="25dp"
             app:layout_constraintBottom_toTopOf="@+id/editInfoTuesdayLabel"
