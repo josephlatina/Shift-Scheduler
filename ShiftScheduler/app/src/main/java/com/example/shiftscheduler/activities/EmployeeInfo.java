@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
+import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 
 import java.util.List;
@@ -25,6 +26,8 @@ public class EmployeeInfo extends AppCompatActivity {
     ImageButton backbtn;
     String empID;
     CheckBox opening, closing;
+    CheckBox AvailMonMorn, AvailTuesMorn, AvailWedMorn, AvailThursMorn, AvailFriMorn, AvailSat, AvailSun;
+    CheckBox AvailMonEven, AvailTuesEven, AvailWedEven, AvailThursEven, AvailFriEven;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,30 @@ public class EmployeeInfo extends AppCompatActivity {
         closing = (CheckBox) findViewById(R.id.infoQualClosingCheckBox);
         opening.setEnabled(false);
         closing.setEnabled(false);
+        AvailMonMorn = (CheckBox) findViewById(R.id.infoAvailMonMorn);
+        AvailTuesMorn = (CheckBox) findViewById(R.id.infoAvailTuesMorn);
+        AvailWedMorn = (CheckBox) findViewById(R.id.infoAvailWedMorn);
+        AvailThursMorn = (CheckBox) findViewById(R.id.infoAvailThursMorn);
+        AvailFriMorn = (CheckBox) findViewById(R.id.infoAvailFriMorn);
+        AvailSat = (CheckBox) findViewById(R.id.infoAvailSat);
+        AvailSun = (CheckBox) findViewById(R.id.infoAvailSun);
+        AvailMonEven = (CheckBox) findViewById(R.id.infoAvailMonEven);
+        AvailTuesEven = (CheckBox) findViewById(R.id.infoAvailTuesEven);
+        AvailWedEven = (CheckBox) findViewById(R.id.infoAvailWedEven);
+        AvailThursEven = (CheckBox) findViewById(R.id.infoAvailThursEven);
+        AvailFriEven = (CheckBox) findViewById(R.id.infoAvailFriEven);
+        AvailMonMorn.setEnabled(false);
+        AvailTuesMorn.setEnabled(false);
+        AvailWedMorn.setEnabled(false);
+        AvailThursMorn.setEnabled(false);
+        AvailFriMorn.setEnabled(false);
+        AvailMonEven.setEnabled(false);
+        AvailTuesEven.setEnabled(false);
+        AvailWedEven.setEnabled(false);
+        AvailThursEven.setEnabled(false);
+        AvailFriEven.setEnabled(false);
+        AvailSat.setEnabled(false);
+        AvailSun.setEnabled(false);
 
         //Populate fields with employee information
         Intent intent = getIntent();
@@ -79,6 +106,7 @@ public class EmployeeInfo extends AppCompatActivity {
         empID = intent.getStringExtra((EmployeeEditForm.EMPLOYEE_ID));
         updateProfile(empID);
         updateQualifications(empID);
+        updateAvailability(empID);
     }
 
     public void updateProfile(String empID) {
@@ -109,5 +137,114 @@ public class EmployeeInfo extends AppCompatActivity {
                 } else { closing.setChecked(false); }
             }
         }
+    }
+
+    public void updateAvailability(String empID) {
+        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeInfo.this);
+        AvailabilityModel avail = dbHelper.getAvailability(Integer.parseInt(empID));
+
+        // update each day's availability in a week
+        // mon availability
+        if (avail.getMonShift() == 1) {
+            AvailMonMorn.setChecked(true);
+            AvailMonEven.setChecked(false);
+        }
+        if (avail.getMonShift() == 2) {
+            AvailMonMorn.setChecked(false);
+            AvailMonEven.setChecked(true);
+        }
+        if (avail.getMonShift() == 3) {
+            AvailMonMorn.setChecked(true);
+            AvailMonEven.setChecked(true);
+        }
+
+        if (avail.getMonShift() < 1 || avail.getMonShift() > 3){
+            AvailMonMorn.setChecked(false);
+            AvailMonEven.setChecked(false);
+        }
+
+        // tue availability
+        if (avail.getTueShift() == 1) {
+            AvailTuesMorn.setChecked(true);
+            AvailTuesEven.setChecked(false);
+        }
+        if (avail.getTueShift() == 2) {
+            AvailTuesMorn.setChecked(false);
+            AvailTuesEven.setChecked(true);
+        }
+        if (avail.getTueShift() == 3) {
+            AvailTuesMorn.setChecked(true);
+            AvailTuesEven.setChecked(true);
+        }
+
+        if (avail.getTueShift() < 1 || avail.getTueShift() > 3){
+            AvailTuesMorn.setChecked(false);
+            AvailTuesEven.setChecked(false);
+        }
+
+        //wed availability
+        if (avail.getWedShift() == 1) {
+            AvailWedMorn.setChecked(true);
+            AvailWedEven.setChecked(false);
+        }
+        if (avail.getWedShift() == 2) {
+            AvailWedMorn.setChecked(false);
+            AvailWedEven.setChecked(true);
+        }
+        if (avail.getWedShift() == 3) {
+            AvailWedMorn.setChecked(true);
+            AvailWedEven.setChecked(true);
+        }
+        if (avail.getWedShift() < 1 || avail.getWedShift() > 3){
+            AvailWedMorn.setChecked(false);
+            AvailWedEven.setChecked(false);
+        }
+
+        // thurs availability
+        if (avail.getThursShift() == 1) {
+            AvailThursMorn.setChecked(true);
+            AvailThursEven.setChecked(false);
+        }
+        if (avail.getThursShift() == 2) {
+            AvailThursMorn.setChecked(false);
+            AvailThursEven.setChecked(true);
+        }
+        if (avail.getThursShift() == 3) {
+            AvailThursMorn.setChecked(true);
+            AvailThursEven.setChecked(true);
+        }
+        if (avail.getThursShift() < 1 || avail.getThursShift() > 3){
+            AvailThursMorn.setChecked(false);
+            AvailThursEven.setChecked(false);
+        }
+
+        // fri availability
+        if (avail.getFriShift() == 1) {
+            AvailFriMorn.setChecked(true);
+            AvailFriEven.setChecked(false);
+        }
+        if (avail.getFriShift() == 2) {
+            AvailFriMorn.setChecked(false);
+            AvailFriEven.setChecked(true);
+        }
+        if (avail.getFriShift() == 3) {
+            AvailFriMorn.setChecked(true);
+            AvailFriEven.setChecked(true);
+        }
+        if (avail.getFriShift() < 1 || avail.getFriShift() > 3){
+            AvailFriMorn.setChecked(false);
+            AvailFriEven.setChecked(false);
+        }
+
+        // weekend's availability
+        if (avail.getSatShift() == 1) {
+            AvailSat.setChecked(true);
+        } else AvailSat.setChecked(false);
+
+        if (avail.getSunShift() == 1) {
+            AvailSun.setChecked(true);
+        } else AvailSun.setChecked(false);
+
+
     }
 }
