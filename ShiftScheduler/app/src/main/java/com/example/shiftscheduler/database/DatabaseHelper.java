@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -14,6 +15,7 @@ import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.ShiftModel;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -63,7 +65,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_FNAME + " TEXT," + COL_LNAME + " TEXT," +
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
-            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER)";
+            COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER," +
+            COL_QUALIFICATIONID + " INTEGER," + COL_AVAILABILITYID + " INTEGER," +
+            "FOREIGN KEY (" + COL_QUALIFICATIONID + ") REFERENCES " + QUALIFICATIONS_TABLE + "(" + COL_QUALIFICATIONID + "), " +
+            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + "))";
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -125,8 +130,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
-        //Retrieve the database already created and create an instance of database to hold it
+        //Create empty entry for Qualifications and Availability Tables corresponding to new employee
+        AvailabilityModel availability = new AvailabilityModel(0,0,3,0,0,0,0,0);
+        addAvailability(availability);
+        String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
+
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        db.execSQL(addQualifications);
+        String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
+        Cursor cur = db.rawQuery(getID, null);
+        cur.moveToFirst();
+        int avaID = cur.getInt(0);
+        cur.close();
+
+        //Retrieve the database already created and create an instance of database to hold it
+
         ContentValues cv = new ContentValues();
 
         //Fill in the data for each column
@@ -140,16 +158,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_PHONENUM, employeeModel.getPhoneNum());
         cv.put(COL_EMAIL, employeeModel.getEmail());
         cv.put(COL_ISACTIVE, "1");
-
-        //Create empty entry for Qualifications and Availability Tables corresponding to new employee
-        String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
-        String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
-        db.execSQL(addQualifications);
-        db.execSQL(addAvailability);
-
+        cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
+        cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
+
+        db.close();
         if (success == -1) {
             return false;
         } else {
@@ -158,22 +173,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Inserts new Shift entry into the database
-    public boolean addShift(ShiftModel shiftModel) {
+    public boolean addShift(LocalDate date, String time) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
-
-        //Fill in the data for each column
-        cv.put(COL_DATE, simpleDateFormat.format(shiftModel.getDate()));
-        cv.put(COL_SHIFTTYPE, shiftModel.getTime());
-
-        //check if inserting into the database was successful or not
-        long success = db.insert(SHIFT_TABLE,null,cv);
-        if (success == -1) {
+        //get data from the database
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            //this indicates that the given shift already exists. Exit to prevent duplication of data
             return false;
         } else {
-            return true;
+            //Fill in the data for each column
+            cv.put(COL_DATE, String.valueOf(Date.valueOf(date.toString())));
+            cv.put(COL_SHIFTTYPE, time);
+
+            //check if inserting into the database was successful or not
+            long success = db.insert(SHIFT_TABLE,null,cv);
+            db.close();
+            if (success == -1) {
+                return false;
+            } else {
+                return true;
+            }
         }
+
+
     }
 
     //Inserts new Availability entry into the database
@@ -183,7 +211,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         //Fill in the data for each column
-        cv.put(COL_AVAILABILITYID, availabilityModel.getAvailabilityID());
         cv.put(COL_SUNSHIFT, availabilityModel.getSunShift());
         cv.put(COL_MONSHIFT, availabilityModel.getMonShift());
         cv.put(COL_TUESHIFT, availabilityModel.getTueShift());
@@ -194,6 +221,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //check if inserting into the database was successful or not
         long success = db.insert(AVAILABILITY_TABLE,null,cv);
+        db.close();
         if (success == -1) {
             return false;
         } else {
@@ -205,27 +233,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public boolean scheduleEmployee(int empID, LocalDate date, String time) {
         int shiftID = 0;
         //get data from the database
-        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE " + COL_DATE +
-                " = " + simpleDateFormat.format(date) + " AND " + COL_SHIFTTYPE + " = " + time;
-        SQLiteDatabase rdb = this.getReadableDatabase();
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        SQLiteDatabase db = this.getWritableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = rdb.rawQuery(queryString, null);
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) {
             shiftID = cursor.getInt(0);
+        } else {
         }
-        //close both db and cursor for others to access
-        cursor.close();
-        rdb.close();
 
         //Retrieve the database already created and create an instance of database to hold it
-        SQLiteDatabase wdb = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
 
         cv.put(COL_EMPID, empID);
         cv.put(COL_SHIFTID, shiftID);
 
-        long success = wdb.insert(WORK_TABLE, null, cv);
+        long success = db.insert(WORK_TABLE, null, cv);
+
+        //close both cursor and db
+        cursor.close();
+        db.close();
         if (success == -1) {
             return false;
         } else {
@@ -387,20 +416,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             case "FULL": ShiftTime = 1; break;
         }
         //create query string
-        String queryString = "SELECT " + COL_AVAILABILITYID + " FROM " + AVAILABILITY_TABLE + " WHERE " + ShiftDay.get(0) +
-                " = " + ShiftTime;
+        String queryString = "SELECT E." + COL_EMPID + " FROM " + AVAILABILITY_TABLE + " AS A, " +
+                EMPLOYEE_TABLE + " AS E " + " WHERE E." + COL_AVAILABILITYID + " = A." + COL_AVAILABILITYID +
+                " AND (A." + ShiftDay.get(0) + " = " + ShiftTime;
         //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
         if (dayOfWeek != 6 && dayOfWeek != 7) {
-            queryString += " OR " + ShiftDay.get(0) + " = 3";
+            queryString += " OR A." + ShiftDay.get(0) + " = 3)";
         }
         //check for employees that are already working in the given shift
-        queryString += "AND " + COL_AVAILABILITYID + " NOT IN ( SELECT W." + COL_EMPID + " FROM " + WORK_TABLE +
-                " AS W, " + SHIFT_TABLE + " AS S WHERE W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND S." +
-                COL_DATE + " = " + simpleDateFormat.format(date) + " AND S." + COL_SHIFTTYPE + " = " + time;
+        queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + WORK_TABLE +
+                " AS W, " + SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND DATE(S." +
+                COL_DATE + ") = ? )";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, null);
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set
             //loop through the results
@@ -424,13 +454,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<EmployeeModel> employees = new ArrayList<>();
 
         //get data from the database
-        String queryString = "SELECT * FROM " + EMPLOYEE_TABLE + " AS E, " + WORK_TABLE + " AS W, " +
-                SHIFT_TABLE + " AS E WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID +
-                " = S." + COL_SHIFTID + " AND S." + COL_SHIFTTYPE + " = " + time + " AND S." + COL_DATE +
-                " = " + simpleDateFormat.format(date);
+        String queryString = "SELECT E." + COL_EMPID + "," + COL_FNAME + "," + COL_LNAME + "," +
+                COL_CITY + "," + COL_STREET + "," + COL_PROVINCE + "," + COL_POSTAL + "," +
+                COL_DOB + "," + COL_PHONENUM + "," + COL_EMAIL + "," + COL_ISACTIVE +
+                " FROM " + EMPLOYEE_TABLE + " AS E, " + WORK_TABLE + " AS W, " +
+                SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID +
+                " = S." + COL_SHIFTID + " AND DATE(S." + COL_DATE +
+                ") = ? AND S." + COL_SHIFTTYPE + " = ? ";
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, null);
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()){ //move it to the first of the result set
             //loop through the results
