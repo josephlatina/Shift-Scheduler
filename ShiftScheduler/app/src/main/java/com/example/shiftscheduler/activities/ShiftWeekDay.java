@@ -100,6 +100,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedavailemp.getText().clear();
             }
         });
         //Button listener for Adding Closing Employees
@@ -114,6 +115,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedavailemp.getText().clear();
             }
         });
         //Button listener for Removing Opening Employees
@@ -128,6 +130,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedschedemp.getText().clear();
             }
         });
         //Button listener for Removing Closing Employees
@@ -142,6 +145,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedschedemp.getText().clear();
             }
         });
     }

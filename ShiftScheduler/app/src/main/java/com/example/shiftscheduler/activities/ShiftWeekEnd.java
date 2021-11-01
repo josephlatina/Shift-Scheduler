@@ -87,9 +87,10 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedavailemp.getText().clear();
             }
         });
-        //Button listener for Adding Closing Employees
+        //Button listener for Removing FullDay Employees
         removebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,6 +102,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedschedemp.getText().clear();
             }
         });
     }
