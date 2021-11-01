@@ -39,8 +39,8 @@ public class EmployeeInfo extends AppCompatActivity {
         dateOfBirth = (EditText) findViewById(R.id.infoDOB);
         editbtn = (Button) findViewById(R.id.infoEditButton);
         backbtn = (ImageButton) findViewById(R.id.info_back);
-        opening = (CheckBox) findViewById(R.id.openingCheckBox);
-        closing = (CheckBox) findViewById(R.id.closingCheckBox);
+        opening = (CheckBox) findViewById(R.id.infoQualOpeningCheckBox);
+        closing = (CheckBox) findViewById(R.id.infoQualClosingCheckBox);
         opening.setEnabled(false);
         closing.setEnabled(false);
 

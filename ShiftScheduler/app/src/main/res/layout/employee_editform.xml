@@ -1,225 +1,525 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/infoQualificationsLabelEdit"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:focusable="false"
-        android:gravity="center"
-        android:inputType="textPersonName"
-        android:text="@string/qualifications"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.738"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:context=".activities.EmployeeEditForm">
 
-    <CheckBox
-        android:id="@+id/closingCheckBoxEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/closing"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.665"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.822" />
+        <EditText
+            android:id="@+id/editInfoPreferencesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="815dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="@string/preferences"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-    <CheckBox
-        android:id="@+id/openingCheckBoxEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/opening"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.299"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.822" />
+        <CheckBox
+            android:id="@+id/editPrefOpenCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/opening"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoPreferencesLabel"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintStart_toStartOf="@+id/editInfoPreferencesLabel"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoPreferencesLabel"
+            app:layout_constraintVertical_bias="0.08" />
 
-    <EditText
-        android:id="@+id/lastNameEdit"
-        android:layout_width="126dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/last_name"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.775"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.159" />
+        <CheckBox
+            android:id="@+id/editPrefCloseCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/closing"
+            app:layout_constraintBottom_toBottomOf="@+id/editPrefOpenCheckBox"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoPreferencesLabel"
+            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintStart_toStartOf="@+id/editInfoPreferencesLabel"
+            app:layout_constraintTop_toTopOf="@+id/editPrefOpenCheckBox"
+            app:layout_constraintVertical_bias="0.02" />
 
-    <EditText
-        android:id="@+id/firstNameEdit"
-        android:layout_width="126dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/first_name"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.196"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.159" />
+        <ImageButton
+            android:id="@+id/editInfo_back"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.038"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/back_arrow" />
 
-    <EditText
-        android:id="@+id/DOBEdit"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/date_of_birth"
-        android:inputType="date"
-        android:minHeight="48dp"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.254" />
+        <EditText
+            android:id="@+id/editInfoQualificationsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="@string/qualifications"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editStreetAddress"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-    <EditText
-        android:id="@+id/phoneNumberEdit"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/phone_number"
-        android:inputType="phone"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.433"
-        tools:ignore="TouchTargetSizeCheck" />
+        <CheckBox
+            android:id="@+id/editQualClosingCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/closing"
+            app:layout_constraintBottom_toBottomOf="@+id/editQualOpeningCheckBox"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoQualificationsLabel"
+            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintStart_toStartOf="@+id/editInfoQualificationsLabel"
+            app:layout_constraintTop_toTopOf="@+id/editQualOpeningCheckBox"
+            app:layout_constraintVertical_bias="0.822" />
 
-    <EditText
-        android:id="@+id/streetAddressEdit"
-        android:layout_width="126dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/street_address"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.196"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.62" />
+        <CheckBox
+            android:id="@+id/editQualOpeningCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/opening"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoQualificationsLabel"
+            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintStart_toStartOf="@+id/editInfoQualificationsLabel"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoQualificationsLabel"
+            app:layout_constraintVertical_bias="0.02" />
 
-    <EditText
-        android:id="@+id/postalCodeEdit"
-        android:layout_width="126dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/postal_code"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.775"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.62" />
+        <EditText
+            android:id="@+id/editLastName"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/last_name"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/editFirstName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.747"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editFirstName"
+            app:layout_constraintVertical_bias="0.128" />
 
-    <EditText
-        android:id="@+id/cityEdit"
-        android:layout_width="126dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/city"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.196"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.522" />
+        <EditText
+            android:id="@+id/editFirstName"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/first_name"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.196"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.128" />
 
-    <EditText
-        android:id="@+id/provinceEdit"
-        android:layout_width="126dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/province"
-        android:inputType="textPersonName"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.775"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.522" />
+        <EditText
+            android:id="@+id/editDOB"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/date_of_birth"
+            android:inputType="date"
+            android:minHeight="48dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.265"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editFirstName"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/emailEdit"
-        android:layout_width="200dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:minHeight="48dp"
-        android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.265"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.344" />
+        <EditText
+            android:id="@+id/editPhoneNumber"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/phone_number"
+            android:inputType="phone"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.265"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editEmail"
+            app:layout_constraintVertical_bias="0.063"
+            tools:ignore="TouchTargetSizeCheck" />
 
-    <Button
-        android:id="@+id/saveEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:text="@string/save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        <EditText
+            android:id="@+id/editStreetAddress"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/street_address"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.196"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editCity"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/BackEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="3dp"
-        android:text="@string/back"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/editPostalCode"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/postal_code"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/editStreetAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.768"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editStreetAddress"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <Switch
-        android:id="@+id/isActiveEdit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:text="@string/isActive"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.783"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.061" />
+        <EditText
+            android:id="@+id/editCity"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/city"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.196"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editPhoneNumber"
+            app:layout_constraintVertical_bias="0.0" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <EditText
+            android:id="@+id/editProvince"
+            android:layout_width="126dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/province"
+            android:inputType="textPersonName"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="@+id/editCity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.768"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editCity"
+            app:layout_constraintVertical_bias="0.325" />
+
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:ems="10"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:minHeight="48dp"
+            android:text=""
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.265"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editDOB"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/editSave"
+            android:layout_width="156dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="940dp"
+            android:text="@string/save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/infoAvailibilityLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="550dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="@string/availability"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/editInfoMorningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="64dp"
+            android:text="@string/morning"
+            app:layout_constraintStart_toEndOf="@+id/editInfoMondayLabel"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
+
+        <TextView
+            android:id="@+id/editInfoMondayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/monday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoMorningLabel" />
+
+        <TextView
+            android:id="@+id/editInfoWednesdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/wednesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoTuesdayLabel" />
+
+        <TextView
+            android:id="@+id/editInfoThursdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/thursday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoWednesdayLabel" />
+
+        <TextView
+            android:id="@+id/editInfoFridayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/friday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoThursdayLabel" />
+
+        <TextView
+            android:id="@+id/editInfoSaturdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/saturday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoFridayLabel" />
+
+        <TextView
+            android:id="@+id/editInfoSundayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/sunday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoSaturdayLabel" />
+
+        <TextView
+            android:id="@+id/editInfoTuesdayLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/tuesday"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editInfoMondayLabel" />
+
+        <TextView
+            android:id="@+id/editInfoEveningLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/evening"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.366"
+            app:layout_constraintStart_toEndOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvialMonMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/editInfoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoMondayLabel" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailTuesMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoTuesdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailWedMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoWednesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoWednesdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailThursMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoThursdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoThursdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailFriMorn"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoFridayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoMorningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoFridayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailSat"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoSaturdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoSaturdayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailSun"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoSundayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoSundayLabel"
+            app:layout_constraintVertical_bias="0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailMonEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/editInfoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoMondayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailTuesEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="7dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoTuesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoTuesdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailWedEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="17dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoWednesdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoWednesdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailThursEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginBottom="18dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoThursdayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoThursdayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <CheckBox
+            android:id="@+id/editInfoAvailFriEven"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            app:layout_constraintBottom_toBottomOf="@+id/editInfoFridayLabel"
+            app:layout_constraintEnd_toEndOf="@+id/editInfoEveningLabel"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/editInfoEveningLabel"
+            app:layout_constraintTop_toTopOf="@+id/editInfoFridayLabel"
+            app:layout_constraintVertical_bias="0.0" />
+
+
+        <Switch
+            android:id="@+id/editIsActive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:text="@string/isActive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.783"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.061" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
