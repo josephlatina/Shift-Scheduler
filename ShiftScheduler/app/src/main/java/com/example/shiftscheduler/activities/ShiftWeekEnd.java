@@ -22,8 +22,8 @@ public class ShiftWeekEnd extends AppCompatActivity {
         setContentView(R.layout.shift_weekend);
 
         //Link the layout controls
-        backbtn = (Button) findViewById(R.id.weekendBack);
-        shiftdate = (EditText) findViewById(R.id.shiftDateWeekEnd);
+        backbtn = (Button) findViewById(R.id.weekEndBack);
+        shiftdate = (EditText) findViewById(R.id.weekEndShiftDate);
 
         //receive intent
         Intent incomingIntent = getIntent();
