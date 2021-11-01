@@ -137,25 +137,4 @@ public class EmployeeModel {
                 ", isActive=" + isActive +
                 '}';
     }
-
-    /**
-     * Checks this employee's availability on a given day.
-     * @param date - requested LocalDate
-     * @return available
-     */
-    public boolean isAvailable(LocalDate date) {
-        // check this employee's availability at ANY point on this date
-        return false; //if not available
-    }
-
-    /**
-     * Checks this employee's availability on a given day at a specific time.
-     * @param date - requested LocalDate
-     * @param time - requested ShiftTime
-     * @return available
-     */
-    public boolean isAvailable(LocalDate date, ShiftTime time) {
-        // check this employee's availability on this date/time
-        return false; //if not available
-    }
 }
