@@ -32,8 +32,11 @@
     <string name="calendarText">Select a day to get started</string>
     <string name="openingShift">Opening Shift</string>
     <string name="closingShift">Closing Shift</string>
+    <string name="fullShift">Full Day Shift</string>
     <string name="addOpening">Add \n Opening Employee</string>
     <string name="addClosing">Add \n Closing Employee</string>
+    <string name="addFullDay">Add \n Employee</string>
+    <string name="removeFullDay">Remove \n Employee</string>
     <string name="opening">Opening</string>
     <string name="saturday">Saturday</string>
     <string name="evening">Evening</string>

@@ -131,7 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
         //Create empty entry for Qualifications and Availability Tables corresponding to new employee
-        AvailabilityModel availability = new AvailabilityModel(0,0,3,0,0,0,0,0);
+        AvailabilityModel availability = new AvailabilityModel(0,1,3,3,3,3,3,1);
         addAvailability(availability);
         String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
 
@@ -422,6 +422,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
         if (dayOfWeek != 6 && dayOfWeek != 7) {
             queryString += " OR A." + ShiftDay.get(0) + " = 3)";
+        } else {
+            queryString += ")";
         }
         //check for employees that are already working in the given shift
         queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + WORK_TABLE +
@@ -561,5 +563,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return availability;
+    }
+
+    /*********************************************************************************************
+     Remove methods
+     *********************************************************************************************/
+    //Removes work entry from the database
+    public boolean descheduleEmployee(int empID, LocalDate date, String time) {
+        int shiftID = 0;
+        //Retrieve the shiftID that corresponds to given date and time
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            shiftID = cursor.getInt(0);
+        } else {
+        }
+
+        //Remove work entry from database
+        long success = db.delete(WORK_TABLE, COL_EMPID + " = ? AND " + COL_SHIFTID +
+                " = ? ", new String[] {String.valueOf(empID),String.valueOf(shiftID)});
+
+        //close both cursor and db
+        cursor.close();
+        db.close();
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

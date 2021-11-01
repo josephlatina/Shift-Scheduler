@@ -32,7 +32,14 @@ public class ShiftCalendar extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                String date = year + "-" + (month+1) + "-" + dayOfMonth;
+                //Concatenate to convert date into string format
+                String date = year + "-" + (month+1) + "-";
+                if (dayOfMonth < 10) {
+                    date += "0" + dayOfMonth; //for formatting purposes
+                } else {
+                    date += dayOfMonth;
+                }
+                //Determine what day of the week and send to its respective activity
                 LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
                 int dayOfWeek = localDate.getDayOfWeek().getValue();
 
