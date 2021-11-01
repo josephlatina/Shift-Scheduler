@@ -49,11 +49,24 @@ public class MonthModel {
     @RequiresApi(api = Build.VERSION_CODES.O) //for .isEqual()
     public DayModel getDay(LocalDate date) {
         for (DayModel day : days) {
-            if (day.getDate().isEqual(date)) {
-                return day;
-            }
+            if (day.getDate().isEqual(date)) return day;
         }
         return null;
+    }
+
+    /**
+     * Update a day in the list with an updated version
+     * @param newDay - new DayModel object with a date within this month
+     * @return successful
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O) //for getDay()
+    public boolean updateDay(DayModel newDay) {
+        DayModel oldDay = getDay(newDay.getDate());
+        if (oldDay == null) return false; //non-existent day check
+
+        days.set(days.indexOf(oldDay), newDay); //replace oldDay with newDay
+
+        return true;
     }
 
     /**
@@ -66,15 +79,11 @@ public class MonthModel {
     public boolean verifyMonth(DatabaseHelper database, List<EmployeeModel> employees) {
         // verify all days individually
         for (DayModel day : days) {
-            if (!day.verifyDay(database)) {
-                return false;
-            }
+            if (!day.verifyDay(database)) return false;
         }
 
         // verify all employees work every week
-        if (!verifyEmployeesWorkWeekly(database, employees)) {
-            return false;
-        }
+        if (!verifyEmployeesWorkWeekly(database, employees)) return false;
 
         // month has passed verification
         return true;
@@ -106,14 +115,17 @@ public class MonthModel {
             boolean employeeWorks = false;
 
             while (!cursor.isEqual(lastSaturday.plusDays(1))) {
-                if (!employeeWorks) { //locks employeeWorks as true if it is ever true
+                //lock employeeWorks as true if it is ever true
+                if (!employeeWorks) {
                     employeeWorks = this.getDay(cursor).containsEmployee(currentEmployee);
                 }
 
                 if (cursor.getDayOfWeek() == DayOfWeek.SATURDAY) { //reaches end of week
                     if (!employeeWorks) { //employee hasn't worked this week
+                        //check if employee is available:
                         boolean employeeAvailable = false;
                         for (int i = 6; i >= 0; i--) { //check for availability this week
+                            //lock employeeAvailable as true if it is ever true
                             if (!employeeAvailable) {
                                 employeeAvailable =
                                         database.getAvailableEmployees(cursor.minusDays(i), "MORNING").contains(currentEmployee) ||
@@ -121,14 +133,12 @@ public class MonthModel {
                                                 database.getAvailableEmployees(cursor.minusDays(i), "FULL").contains(currentEmployee);
                             }
                         }
-                        if (employeeAvailable) { //employee is available and hasn't worked this week
-                            return false;
-                        }
+                        //if employee is available and hasn't worked this week, verify fails
+                        if (employeeAvailable) return false;
                     }
                     //employee has worked (passes for this week)
                     employeeWorks = false; //reset employeeWorks for the next week
                 }
-
                 cursor = cursor.plusDays(1); //point cursor to the next day
             }
         }
