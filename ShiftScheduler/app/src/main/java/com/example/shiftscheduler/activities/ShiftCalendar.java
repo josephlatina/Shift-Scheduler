@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.CalendarView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -63,6 +64,12 @@ public class ShiftCalendar extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
+        //receive intent
+        Intent incomingIntent = getIntent();
+        DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
+//        if (day != null) {
+//            Toast.makeText(ShiftCalendar.this, day.toString(), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =

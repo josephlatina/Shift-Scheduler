@@ -5,13 +5,14 @@ import android.provider.ContactsContract;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
-public class FullShift extends ShiftModel {
+public class FullShift extends ShiftModel implements Serializable {
     private final ShiftTime time = ShiftTime.FULL;
     private final int icon = R.drawable.ic_full;
 
