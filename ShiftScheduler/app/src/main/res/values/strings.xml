@@ -48,6 +48,7 @@
     <string name="availableEmployees">Available Employees</string>
     <string name="scheduledEmployees">Scheduled Employees</string>
     <string name="empID">Employee ID</string>
+    <string name="date">Date</string>
 
 
 </resources>
