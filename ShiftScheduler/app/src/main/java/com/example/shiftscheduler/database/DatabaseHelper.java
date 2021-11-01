@@ -177,19 +177,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
-
-        //Fill in the data for each column
-        cv.put(COL_DATE, String.valueOf(Date.valueOf(date.toString())));
-        cv.put(COL_SHIFTTYPE, time);
-
-        //check if inserting into the database was successful or not
-        long success = db.insert(SHIFT_TABLE,null,cv);
-        db.close();
-        if (success == -1) {
+        //get data from the database
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            //this indicates that the given shift already exists. Exit to prevent duplication of data
             return false;
         } else {
-            return true;
+            //Fill in the data for each column
+            cv.put(COL_DATE, String.valueOf(Date.valueOf(date.toString())));
+            cv.put(COL_SHIFTTYPE, time);
+
+            //check if inserting into the database was successful or not
+            long success = db.insert(SHIFT_TABLE,null,cv);
+            db.close();
+            if (success == -1) {
+                return false;
+            } else {
+                return true;
+            }
         }
+
+
     }
 
     //Inserts new Availability entry into the database
