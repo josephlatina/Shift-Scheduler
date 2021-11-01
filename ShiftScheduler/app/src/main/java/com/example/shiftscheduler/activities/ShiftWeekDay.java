@@ -17,13 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
+import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.EveningShift;
 import com.example.shiftscheduler.models.MorningShift;
 import com.example.shiftscheduler.models.ShiftModel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.NavigableSet;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class ShiftWeekDay extends AppCompatActivity {
 
@@ -75,9 +83,13 @@ public class ShiftWeekDay extends AppCompatActivity {
 
         //Button listener for back
         backbtn.setOnClickListener(new View.OnClickListener() {
+            //Populate day object
+            DayModel day = populateDay(localDate);
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(ShiftWeekDay.this, ShiftCalendar.class);
+                myIntent.putExtra("date", date);
+                myIntent.putExtra("DayObject", day);
                 startActivity(myIntent);
             }
         });
@@ -100,6 +112,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedavailemp.getText().clear();
             }
         });
         //Button listener for Adding Closing Employees
@@ -114,6 +127,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedavailemp.getText().clear();
             }
         });
         //Button listener for Removing Opening Employees
@@ -128,6 +142,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedschedemp.getText().clear();
             }
         });
         //Button listener for Removing Closing Employees
@@ -142,6 +157,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList(localDate);
                 buildAllRecyclerViews();
+                selectedschedemp.getText().clear();
             }
         });
     }
@@ -198,5 +214,26 @@ public class ShiftWeekDay extends AppCompatActivity {
 
             }
         });
+    }
+
+    public DayModel populateDay(LocalDate localDate) {
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+
+        //Retrieve Shift IDs
+        int morningShiftID = dbHelper.getShiftID(localDate, "MORNING");
+        int eveningShiftID = dbHelper.getShiftID(localDate, "EVENING");
+
+        //Create set of scheduled employees for each shift
+        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<EmployeeModel>(dbHelper.getScheduledEmployees(localDate, "MORNING"));
+        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<EmployeeModel>(dbHelper.getScheduledEmployees(localDate, "EVENING"));
+
+        //Create shift objects for each respective shift for the day
+        MorningShift morningShift = new MorningShift(morningShiftID, localDate, morningEmployees, 2);
+        EveningShift eveningShift = new EveningShift(eveningShiftID, localDate, eveningEmployees, 2);
+
+        //Create day object and populate
+        DayModel day = new DayModel(localDate, morningShift, eveningShift);
+
+        return day;
     }
 }

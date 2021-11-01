@@ -403,7 +403,7 @@
             app:layout_constraintTop_toBottomOf="@+id/infoAvailibilityLabel" />
 
         <CheckBox
-            android:id="@+id/infoAvialMonMorn"
+            android:id="@+id/infoAvailMonMorn"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:clickable="false"
@@ -414,7 +414,7 @@
             app:layout_constraintTop_toTopOf="@+id/infoMondayLabel" />
 
         <CheckBox
-            android:id="@+id/InfoAvailTuesMorn"
+            android:id="@+id/infoAvailTuesMorn"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:clickable="false"
@@ -503,7 +503,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <CheckBox
-            android:id="@+id/InfoAvailTuesEven"
+            android:id="@+id/infoAvailTuesEven"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginBottom="7dp"

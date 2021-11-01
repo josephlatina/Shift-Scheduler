@@ -7,13 +7,14 @@ import androidx.annotation.RequiresApi;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
-public class MorningShift extends ShiftModel {
+public class MorningShift extends ShiftModel implements Serializable {
     private final ShiftTime time = ShiftTime.MORNING;
     private final int icon = R.drawable.ic_morning;
 

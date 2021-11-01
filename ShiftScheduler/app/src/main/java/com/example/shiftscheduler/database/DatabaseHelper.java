@@ -84,10 +84,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Create Availability Table
     private String createAvailabilityTable = "CREATE TABLE " + AVAILABILITY_TABLE + "(" +
             COL_AVAILABILITYID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-            COL_SUNSHIFT + " INTEGER," + COL_MONSHIFT + " INTEGER," +
-            COL_TUESHIFT + " INTEGER," + COL_WEDSHIFT + " INTEGER," +
-            COL_THURSSHIFT + " INTEGER," + COL_FRISHIFT + " INTEGER," +
-            COL_SATSHIFT + " INTEGER)";
+            COL_SUNSHIFT + " INTEGER DEFAULT 0," + COL_MONSHIFT + " INTEGER DEFAULT 0," +
+            COL_TUESHIFT + " INTEGER DEFAULT 0," + COL_WEDSHIFT + " INTEGER DEFAULT 0," +
+            COL_THURSSHIFT + " INTEGER DEFAULT 0," + COL_FRISHIFT + " INTEGER DEFAULT 0," +
+            COL_SATSHIFT + " INTEGER DEFAULT 0)";
     //Create the Qualifications Table
     private String createQualificationsTable = "CREATE TABLE " + QUALIFICATIONS_TABLE + "(" +
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -130,21 +130,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
-        //Create empty entry for Qualifications and Availability Tables corresponding to new employee
-        AvailabilityModel availability = new AvailabilityModel(0,1,3,3,3,3,3,1);
-        addAvailability(availability);
-        String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
-
-        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
-        db.execSQL(addQualifications);
-        String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
-        Cursor cur = db.rawQuery(getID, null);
-        cur.moveToFirst();
-        int avaID = cur.getInt(0);
-        cur.close();
-
+        
         //Retrieve the database already created and create an instance of database to hold it
-
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
         ContentValues cv = new ContentValues();
 
         //Fill in the data for each column
@@ -158,6 +146,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cv.put(COL_PHONENUM, employeeModel.getPhoneNum());
         cv.put(COL_EMAIL, employeeModel.getEmail());
         cv.put(COL_ISACTIVE, "1");
+
+        String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
+        String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
+        db.execSQL(addQualifications);
+        db.execSQL(addAvailability);
+
+        String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
+        Cursor cur = db.rawQuery(getID, null);
+        cur.moveToFirst();
+        int avaID = cur.getInt(0);
+        cur.close();
         cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
         cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
 
@@ -200,8 +199,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 return true;
             }
         }
-
-
     }
 
     //Inserts new Availability entry into the database
@@ -544,25 +541,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
         Cursor cursor = db.rawQuery(queryString, null);
+        int availabilityID = 0, sunShift = 0, monShift = 0, tueShift = 0,
+                wedShift = 0, thurShift = 0, friShift = 0, satShift = 0;
 
-        //retrieve availability information from this cursor.
-        int availabilityID = cursor.getInt(0);
-        int sunShift = cursor.getInt(1);
-        int monShift = cursor.getInt(2);
-        int tueShift = cursor.getInt(3);
-        int wedShift = cursor.getInt(4);
-        int thurShift = cursor.getInt(5);
-        int friShift = cursor.getInt(6);
-        int satShift = cursor.getInt(7);
+        if (cursor.moveToFirst()) {
+            //retrieve availability information from this cursor.
+            availabilityID = cursor.getInt(0);
+            sunShift = cursor.getInt(1);
+            monShift = cursor.getInt(2);
+            tueShift = cursor.getInt(3);
+            wedShift = cursor.getInt(4);
+            thurShift = cursor.getInt(5);
+            friShift = cursor.getInt(6);
+            satShift = cursor.getInt(7);
+        }
 
         // the availabilityID to be returned is:
         AvailabilityModel availability = new AvailabilityModel(availabilityID, sunShift,
-                monShift, tueShift, wedShift, thurShift, friShift, satShift);
+                    monShift, tueShift, wedShift, thurShift, friShift, satShift);
 
         // close both db and cursor for others to access
         cursor.close();
         db.close();
         return availability;
+    }
+
+    public int getShiftID(LocalDate date, String time) {
+        int shiftID;
+        //get data from the database
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
+        //If shift exists, return shiftID. Otherwise, return 0.
+        if (cursor.moveToFirst()) {
+            shiftID = cursor.getInt(0);
+        } else {
+            shiftID = 0;
+        }
+        return shiftID;
     }
 
     /*********************************************************************************************
