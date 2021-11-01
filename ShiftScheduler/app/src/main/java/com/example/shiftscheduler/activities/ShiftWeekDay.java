@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -26,7 +27,8 @@ import java.util.ArrayList;
 public class ShiftWeekDay extends AppCompatActivity {
 
     //references to layout controls
-    Button backbtn, addopenbtn, addclosebtn;
+    Button backbtn;
+    ImageButton addopenbtn, addclosebtn;
     EditText shiftdate, selectedemp;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> employeeList;
@@ -49,8 +51,8 @@ public class ShiftWeekDay extends AppCompatActivity {
 
         //Link the layout controls
         backbtn = (Button) findViewById(R.id.dayBack);
-        addopenbtn = (Button) findViewById(R.id.addOpening);
-        addclosebtn = (Button) findViewById(R.id.addClosing);
+        addopenbtn = (ImageButton) findViewById(R.id.addOpening);
+        addclosebtn = (ImageButton) findViewById(R.id.addClosing);
         shiftdate = (EditText) findViewById(R.id.shiftDate);
         selectedemp = (EditText) findViewById(R.id.selectedEmployee);
         schedOpenRecyclerView = findViewById(R.id.scheduledOpeningEmployees);
