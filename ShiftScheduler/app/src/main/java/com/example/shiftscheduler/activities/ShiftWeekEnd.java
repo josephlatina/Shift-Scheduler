@@ -88,6 +88,19 @@ public class ShiftWeekEnd extends AppCompatActivity {
             }
         });
         //Button listener for Adding Closing Employees
+        removebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //schedule an employee for that shift (scheduleEmployee) will update the database
+                int employeeID = Integer.parseInt(selectedschedemp.getText().toString());
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekEnd.this);
+                dbHelper.descheduleEmployee(employeeID, localDate, "FULL");
+
+                //update Recycler Views
+                updateEmployeeList(localDate);
+                buildAllRecyclerViews();
+            }
+        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
