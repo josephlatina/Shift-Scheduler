@@ -4,16 +4,19 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.shiftscheduler.database.DatabaseHelper;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Container for all the DayModels associated with a given month.
  */
 public class MonthModel {
     private final LocalDate startDate;
-    private ArrayList<DayModel> days;
+    private final ArrayList<DayModel> days;
 
     /**
      * Constructor.
@@ -55,20 +58,21 @@ public class MonthModel {
 
     /**
      * Verifies this month according to specifications.
+     * @param database - DatabaseHelper object for the current session
      * @param employees - ArrayList of all current working EmployeeModels
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
-    public boolean verifyMonth(ArrayList<EmployeeModel> employees) {
+    public boolean verifyMonth(DatabaseHelper database, List<EmployeeModel> employees) {
         // verify all days individually
         for (DayModel day : days) {
-            if (!day.verifyDay()) {
+            if (!day.verifyDay(database)) {
                 return false;
             }
         }
 
         // verify all employees work every week
-        if (!verifyEmployeesWorkWeekly(employees)) {
+        if (!verifyEmployeesWorkWeekly(database, employees)) {
             return false;
         }
 
@@ -78,11 +82,12 @@ public class MonthModel {
 
     /**
      * Checks every employee to ensure each one works every week involved in this month.
+     * @param database - DatabaseHelper object for the current session
      * @param employees - ArrayList of all current (active) employees
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
-    private boolean verifyEmployeesWorkWeekly(ArrayList<EmployeeModel> employees){
+    private boolean verifyEmployeesWorkWeekly(DatabaseHelper database, List<EmployeeModel> employees){
         // 1. find the Sunday at/before startDate
         LocalDate firstSunday = startDate;
         while (firstSunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
@@ -110,7 +115,10 @@ public class MonthModel {
                         boolean employeeAvailable = false;
                         for (int i = 6; i >= 0; i--) { //check for availability this week
                             if (!employeeAvailable) {
-                                  employeeAvailable = currentEmployee.isAvailable(cursor.minusDays(i));
+                                employeeAvailable =
+                                        database.getAvailableEmployees(cursor.minusDays(i), "MORNING").contains(currentEmployee) ||
+                                                database.getAvailableEmployees(cursor.minusDays(i), "EVENING").contains(currentEmployee) ||
+                                                database.getAvailableEmployees(cursor.minusDays(i), "FULL").contains(currentEmployee);
                             }
                         }
                         if (employeeAvailable) { //employee is available and hasn't worked this week

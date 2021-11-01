@@ -1,10 +1,15 @@
 package com.example.shiftscheduler.models;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 
@@ -163,21 +168,22 @@ public abstract class ShiftModel {
 
     /**
      * Evaluates whether the shift meets the specified criteria
+     * @param database - DatabaseHelper object for the current session
      * @return verified
      */
-    public boolean verifyShift() {
+    public boolean verifyShift(DatabaseHelper database) {
         // check if shift is full
         if (!(employees.size() == employeesNeeded)) {
             return false;
         }
 
         // check employee availability
-        if (!this.verifyEmployeeAvailability()) {
+        if (!this.verifyEmployeeAvailability(database)) {
             return false;
         }
 
         // check employee qualifications
-        if (!this.verifyEmployeeQualifications()) {
+        if (!this.verifyEmployeeQualifications(database)) {
             return false;
         }
 
@@ -187,16 +193,26 @@ public abstract class ShiftModel {
 
     /**
      * Verifies that all employees are available for this shift
-     * (set in subclasses)
+     * @param database - DatabaseHelper object for the current session
      * @return verified
      */
-    protected abstract boolean verifyEmployeeAvailability();
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    protected boolean verifyEmployeeAvailability(DatabaseHelper database) {
+        List<EmployeeModel> availableEmployees = database.getAvailableEmployees(date, getTime());
+        for (EmployeeModel employee : getEmployees()) {
+            if (!availableEmployees.contains(employee)) { //employee is not available
+                return false;
+            }
+        }
+        return true;
+    };
 
     /**
      * Verifies employees' qualifications according to the specification
      * (set in subclasses)
+     * @param database - DatabaseHelper object for the current session
      * @return verified
      */
-    protected abstract boolean verifyEmployeeQualifications();
+    protected abstract boolean verifyEmployeeQualifications(DatabaseHelper database);
 }
 

@@ -16,7 +16,32 @@
         <!--Employee Name-->
 
         <CheckBox
-            android:id="@+id/closingCheckBox"
+            android:id="@+id/infoPrefOpenCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:minHeight="48dp"
+            android:text="@string/opening"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.324"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoPreferencesLabel" />
+
+        <CheckBox
+            android:id="@+id/infoPrefCloseCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:minHeight="48dp"
+            android:text="@string/closing"
+            app:layout_constraintBottom_toBottomOf="@+id/infoPrefOpenCheckBox"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toEndOf="@+id/infoPrefOpenCheckBox"
+            app:layout_constraintTop_toTopOf="@+id/infoPrefOpenCheckBox" />
+
+        <CheckBox
+            android:id="@+id/infoQualClosingCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -25,11 +50,11 @@
             android:text="@string/closing"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.34"
-            app:layout_constraintStart_toEndOf="@+id/openingCheckBox"
+            app:layout_constraintStart_toEndOf="@+id/infoQualOpeningCheckBox"
             app:layout_constraintTop_toBottomOf="@+id/infoQualificationsLabel" />
 
         <ImageView
-            android:id="@+id/InfoEmployeeImg"
+            android:id="@+id/infoEmployeeImg"
             android:layout_width="113dp"
             android:layout_height="101dp"
             android:text=""
@@ -232,11 +257,30 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
 
+        <EditText
+            android:id="@+id/infoPreferencesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="725dp"
+            android:ems="10"
+            android:focusable="false"
+            android:gravity="center"
+            android:inputType="textPersonName"
+            android:text="@string/preferences"
+            android:textSize="24sp"
+
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
+
         <Button
             android:id="@+id/infoEditButton"
             android:layout_width="108dp"
             android:layout_height="56dp"
-            android:layout_marginTop="750dp"
+            android:layout_marginTop="850dp"
             android:text="@string/edit"
 
             android:textSize="18sp"
@@ -246,7 +290,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <CheckBox
-            android:id="@+id/openingCheckBox"
+            android:id="@+id/infoQualOpeningCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
