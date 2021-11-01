@@ -564,4 +564,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return availability;
     }
+
+    /*********************************************************************************************
+     Remove methods
+     *********************************************************************************************/
+    //Removes work entry from the database
+    public boolean descheduleEmployee(int empID, LocalDate date, String time) {
+        int shiftID = 0;
+        //Retrieve the shiftID that corresponds to given date and time
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            shiftID = cursor.getInt(0);
+        } else {
+        }
+
+        //Remove work entry from database
+        long success = db.delete(WORK_TABLE, COL_EMPID + " = ? AND " + COL_SHIFTID +
+                " = ? ", new String[] {String.valueOf(empID),String.valueOf(shiftID)});
+
+        //close both cursor and db
+        cursor.close();
+        db.close();
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
