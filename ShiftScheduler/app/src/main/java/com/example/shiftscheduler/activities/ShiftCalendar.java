@@ -11,6 +11,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.models.DayModel;
+import com.example.shiftscheduler.models.MonthModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.time.LocalDate;
@@ -59,6 +61,10 @@ public class ShiftCalendar extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
     }
 
+    public void onResume() {
+        super.onResume();
+    }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -76,4 +82,16 @@ public class ShiftCalendar extends AppCompatActivity {
                 }
 
             };
+
+    public MonthModel createMonthObject(int month, int year) {
+        return null;
+    }
+
+    public void updateMonthObject(LocalDate date) {
+        return;
+    }
+
+    public DayModel createDayObject(LocalDate date) {
+        return null;
+    }
 }
