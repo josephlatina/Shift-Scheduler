@@ -44,6 +44,7 @@
     <string name="tuesday">Tuesday</string>
     <string name="monday">Monday</string>
     <string name="morning">Morning</string>
+    <string name="preferences">Preferences</string>
 
 
 </resources>

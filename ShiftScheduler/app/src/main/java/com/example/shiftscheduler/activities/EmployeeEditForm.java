@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Switch;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +26,7 @@ public class EmployeeEditForm extends AppCompatActivity {
     EditText fname, lname, street, city, province, postalCode, dob, phoneNum, email;
     Switch activeEmployee;
     CheckBox opening, closing;
+    ImageButton backbtn;
     String empID;
     int open = 0, close = 0;
 
@@ -34,19 +36,20 @@ public class EmployeeEditForm extends AppCompatActivity {
         setContentView(R.layout.employee_editform);
 
         //Link the layout controls
-        save_btn = (Button) findViewById(R.id.saveEdit);
-        fname = (EditText) findViewById(R.id.firstNameEdit);
-        lname = (EditText) findViewById(R.id.lastNameEdit);
-        street = (EditText) findViewById(R.id.streetAddressEdit);
-        city = (EditText) findViewById(R.id.cityEdit);
-        province = (EditText) findViewById(R.id.provinceEdit);
-        postalCode = (EditText) findViewById(R.id.postalCodeEdit);
-        dob = (EditText) findViewById(R.id.DOBEdit);
-        phoneNum = (EditText) findViewById(R.id.phoneNumberEdit);
-        email = (EditText) findViewById(R.id.emailEdit);
-        activeEmployee = (Switch) findViewById(R.id.isActiveEdit);
-        opening = (CheckBox) findViewById(R.id.openingCheckBoxEdit);
-        closing = (CheckBox) findViewById(R.id.closingCheckBoxEdit);
+        save_btn = (Button) findViewById(R.id.editSave);
+        backbtn = (ImageButton) findViewById(R.id.editInfo_back);
+        fname = (EditText) findViewById(R.id.editFirstName);
+        lname = (EditText) findViewById(R.id.editLastName);
+        street = (EditText) findViewById(R.id.editStreetAddress);
+        city = (EditText) findViewById(R.id.editCity);
+        province = (EditText) findViewById(R.id.editProvince);
+        postalCode = (EditText) findViewById(R.id.editPostalCode);
+        dob = (EditText) findViewById(R.id.editDOB);
+        phoneNum = (EditText) findViewById(R.id.editPhoneNumber);
+        email = (EditText) findViewById(R.id.editEmail);
+        activeEmployee = (Switch) findViewById(R.id.editIsActive);
+        opening = (CheckBox) findViewById(R.id.editQualOpeningCheckBox);
+        closing = (CheckBox) findViewById(R.id.editQualClosingCheckBox);
 
         //Retrieve employee information
         Intent intent = getIntent();
@@ -115,5 +118,14 @@ public class EmployeeEditForm extends AppCompatActivity {
             }
         });
 
+        //Button listener for back
+        backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(EmployeeEditForm.this, EmployeeInfo.class);
+                myIntent.putExtra(EMPLOYEE_ID, empID);
+                startActivity(myIntent);
+            }
+        });
     }
 }
