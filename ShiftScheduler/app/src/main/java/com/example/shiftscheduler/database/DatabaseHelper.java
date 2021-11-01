@@ -131,7 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Inserts new Employee entry into the database.
     public boolean addEmployee(EmployeeModel employeeModel) {
         //Create empty entry for Qualifications and Availability Tables corresponding to new employee
-        AvailabilityModel availability = new AvailabilityModel(0,0,1,0,0,0,0,0);
+        AvailabilityModel availability = new AvailabilityModel(0,0,3,0,0,0,0,0);
         addAvailability(availability);
         String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
 
@@ -222,10 +222,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int shiftID = 0;
         //get data from the database
         String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
-                ") = ? ";
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
         SQLiteDatabase db = this.getWritableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) {
             shiftID = cursor.getInt(0);
@@ -448,10 +448,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " FROM " + EMPLOYEE_TABLE + " AS E, " + WORK_TABLE + " AS W, " +
                 SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID +
                 " = S." + COL_SHIFTID + " AND DATE(S." + COL_DATE +
-                ") = ? ";
+                ") = ? AND S." + COL_SHIFTTYPE + " = ? ";
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()){ //move it to the first of the result set
             //loop through the results

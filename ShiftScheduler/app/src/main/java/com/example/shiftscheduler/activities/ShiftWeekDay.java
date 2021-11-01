@@ -103,7 +103,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 //schedule an employee for that shift (scheduleEmployee) will update the database
                 int employeeID = Integer.parseInt(selectedemp.getText().toString());
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                dbHelper.scheduleEmployee(employeeID, localDate, "MORNING");
+                dbHelper.scheduleEmployee(employeeID, localDate, "EVENING");
 
                 //update Recycler Views
                 updateEmployeeList(localDate);
