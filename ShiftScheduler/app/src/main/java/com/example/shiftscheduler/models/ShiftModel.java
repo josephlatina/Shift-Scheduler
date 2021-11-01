@@ -8,6 +8,7 @@ import androidx.annotation.RequiresApi;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NavigableSet;
@@ -26,7 +27,7 @@ enum ShiftTime {
  * Represents a unit of work for a specific employee for a specific date/time.
  * @author Alex Cairns
  */
-public abstract class ShiftModel {
+public abstract class ShiftModel implements Serializable {
     private final int shiftID;
     private final LocalDate date;
     private NavigableSet<EmployeeModel> employees;

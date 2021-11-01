@@ -7,13 +7,14 @@ import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.database.DatabaseHelper;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 /**
  * Container for all the ShiftModels associated with a specific day.
  */
-public class DayModel {
+public class DayModel implements Serializable {
     private final LocalDate date;
     private final MorningShift morningShift;
     private final EveningShift eveningShift;
