@@ -152,17 +152,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(addQualifications);
         db.execSQL(addAvailability);
 
-//        String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
-//        Cursor cur = db.rawQuery(getID, null);
-//        cur.moveToFirst();
-//        int avaID = cur.getInt(0);
-//        cur.close();
-//        cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
-//        cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
-
-//        AvailabilityModel availability = new AvailabilityModel(0,0,0,0,0,0,0,0);
-//        addAvailability(availability);
-
+        String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
+        Cursor cur = db.rawQuery(getID, null);
+        cur.moveToFirst();
+        int avaID = cur.getInt(0);
+        cur.close();
+        cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
+        cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
