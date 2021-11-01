@@ -565,6 +565,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return availability;
     }
 
+    public int getShiftID(LocalDate date, String time) {
+        int shiftID;
+        //get data from the database
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + SHIFT_TABLE + " WHERE DATE(" + COL_DATE +
+                ") = ? AND " + COL_SHIFTTYPE + " = ? ";
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time});
+        //If shift exists, return shiftID. Otherwise, return 0.
+        if (cursor.moveToFirst()) {
+            shiftID = cursor.getInt(0);
+        } else {
+            shiftID = 0;
+        }
+        return shiftID;
+    }
+
     /*********************************************************************************************
      Remove methods
      *********************************************************************************************/
