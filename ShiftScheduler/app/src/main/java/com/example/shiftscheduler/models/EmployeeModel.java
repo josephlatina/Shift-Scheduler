@@ -1,9 +1,10 @@
 package com.example.shiftscheduler.models;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class EmployeeModel {
+public class EmployeeModel implements Comparable<EmployeeModel>, Serializable {
     private final int employeeID;
     private String fName;
     private String lName;
@@ -114,6 +115,11 @@ public class EmployeeModel {
         if (o == null || getClass() != o.getClass()) return false;
         EmployeeModel that = (EmployeeModel) o;
         return employeeID == that.employeeID && isActive == that.isActive && fName.equals(that.fName) && lName.equals(that.lName) && city.equals(that.city) && street.equals(that.street) && province.equals(that.province) && postal.equals(that.postal) && DOB.equals(that.DOB) && phoneNum.equals(that.phoneNum);
+    }
+
+    @Override
+    public int compareTo(EmployeeModel employee) {
+        return Double.compare(employeeID, employee.employeeID);
     }
 
     @Override

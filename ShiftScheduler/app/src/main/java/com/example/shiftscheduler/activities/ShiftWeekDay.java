@@ -224,8 +224,8 @@ public class ShiftWeekDay extends AppCompatActivity {
         int eveningShiftID = dbHelper.getShiftID(localDate, "EVENING");
 
         //Create set of scheduled employees for each shift
-        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<EmployeeModel>(dbHelper.getScheduledEmployees(localDate, "MORNING"));
-        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<EmployeeModel>(dbHelper.getScheduledEmployees(localDate, "EVENING"));
+        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(localDate, "MORNING"));
+        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(localDate, "EVENING"));
 
         //Create shift objects for each respective shift for the day
         MorningShift morningShift = new MorningShift(morningShiftID, localDate, morningEmployees, 2);
