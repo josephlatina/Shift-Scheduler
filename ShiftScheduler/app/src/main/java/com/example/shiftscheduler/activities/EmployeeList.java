@@ -37,8 +37,6 @@ public class EmployeeList extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.employee_list);
 
@@ -58,6 +56,41 @@ public class EmployeeList extends AppCompatActivity{
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+
+        //sample data
+        if(employeeList.size() == 0){
+            EmployeeModel sample1 = new EmployeeModel(1, "Dan",
+                    "Povemire", "New York", "99st", "Ontario","T8A8I9",
+                    "june 19 1992", "815-223-9981","dan@povemire@gmail.com",
+                    true);
+            EmployeeModel sample2 = new EmployeeModel(2, "Orion",
+                    "Sehn", "New York", "99st", "Ontario","T8A8I9",
+                    "june 19 1996", "815-223-9981","orion.sehn@gmail.com",
+                    true);
+            EmployeeModel sample3 = new EmployeeModel(3, "Mr",
+                    "Skeletal", "New York", "99st", "Ontario","T8A8I9",
+                    "june 19 1992", "815-223-2341","dan@povemire@gmail.com",
+                    true);
+            EmployeeModel sample4 = new EmployeeModel(4, "John",
+                    "Dorian", "New York", "99st", "Ontario","T8A8I9",
+                    "june 19 1992", "815-223-9981","dan@povemire@gmail.com",
+                    true);
+            EmployeeModel sample5 = new EmployeeModel(5, "Jules",
+                    "Verne", "New York", "99st", "Ontario","T8A8I9",
+                    "june 19 1992", "815-223-9981","dan@povemire@gmail.com",
+                    true);
+            DatabaseHelper dbHelper = new DatabaseHelper(EmployeeList.this);
+            dbHelper.addEmployee(sample1);
+            dbHelper.addEmployee(sample2);
+            dbHelper.addEmployee(sample3);
+            dbHelper.addEmployee(sample4);
+            dbHelper.addEmployee(sample5);
+            updateEmployeeList();
+
+
+            //sample data
+        }
 
     }
 
