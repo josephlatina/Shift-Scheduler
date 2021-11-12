@@ -239,6 +239,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    //Inserts new TimeOff entry into the database
+    public boolean addTimeOff(int empID, LocalDate dateFrom, LocalDate dateTo) {
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+        //get data from the database
+        String queryString = "SELECT " + COL_TIMEOFFID + " FROM " + TIMEOFF_TABLE + " WHERE DATE(" + COL_DATEFROM +
+                ") = ? AND " + COL_DATETO + " = ? AND " + COL_EMPID + " = ? ";
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(dateFrom.toString())),
+                String.valueOf(Date.valueOf(dateTo.toString())), String.valueOf(empID)});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            //this indicates that the given timeoff entry already exists. Exit to prevent duplication of data
+            return false;
+        } else {
+            //Fill in the data for each column
+            cv.put(COL_EMPID, String.valueOf(empID));
+            cv.put(COL_DATEFROM, String.valueOf(Date.valueOf(dateFrom.toString())));
+            cv.put(COL_DATETO, String.valueOf(Date.valueOf(dateTo.toString())));
+
+            //check if inserting into the database was successful or not
+            long success = db.insert(TIMEOFF_TABLE,null,cv);
+            db.close();
+            if (success == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
     //Inserts new Work entry into the database
     public boolean scheduleEmployee(int empID, LocalDate date, String time) {
         int shiftID = 0;
@@ -445,7 +477,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),
+                String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set
             //loop through the results
@@ -620,6 +653,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Remove work entry from database
         long success = db.delete(WORK_TABLE, COL_EMPID + " = ? AND " + COL_SHIFTID +
                 " = ? ", new String[] {String.valueOf(empID),String.valueOf(shiftID)});
+
+        //close both cursor and db
+        cursor.close();
+        db.close();
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //Removes timeoff entry from the database
+    public boolean removeTimeOff(int empID, LocalDate dateFrom, LocalDate dateTo) {
+        int timeOffID = 0;
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+        //get data from the database
+        String queryString = "SELECT " + COL_TIMEOFFID + " FROM " + TIMEOFF_TABLE + " WHERE DATE(" + COL_DATEFROM +
+                ") = ? AND " + COL_DATETO + " = ? AND " + COL_EMPID + " = ? ";
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(dateFrom.toString())),
+                String.valueOf(Date.valueOf(dateTo.toString())), String.valueOf(empID)});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            timeOffID = cursor.getInt(0);
+        }
+
+        //Remove timeoff entry from database
+        long success = db.delete(TIMEOFF_TABLE, COL_TIMEOFFID + " = ? ",
+                new String[] {String.valueOf(timeOffID)});
 
         //close both cursor and db
         cursor.close();
