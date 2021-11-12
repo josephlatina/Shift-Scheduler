@@ -27,11 +27,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SHIFT_TABLE = "SHIFT_TABLE";
     public static final String AVAILABILITY_TABLE = "AVAILABILITY_TABLE";
     public static final String QUALIFICATIONS_TABLE = "QUALIFICATIONS_TABLE";
+    public static final String TIMEOFF_TABLE = "TIMEOFF_TABLE";
     public static final String WORK_TABLE = "WORK_TABLE";
     public static final String COL_EMPID = "EMPID";
     public static final String COL_SHIFTID = "SHIFTID";
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
     public static final String COL_AVAILABILITYID = "AVAILABILITYID";
+    public static final String COL_TIMEOFFID = "TIMEOFFID";
     public static final String COL_SHIFTTYPE = "SHIFTTYPE";
     public static final String COL_MORNING = "OPENING";
     public static final String COL_EVENING = "CLOSING";
@@ -53,6 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_THURSSHIFT = "THURSSHIFT";
     public static final String COL_FRISHIFT = "FRISHIFT";
     public static final String COL_SATSHIFT = "SATSHIFT";
+    public static final String COL_DATEFROM = "DATEFROM";
+    public static final String COL_DATETO = "DATETO";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
 
     /***********************************************************************************
@@ -66,9 +70,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
             COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER," +
-            COL_QUALIFICATIONID + " INTEGER," + COL_AVAILABILITYID + " INTEGER," +
+            COL_QUALIFICATIONID + " INTEGER," + COL_AVAILABILITYID + " INTEGER," + COL_TIMEOFFID + " INTEGER," +
             "FOREIGN KEY (" + COL_QUALIFICATIONID + ") REFERENCES " + QUALIFICATIONS_TABLE + "(" + COL_QUALIFICATIONID + "), " +
-            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + "))";
+            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + ")," +
+            "FOREIGN KEY (" + COL_TIMEOFFID + ") REFERENCES " + TIMEOFF_TABLE + "(" + COL_TIMEOFFID + "))";
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -93,6 +98,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_MORNING + " INTEGER," +
             COL_EVENING + " INTEGER)";
+    //Create TimeOff Table
+    private String createTimeOffTable = "CREATE TABLE " + TIMEOFF_TABLE + "(" +
+            COL_TIMEOFFID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_DATEFROM + " DATE," +
+            COL_DATETO + " DATE)";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -117,6 +127,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createQualificationsTable);
         //create the WorkedBy table
         db.execSQL(createWorkTable);
+        //create the TimeOff table
+        db.execSQL(createTimeOffTable);
     }
     //called to modify the schema for the database. Used when the database version number changes
     @Override
@@ -149,8 +161,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
         String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
+        String addTimeOff = "INSERT INTO " + TIMEOFF_TABLE + " DEFAULT VALUES";
         db.execSQL(addQualifications);
         db.execSQL(addAvailability);
+        db.execSQL(addTimeOff);
 
         String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
         Cursor cur = db.rawQuery(getID, null);
@@ -159,6 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cur.close();
         cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
         cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
+        cv.put(COL_TIMEOFFID, String.valueOf(avaID));
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
