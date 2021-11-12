@@ -70,10 +70,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_CITY + " TEXT," + COL_STREET + " TEXT," + COL_PROVINCE + " TEXT," + COL_POSTAL + " TEXT," +
             COL_DOB + " DATE," +
             COL_PHONENUM + " TEXT," + COL_EMAIL + " TEXT," + COL_ISACTIVE + " INTEGER," +
-            COL_QUALIFICATIONID + " INTEGER," + COL_AVAILABILITYID + " INTEGER," + COL_TIMEOFFID + " INTEGER," +
+            COL_QUALIFICATIONID + " INTEGER," + COL_AVAILABILITYID + " INTEGER," +
             "FOREIGN KEY (" + COL_QUALIFICATIONID + ") REFERENCES " + QUALIFICATIONS_TABLE + "(" + COL_QUALIFICATIONID + "), " +
-            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + ")," +
-            "FOREIGN KEY (" + COL_TIMEOFFID + ") REFERENCES " + TIMEOFF_TABLE + "(" + COL_TIMEOFFID + "))";
+            "FOREIGN KEY (" + COL_AVAILABILITYID + ") REFERENCES " + AVAILABILITY_TABLE + "(" + COL_AVAILABILITYID + "))";
     //Create Shift Table
     private String createShiftTable = "CREATE TABLE " + SHIFT_TABLE + "(" +
             COL_SHIFTID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -101,8 +100,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Create TimeOff Table
     private String createTimeOffTable = "CREATE TABLE " + TIMEOFF_TABLE + "(" +
             COL_TIMEOFFID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_EMPID + " INTEGER," +
             COL_DATEFROM + " DATE," +
-            COL_DATETO + " DATE)";
+            COL_DATETO + " DATE," +
+            "FOREIGN KEY (" + COL_EMPID + ") REFERENCES " + EMPLOYEE_TABLE + "(" + COL_EMPID + "))";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -161,10 +162,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
         String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
-        String addTimeOff = "INSERT INTO " + TIMEOFF_TABLE + " DEFAULT VALUES";
         db.execSQL(addQualifications);
         db.execSQL(addAvailability);
-        db.execSQL(addTimeOff);
 
         String getID = "SELECT MAX(" + COL_AVAILABILITYID + ") FROM " + AVAILABILITY_TABLE;
         Cursor cur = db.rawQuery(getID, null);
@@ -173,7 +172,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cur.close();
         cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
         cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
-        cv.put(COL_TIMEOFFID, String.valueOf(avaID));
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);
@@ -441,6 +439,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + WORK_TABLE +
                 " AS W, " + SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND DATE(S." +
                 COL_DATE + ") = ? )";
+        //check for employees that have timeoffs
+        queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + TIMEOFF_TABLE +
+                " AS T WHERE E." + COL_EMPID + " = T." + COL_EMPID + " AND DATE(T." + COL_DATEFROM + ") <= ? AND DATE(T." + COL_DATETO + ") >= ? )";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
