@@ -27,11 +27,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String SHIFT_TABLE = "SHIFT_TABLE";
     public static final String AVAILABILITY_TABLE = "AVAILABILITY_TABLE";
     public static final String QUALIFICATIONS_TABLE = "QUALIFICATIONS_TABLE";
+    public static final String TIMEOFF_TABLE = "TIMEOFF_TABLE";
     public static final String WORK_TABLE = "WORK_TABLE";
     public static final String COL_EMPID = "EMPID";
     public static final String COL_SHIFTID = "SHIFTID";
     public static final String COL_QUALIFICATIONID = "QUALIFICATIONID";
     public static final String COL_AVAILABILITYID = "AVAILABILITYID";
+    public static final String COL_TIMEOFFID = "TIMEOFFID";
     public static final String COL_SHIFTTYPE = "SHIFTTYPE";
     public static final String COL_MORNING = "OPENING";
     public static final String COL_EVENING = "CLOSING";
@@ -53,6 +55,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_THURSSHIFT = "THURSSHIFT";
     public static final String COL_FRISHIFT = "FRISHIFT";
     public static final String COL_SATSHIFT = "SATSHIFT";
+    public static final String COL_DATEFROM = "DATEFROM";
+    public static final String COL_DATETO = "DATETO";
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss");
 
     /***********************************************************************************
@@ -93,6 +97,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COL_QUALIFICATIONID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COL_MORNING + " INTEGER," +
             COL_EVENING + " INTEGER)";
+    //Create TimeOff Table
+    private String createTimeOffTable = "CREATE TABLE " + TIMEOFF_TABLE + "(" +
+            COL_TIMEOFFID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            COL_EMPID + " INTEGER," +
+            COL_DATEFROM + " DATE," +
+            COL_DATETO + " DATE," +
+            "FOREIGN KEY (" + COL_EMPID + ") REFERENCES " + EMPLOYEE_TABLE + "(" + COL_EMPID + "))";
 
     //constructor method that will set the name of the database
         //context is the reference to the app, name is the name of database
@@ -117,6 +128,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createQualificationsTable);
         //create the WorkedBy table
         db.execSQL(createWorkTable);
+        //create the TimeOff table
+        db.execSQL(createTimeOffTable);
     }
     //called to modify the schema for the database. Used when the database version number changes
     @Override
@@ -223,6 +236,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         } else {
             return true;
+        }
+    }
+
+    //Inserts new TimeOff entry into the database
+    public boolean addTimeOff(int empID, LocalDate dateFrom, LocalDate dateTo) {
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+        //get data from the database
+        String queryString = "SELECT " + COL_TIMEOFFID + " FROM " + TIMEOFF_TABLE + " WHERE DATE(" + COL_DATEFROM +
+                ") = ? AND " + COL_DATETO + " = ? AND " + COL_EMPID + " = ? ";
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(dateFrom.toString())),
+                String.valueOf(Date.valueOf(dateTo.toString())), String.valueOf(empID)});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            //this indicates that the given timeoff entry already exists. Exit to prevent duplication of data
+            return false;
+        } else {
+            //Fill in the data for each column
+            cv.put(COL_EMPID, String.valueOf(empID));
+            cv.put(COL_DATEFROM, String.valueOf(Date.valueOf(dateFrom.toString())));
+            cv.put(COL_DATETO, String.valueOf(Date.valueOf(dateTo.toString())));
+
+            //check if inserting into the database was successful or not
+            long success = db.insert(TIMEOFF_TABLE,null,cv);
+            db.close();
+            if (success == -1) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 
@@ -426,10 +471,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + WORK_TABLE +
                 " AS W, " + SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND DATE(S." +
                 COL_DATE + ") = ? )";
+        //check for employees that have timeoffs
+        queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + TIMEOFF_TABLE +
+                " AS T WHERE E." + COL_EMPID + " = T." + COL_EMPID + " AND DATE(T." + COL_DATEFROM + ") <= ? AND DATE(T." + COL_DATETO + ") >= ? )";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),
+                String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set
             //loop through the results
@@ -604,6 +653,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Remove work entry from database
         long success = db.delete(WORK_TABLE, COL_EMPID + " = ? AND " + COL_SHIFTID +
                 " = ? ", new String[] {String.valueOf(empID),String.valueOf(shiftID)});
+
+        //close both cursor and db
+        cursor.close();
+        db.close();
+        if (success == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    //Removes timeoff entry from the database
+    public boolean removeTimeOff(int empID, LocalDate dateFrom, LocalDate dateTo) {
+        int timeOffID = 0;
+        //Retrieve the database already created and create an instance of database to hold it
+        SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
+        ContentValues cv = new ContentValues();
+        //get data from the database
+        String queryString = "SELECT " + COL_TIMEOFFID + " FROM " + TIMEOFF_TABLE + " WHERE DATE(" + COL_DATEFROM +
+                ") = ? AND " + COL_DATETO + " = ? AND " + COL_EMPID + " = ? ";
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(dateFrom.toString())),
+                String.valueOf(Date.valueOf(dateTo.toString())), String.valueOf(empID)});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) {
+            timeOffID = cursor.getInt(0);
+        }
+
+        //Remove timeoff entry from database
+        long success = db.delete(TIMEOFF_TABLE, COL_TIMEOFFID + " = ? ",
+                new String[] {String.valueOf(timeOffID)});
 
         //close both cursor and db
         cursor.close();
