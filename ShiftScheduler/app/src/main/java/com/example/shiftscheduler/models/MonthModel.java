@@ -76,17 +76,19 @@ public class MonthModel {
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
-    public boolean verifyMonth(DatabaseHelper database, List<EmployeeModel> employees) {
+    public ArrayList<ErrorModel> verifyMonth(DatabaseHelper database, List<EmployeeModel> employees) {
+        ArrayList<ErrorModel> errors = new ArrayList<>();
+
         // verify all days individually
         for (DayModel day : days) {
-            if (!day.verifyDay(database)) return false;
+            errors = day.verifyDay(database, errors);
         }
 
         // verify all employees work every week
-        if (!verifyEmployeesWorkWeekly(database, employees)) return false;
+        errors = verifyEmployeesWorkWeekly(database, employees, errors);
 
-        // month has passed verification
-        return true;
+        // return all found errors
+        return errors;
     }
 
     /**
@@ -96,7 +98,9 @@ public class MonthModel {
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
-    private boolean verifyEmployeesWorkWeekly(DatabaseHelper database, List<EmployeeModel> employees){
+    private ArrayList<ErrorModel> verifyEmployeesWorkWeekly(DatabaseHelper database,
+                                                            List<EmployeeModel> employees,
+                                                            ArrayList<ErrorModel> errors) {
         // 1. find the Sunday at/before startDate
         LocalDate firstSunday = startDate;
         while (firstSunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
@@ -128,13 +132,20 @@ public class MonthModel {
                             //lock employeeAvailable as true if it is ever true
                             if (!employeeAvailable) {
                                 employeeAvailable =
-                                        database.getAvailableEmployees(cursor.minusDays(i), "MORNING").contains(currentEmployee) ||
-                                                database.getAvailableEmployees(cursor.minusDays(i), "EVENING").contains(currentEmployee) ||
-                                                database.getAvailableEmployees(cursor.minusDays(i), "FULL").contains(currentEmployee);
+                                        database.getAvailableEmployees(cursor.minusDays(i),
+                                                "MORNING").contains(currentEmployee) ||
+                                                database.getAvailableEmployees(cursor.minusDays(i),
+                                                        "EVENING").contains(currentEmployee) ||
+                                                database.getAvailableEmployees(cursor.minusDays(i),
+                                                        "FULL").contains(currentEmployee);
                             }
                         }
-                        //if employee is available and hasn't worked this week, verify fails
-                        if (employeeAvailable) return false;
+                        //if employee is available and hasn't worked this week, create an error
+                        if (employeeAvailable) {
+                            String details = currentEmployee.getFName() +" "+
+                                    currentEmployee.getLName() + " does not work this week.";
+                            errors.add(new ErrorModel(cursor.minusDays(6), cursor, details));
+                        }
                     }
                     //employee has worked (passes for this week)
                     employeeWorks = false; //reset employeeWorks for the next week
@@ -142,6 +153,6 @@ public class MonthModel {
                 cursor = cursor.plusDays(1); //point cursor to the next day
             }
         }
-        return true;
+        return errors;
     }
 }
