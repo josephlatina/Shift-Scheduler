@@ -60,10 +60,11 @@ public class ErrorModel {
     }
 
     /**
-     * @return endDate
+     * @return endDate, or startDate if there's isn't one
      */
     public LocalDate getEndDate() {
-        return endDate;
+        if (endDate == null) return startDate;
+        else return endDate;
     }
 
     /**
