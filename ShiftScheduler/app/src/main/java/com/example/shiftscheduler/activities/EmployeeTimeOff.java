@@ -1,6 +1,7 @@
 package com.example.shiftscheduler.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.shiftscheduler.R;
 
 import android.os.Bundle;
 
