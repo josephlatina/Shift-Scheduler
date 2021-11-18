@@ -16,41 +16,13 @@
         <!--Employee Name-->
 
         <CheckBox
-            android:id="@+id/infoPrefOpenCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:minHeight="48dp"
-            android:text="@string/opening"
-            android:enabled="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.324"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/infoPreferencesLabel" />
-
-        <CheckBox
-            android:id="@+id/infoPrefCloseCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:minHeight="48dp"
-            android:text="@string/closing"
-            android:enabled="false"
-
-            app:layout_constraintBottom_toBottomOf="@+id/infoPrefOpenCheckBox"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.333"
-            app:layout_constraintStart_toEndOf="@+id/infoPrefOpenCheckBox"
-            app:layout_constraintTop_toTopOf="@+id/infoPrefOpenCheckBox" />
-
-        <CheckBox
             android:id="@+id/infoQualClosingCheckBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:clickable="false"
-            android:minHeight="48dp"
             android:enabled="false"
+            android:minHeight="48dp"
             android:text="@string/closing"
 
             app:layout_constraintEnd_toEndOf="parent"
@@ -262,25 +234,6 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
 
-        <EditText
-            android:id="@+id/infoPreferencesLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="725dp"
-            android:ems="10"
-            android:focusable="false"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:text="@string/preferences"
-            android:textSize="24sp"
-
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
-
         <Button
             android:id="@+id/infoEditButton"
             android:layout_width="108dp"
@@ -299,10 +252,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:minHeight="48dp"
-            android:text="@string/opening"
             android:clickable="false"
             android:enabled="false"
+            android:minHeight="48dp"
+            android:text="@string/opening"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.272"
             app:layout_constraintStart_toStartOf="parent"
@@ -317,7 +270,8 @@
             app:layout_constraintHorizontal_bias="0.038"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/back_arrow" />
+            app:srcCompat="@drawable/back_arrow"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:id="@+id/infoMorningLabel"
@@ -558,6 +512,17 @@
             app:layout_constraintStart_toStartOf="@+id/infoEveningLabel"
             app:layout_constraintTop_toTopOf="@+id/infoFridayLabel"
             app:layout_constraintVertical_bias="0.0" />
+
+        <Button
+            android:id="@+id/timeOffBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/timeOffBtn"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/infoAvailSun"
+            app:layout_constraintVertical_bias="0.198" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

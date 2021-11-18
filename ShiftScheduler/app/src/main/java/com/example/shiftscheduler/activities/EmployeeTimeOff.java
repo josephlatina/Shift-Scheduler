@@ -11,5 +11,8 @@ public class EmployeeTimeOff extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.employee_timeoff);
+
+        //references to layout controls
+
     }
 }
