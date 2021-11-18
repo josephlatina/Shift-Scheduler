@@ -25,7 +25,8 @@ public class MorningShift extends ShiftModel implements Serializable {
      * @param employees  - set of assigned employees
      * @param employeesNeeded - maximum employees allowed
      */
-    public MorningShift(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees, int employeesNeeded) {
+    public MorningShift(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees,
+                        int employeesNeeded) {
         super(shiftID, date, employees, employeesNeeded);
     }
 
@@ -43,14 +44,23 @@ public class MorningShift extends ShiftModel implements Serializable {
      * @return verified
      */
     @Override
-    protected boolean verifyEmployeeQualifications(DatabaseHelper database) {
+    protected ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
+                                                                 ArrayList<ErrorModel> errors) {
         List<Boolean> employeeQualifications;
+        boolean qualified = false;
+
         for (EmployeeModel employee : getEmployees()) {
             employeeQualifications = database.getQualifications(employee.getEmployeeID());
-            if (employeeQualifications.get(0)) { //employee is qualified to open
-                return true;
+            if (!qualified && employeeQualifications.get(0)) { //employee is qualified to open
+                qualified = true;
             }
         }
-        return false;
+
+        if (!qualified) {
+            errors.add(new ErrorModel(getDate(),
+                    "MORNING SHIFT - No employees are qualified to open."));
+        }
+
+        return errors;
     }
 }

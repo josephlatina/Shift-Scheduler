@@ -10,6 +10,7 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -41,7 +42,8 @@ public abstract class ShiftModel implements Serializable {
      * @param date - date of shift
      * @param employees - set of the assigned employee (set prevents duplicates)
      */
-    public ShiftModel(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees, int employeesNeeded) {
+    public ShiftModel(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees,
+                      int employeesNeeded) {
         this.shiftID = shiftID;
         this.date = date;
         this.employees = employees;
@@ -172,24 +174,22 @@ public abstract class ShiftModel implements Serializable {
      * @param database - DatabaseHelper object for the current session
      * @return verified
      */
-    public boolean verifyShift(DatabaseHelper database) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<ErrorModel> verifyShift(DatabaseHelper database, ArrayList<ErrorModel> errors) {
         // check if shift is full
-        if (!(employees.size() == employeesNeeded)) {
-            return false;
+        if (employees.size() != employeesNeeded) {
+            errors.add(new ErrorModel(date,
+                     getTime()+": Shift does not have enough employees assigned to it."));
         }
 
         // check employee availability
-        if (!this.verifyEmployeeAvailability(database)) {
-            return false;
-        }
+        errors = verifyEmployeeAvailability(database, errors);
 
         // check employee qualifications
-        if (!this.verifyEmployeeQualifications(database)) {
-            return false;
-        }
+        errors = verifyEmployeeQualifications(database, errors);
 
-        // shift passes verification
-        return true;
+        // return all found errors
+        return errors;
     }
 
     /**
@@ -198,14 +198,16 @@ public abstract class ShiftModel implements Serializable {
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    protected boolean verifyEmployeeAvailability(DatabaseHelper database) {
+    protected ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
+                                                               ArrayList<ErrorModel> errors) {
         List<EmployeeModel> availableEmployees = database.getAvailableEmployees(date, getTime());
         for (EmployeeModel employee : getEmployees()) {
             if (!availableEmployees.contains(employee)) { //employee is not available
-                return false;
+                errors.add(new ErrorModel(date, getTime()+" SHIFT - "+employee.getFName()+" "+
+                        employee.getLName()+" is scheduled but not available."));
             }
         }
-        return true;
+        return errors;
     };
 
     /**
@@ -214,6 +216,7 @@ public abstract class ShiftModel implements Serializable {
      * @param database - DatabaseHelper object for the current session
      * @return verified
      */
-    protected abstract boolean verifyEmployeeQualifications(DatabaseHelper database);
+    protected abstract ArrayList<ErrorModel>
+    verifyEmployeeQualifications(DatabaseHelper database, ArrayList<ErrorModel> errors);
 }
 

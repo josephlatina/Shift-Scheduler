@@ -41,7 +41,7 @@ public class ErrorModel {
     @NonNull
     public String toString() {
         if (endDate == null) return startDate + ": " + details;
-        else return startDate + "-" + endDate + ": " + details;
+        else return startDate + " to " + endDate + ": " + details;
     }
 
     /**
