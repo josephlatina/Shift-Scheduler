@@ -10,6 +10,7 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * Container for all the ShiftModels associated with a specific day.
@@ -102,23 +103,29 @@ public class DayModel implements Serializable {
      * @return whether day is valid
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public boolean verifyDay(DatabaseHelper database) {
+    public ArrayList<ErrorModel> verifyDay(DatabaseHelper database, ArrayList<ErrorModel> errors) {
         // check for proper shift existence based on day of week (should be guaranteed by other logic)
         DayOfWeek dow = date.getDayOfWeek();
         if (dow == DayOfWeek.SUNDAY || dow == DayOfWeek.SATURDAY) {
             if (fullShift == null || morningShift != null || eveningShift != null) {
-                return false;
+                errors.add(new ErrorModel(date, "CRITICAL. Improper shift existence."));
             }
         } else if (morningShift == null || eveningShift == null) {
-            return false;
+            errors.add(new ErrorModel(date, "CRITICAL. Improper shift existence."))
         }
 
         // check shifts themselves
-        if (morningShift != null && !morningShift.verifyShift(database)) {return false;}
-        if (eveningShift != null && !eveningShift.verifyShift(database)) {return false;}
-        if (fullShift != null && !fullShift.verifyShift(database)) {return false;}
+        if (morningShift != null) {
+            errors = morningShift.verifyShift(database, errors);
+        }
+        if (eveningShift != null) {
+            errors = eveningShift.verifyShift(database, errors);
+        }
+        if (fullShift != null) {
+            errors = fullShift.verifyShift(database, errors);
+        }
 
-        // day has passed verification
-        return true;
+        // return all found errors
+        return errors;
     }
 }

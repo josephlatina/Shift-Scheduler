@@ -23,7 +23,8 @@ public class FullShift extends ShiftModel implements Serializable {
      * @param employees  - set of assigned employees
      * @param employeesNeeded - maximum employees allowed
      */
-    public FullShift(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees, int employeesNeeded) {
+    public FullShift(int shiftID, LocalDate date, NavigableSet<EmployeeModel> employees,
+                     int employeesNeeded) {
         super(shiftID, date, employees, employeesNeeded);
     }
 
@@ -41,24 +42,31 @@ public class FullShift extends ShiftModel implements Serializable {
      * @return verified
      */
     @Override
-    protected boolean verifyEmployeeQualifications(DatabaseHelper database) {
+    protected ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
+                                                                 ArrayList<ErrorModel> errors) {
         boolean openQualified = false;
         boolean closeQualified = false;
         List<Boolean> employeeQualifications;
-        // check that at least one employee is qualified to open
-        // and that at least one employee is qualified to close
+
         for (EmployeeModel employee : getEmployees()) {
             employeeQualifications = database.getQualifications(employee.getEmployeeID());
-            if (!openQualified) {
+            if (!openQualified) { //opening qualification check and lock
                 openQualified = employeeQualifications.get(0);
             }
-            if (!closeQualified) {
+            if (!closeQualified) { //closing qualification check and lock
                 closeQualified = employeeQualifications.get(1);
             }
-            if (openQualified && closeQualified) {
-                return true;
-            }
         }
-        return false;
+
+        if (!openQualified) {
+            errors.add(new ErrorModel(getDate(),
+                    "FULL SHIFT - No employees are qualified to open."));
+        }
+        if (!closeQualified) {
+            errors.add(new ErrorModel(getDate(),
+                    "FULL SHIFT - No employees are qualified to close."));
+        }
+
+        return errors;
     }
 }
