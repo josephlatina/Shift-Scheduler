@@ -41,7 +41,7 @@ public class ErrorModel {
     @NonNull
     public String toString() {
         if (endDate == null) return startDate + ": " + details;
-        else return startDate + "-" + endDate + ": " + details;
+        else return startDate + " to " + endDate + ": " + details;
     }
 
     /**
@@ -60,10 +60,11 @@ public class ErrorModel {
     }
 
     /**
-     * @return endDate
+     * @return endDate, or startDate if there's isn't one
      */
     public LocalDate getEndDate() {
-        return endDate;
+        if (endDate == null) return startDate;
+        else return endDate;
     }
 
     /**
