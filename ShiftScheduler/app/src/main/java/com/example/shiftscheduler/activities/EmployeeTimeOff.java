@@ -1,6 +1,8 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,6 +36,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
     ImageButton backbtn;
     String empID, fullName;
     DatePickerDialog.OnDateSetListener fromDateListener, toDateListener;
+    AlertDialog.Builder alertDialogBuilder;
     //Recycler View Setup:
     private ArrayList<TimeoffModel> timeoffList;
     private RecyclerView recyclerView;
@@ -54,6 +57,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
         backbtn = findViewById(R.id.timeOffBack);
         addbtn = findViewById(R.id.addTimeOff);
         recyclerView = findViewById(R.id.timeOffList);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         //Receive Intent
         Intent intent = getIntent();
@@ -124,6 +128,15 @@ public class EmployeeTimeOff extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                if (dateFrom.getText().toString().isEmpty() == true || dateTo.getText().toString().isEmpty() == true) {
+                    promptErrorMessage(2);
+                    return;
+                }
+                if (LocalDate.parse(dateFrom.getText().toString()).compareTo(LocalDate.parse(dateTo.getText().toString())) > 0) {
+                    promptErrorMessage(1);
+                    return;
+                }
+
                 DatabaseHelper dbHelper = new DatabaseHelper(EmployeeTimeOff.this);
                 if (dateFrom.getText().toString().isEmpty() == false && dateTo.getText().toString().isEmpty() == false) {
                     LocalDate fromLocalDate = LocalDate.parse(dateFrom.getText().toString(), DateTimeFormatter.ISO_LOCAL_DATE);
@@ -143,6 +156,39 @@ public class EmployeeTimeOff extends AppCompatActivity {
         super.onResume();
         updateTimeoffList();
         buildRecyclerView();
+    }
+
+    private void promptErrorMessage(int code) {
+        String details1 = "Starting date is greater than the Ending date.";
+        String details2 = "Please populate empty fields.";
+        String details3 = "This request has already been processed.";
+
+        switch (code) {
+            case 1: alertDialogBuilder.setTitle("Invalid dates");
+                    alertDialogBuilder.setMessage(details1);
+                    break;
+            case 2: alertDialogBuilder.setTitle("Empty field");
+                    alertDialogBuilder.setMessage(details2);
+                    break;
+            case 3: alertDialogBuilder.setTitle("Duplicate entry");
+                    alertDialogBuilder.setMessage(details3);
+                    break;
+        }
+
+        alertDialogBuilder.setCancelable(false)
+                .setNegativeButton("OK",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
     }
 
     private void showDatePickerDialog(DatePickerDialog.OnDateSetListener dateListener) {
