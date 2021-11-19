@@ -39,7 +39,7 @@ public class TimeoffListAdapter extends RecyclerView.Adapter<TimeoffListAdapter.
             dateTo = itemView.findViewById(R.id.dateToList);
             deletebtn = itemView.findViewById(R.id.deleteTimeoff);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            deletebtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (listener != null) {

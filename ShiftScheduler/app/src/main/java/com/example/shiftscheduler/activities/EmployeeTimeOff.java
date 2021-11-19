@@ -28,11 +28,12 @@ import java.util.Calendar;
 public class EmployeeTimeOff extends AppCompatActivity {
 
     public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
+    public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
 
     EditText name, dateTo, dateFrom;
     Button addbtn;
     ImageButton backbtn;
-    String empID;
+    String empID, fullName;
     DatePickerDialog.OnDateSetListener fromDateListener, toDateListener;
     //Recycler View Setup:
     private ArrayList<TimeoffModel> timeoffList;
@@ -57,7 +58,8 @@ public class EmployeeTimeOff extends AppCompatActivity {
 
         //Receive Intent
         Intent intent = getIntent();
-        name.setText(intent.getStringExtra(EmployeeInfo.EMPLOYEE_NAME));
+        fullName = intent.getStringExtra(EmployeeInfo.EMPLOYEE_NAME);
+        name.setText(fullName);
         empID = intent.getStringExtra(EmployeeInfo.EDITEMPLOYEE_ID);
 
         //Build recycler view
@@ -98,6 +100,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(EmployeeTimeOff.this, EmployeeInfo.class);
                 myIntent.putExtra(EMPLOYEE_ID, empID);
+                myIntent.putExtra(EMPLOYEE_NAME, fullName);
                 startActivity(myIntent);
             }
         });
@@ -160,6 +163,22 @@ public class EmployeeTimeOff extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         adapter = new TimeoffListAdapter(timeoffList);
+
+        //When you click on the delete button inside the recycler view
+        adapter.setOnTimeoffClickListener(new TimeoffListAdapter.OnTimeoffClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onTimeoffClick(int position) {
+                TimeoffModel timeoff = timeoffList.get(position);
+                int timeoffID = timeoff.getTimeoffID();
+
+                DatabaseHelper dbHelper = new DatabaseHelper(EmployeeTimeOff.this);
+                dbHelper.removeTimeOff(timeoffID);
+
+                updateTimeoffList();
+                buildRecyclerView();
+            }
+        });
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

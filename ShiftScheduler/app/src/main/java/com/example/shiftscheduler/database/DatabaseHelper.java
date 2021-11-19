@@ -588,7 +588,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<TimeoffModel> returnList = new ArrayList<>();
 
         //get data from the database
-        String queryString = "SELECT T." + COL_EMPID + ", " + COL_FNAME + ", " + COL_LNAME + ", " + COL_DATEFROM +
+        String queryString = "SELECT T." + COL_TIMEOFFID + ", T." + COL_EMPID + ", " + COL_FNAME + ", " + COL_LNAME + ", " + COL_DATEFROM +
                 ", " + COL_DATETO + " FROM " + TIMEOFF_TABLE + " AS T, " + EMPLOYEE_TABLE + " AS E WHERE T." +
                 COL_EMPID + " = E." + COL_EMPID + " AND T." + COL_EMPID + " = " + empID;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -598,13 +598,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){ //move it to the first of the result set
             //loop through the results
             do{
-                int employeeID = cursor.getInt(0);
-                String fName = cursor.getString(1);
-                String lName = cursor.getString(2);
-                LocalDate dateFrom = LocalDate.parse(cursor.getString(3), DateTimeFormatter.ISO_LOCAL_DATE);
-                LocalDate dateTo = LocalDate.parse(cursor.getString(4), DateTimeFormatter.ISO_LOCAL_DATE);
+                int timeoffID = cursor.getInt(0);
+                int employeeID = cursor.getInt(1);
+                String fName = cursor.getString(2);
+                String lName = cursor.getString(3);
+                LocalDate dateFrom = LocalDate.parse(cursor.getString(4), DateTimeFormatter.ISO_LOCAL_DATE);
+                LocalDate dateTo = LocalDate.parse(cursor.getString(5), DateTimeFormatter.ISO_LOCAL_DATE);
 
-                TimeoffModel entry = new TimeoffModel(employeeID, fName, lName, dateFrom, dateTo);
+                TimeoffModel entry = new TimeoffModel(timeoffID, employeeID, fName, lName, dateFrom, dateTo);
                 returnList.add(entry);
             } while(cursor.moveToNext());
         } else {
@@ -700,28 +701,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Removes timeoff entry from the database
-    public boolean removeTimeOff(int empID, LocalDate dateFrom, LocalDate dateTo) {
-        int timeOffID = 0;
+    public boolean removeTimeOff(int timeOffID) {
         //Retrieve the database already created and create an instance of database to hold it
         SQLiteDatabase db = this.getWritableDatabase(); // open the database from db
-        ContentValues cv = new ContentValues();
-        //get data from the database
-        String queryString = "SELECT " + COL_TIMEOFFID + " FROM " + TIMEOFF_TABLE + " WHERE DATE(" + COL_DATEFROM +
-                ") = ? AND " + COL_DATETO + " = ? AND " + COL_EMPID + " = ? ";
-        //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(dateFrom.toString())),
-                String.valueOf(Date.valueOf(dateTo.toString())), String.valueOf(empID)});
-        //check if the result successfully brought back from the database
-        if (cursor.moveToFirst()) {
-            timeOffID = cursor.getInt(0);
-        }
 
         //Remove timeoff entry from database
         long success = db.delete(TIMEOFF_TABLE, COL_TIMEOFFID + " = ? ",
                 new String[] {String.valueOf(timeOffID)});
 
-        //close both cursor and db
-        cursor.close();
+        //close db
         db.close();
         if (success == -1) {
             return false;

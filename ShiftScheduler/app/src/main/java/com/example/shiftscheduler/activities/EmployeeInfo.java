@@ -122,6 +122,7 @@ public class EmployeeInfo extends AppCompatActivity {
         //if activity it returned from is not EmployeeEditForm, then retrieve from EmployeeTimeOff
         if (empID == null) {
             empID = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_ID);
+            fullName = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_NAME);
         }
         updateProfile(empID);
         updateQualifications(empID);
