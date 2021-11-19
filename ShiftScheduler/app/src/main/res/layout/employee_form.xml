@@ -44,6 +44,7 @@
         android:inputType="date"
         android:minHeight="48dp"
         android:text=""
+        android:focusable="false"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lastName" />
 

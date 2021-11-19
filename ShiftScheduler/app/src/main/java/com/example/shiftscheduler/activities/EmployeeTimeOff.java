@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -134,8 +133,6 @@ public class EmployeeTimeOff extends AppCompatActivity {
 
                 updateTimeoffList();
                 buildRecyclerView();
-
-                Toast.makeText(EmployeeTimeOff.this, String.valueOf(adapter.getItemCount()), Toast.LENGTH_SHORT).show();
             }
         });
 
