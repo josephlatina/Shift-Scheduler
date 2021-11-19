@@ -14,10 +14,13 @@ import androidx.annotation.RequiresApi;
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.ShiftModel;
+import com.example.shiftscheduler.models.TimeoffModel;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -571,6 +574,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 EmployeeModel newEmployee = new EmployeeModel(employeeID,
                         fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
                 returnList.add(newEmployee);
+            } while(cursor.moveToNext());
+        } else {
+            // error, nothing added to the list
+        }
+
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+        return returnList;
+    }
+
+    //retrieve data from the Timeoff table
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<TimeoffModel> getTimeoffs() {
+        List<TimeoffModel> returnList = new ArrayList<>();
+
+        //get data from the database
+        String queryString = "SELECT * FROM " + TIMEOFF_TABLE;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()){ //move it to the first of the result set
+            //loop through the results
+            do{
+                int employeeID = cursor.getInt(1);
+                LocalDate dateFrom = LocalDate.parse(cursor.getString(2), DateTimeFormatter.ISO_LOCAL_DATE);
+                LocalDate dateTo = LocalDate.parse(cursor.getString(3), DateTimeFormatter.ISO_LOCAL_DATE);
+
+                TimeoffModel entry = new TimeoffModel(employeeID, dateFrom, dateTo);
+                returnList.add(entry);
             } while(cursor.moveToNext());
         } else {
             // error, nothing added to the list
