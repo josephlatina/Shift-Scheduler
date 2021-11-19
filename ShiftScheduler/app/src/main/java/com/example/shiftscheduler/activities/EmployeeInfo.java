@@ -20,11 +20,13 @@ import java.util.List;
 public class EmployeeInfo extends AppCompatActivity {
 
     public static final String EDITEMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
+    public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
 
     EditText name, phoneNumber, email, streetAddress, dateOfBirth;
     Button editbtn;
+    Button timeoffbtn;
     ImageButton backbtn;
-    String empID;
+    String empID, fullName;
     CheckBox opening, closing;
     CheckBox AvailMonMorn, AvailTuesMorn, AvailWedMorn, AvailThursMorn, AvailFriMorn, AvailSat, AvailSun;
     CheckBox AvailMonEven, AvailTuesEven, AvailWedEven, AvailThursEven, AvailFriEven;
@@ -70,10 +72,12 @@ public class EmployeeInfo extends AppCompatActivity {
         AvailFriEven.setEnabled(false);
         AvailSat.setEnabled(false);
         AvailSun.setEnabled(false);
+        timeoffbtn = (Button) findViewById(R.id.timeOffBtn);
 
         //Populate fields with employee information
         Intent intent = getIntent();
-        name.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_NAME));
+        fullName = intent.getStringExtra(EmployeeList.EMPLOYEE_NAME);
+        name.setText(fullName);
         phoneNumber.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_PHONE_NUMBER));
         email.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_EMAIL));
         streetAddress.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_ADDRESS));
@@ -98,12 +102,28 @@ public class EmployeeInfo extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
+
+        //Button listener for time off button
+        timeoffbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(EmployeeInfo.this, EmployeeTimeOff.class);
+                myIntent.putExtra(EMPLOYEE_NAME, fullName);
+                myIntent.putExtra(EDITEMPLOYEE_ID, empID);
+                startActivity(myIntent);
+            }
+        });
     }
 
     public void onResume() {
         super.onResume();
         Intent intent = getIntent();
         empID = intent.getStringExtra((EmployeeEditForm.EMPLOYEE_ID));
+        //if activity it returned from is not EmployeeEditForm, then retrieve from EmployeeTimeOff
+        if (empID == null) {
+            empID = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_ID);
+            fullName = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_NAME);
+        }
         updateProfile(empID);
         updateQualifications(empID);
         updateAvailability(empID);

@@ -2,7 +2,6 @@ package com.example.shiftscheduler.models;
 
 import android.os.Build;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.database.DatabaseHelper;
@@ -111,7 +110,7 @@ public class DayModel implements Serializable {
                 errors.add(new ErrorModel(date, "CRITICAL. Improper shift existence."));
             }
         } else if (morningShift == null || eveningShift == null) {
-            errors.add(new ErrorModel(date, "CRITICAL. Improper shift existence."))
+            errors.add(new ErrorModel(date, "CRITICAL. Improper shift existence."));
         }
 
         // check shifts themselves

@@ -1,10 +1,12 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Switch;
@@ -16,6 +18,7 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class EmployeeEditForm extends AppCompatActivity {
@@ -33,6 +36,7 @@ public class EmployeeEditForm extends AppCompatActivity {
     String empID;
     int open = 0, close = 0;
     int sunShift =0, monShift=0, tueShift=0, wedShift=0, thursShift=0, friShift=0, satShift=0;
+    DatePickerDialog.OnDateSetListener dobListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -268,5 +272,39 @@ public class EmployeeEditForm extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
+
+        //Implement date listener
+        dobListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                String date = year + "-" + (month) + "-";
+                if (dayOfMonth < 10) {
+                    date += "0" + dayOfMonth; //for formatting purposes
+                } else {
+                    date += dayOfMonth;
+                }
+
+                dob.setText(date);
+            }
+        };
+
+        //On click listener for dob
+        dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog(dobListener);
+            }
+        });
+    }
+
+    private void showDatePickerDialog(DatePickerDialog.OnDateSetListener dateListener) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this,
+                dateListener,
+                Calendar.getInstance().get(Calendar.YEAR),
+                Calendar.getInstance().get(Calendar.MONTH),
+                Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        );
+        datePickerDialog.show();
     }
 }
