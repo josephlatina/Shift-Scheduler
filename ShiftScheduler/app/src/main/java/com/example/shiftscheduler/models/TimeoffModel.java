@@ -1,2 +1,21 @@
-package com.example.shiftscheduler.models;public class TimeoffModel {
+package com.example.shiftscheduler.models;
+
+import java.time.LocalDate;
+
+public class TimeoffModel {
+    private int empID;
+    private LocalDate dateFrom;
+    private LocalDate dateTo;
+
+    public TimeoffModel (int empID, LocalDate dateFrom, LocalDate dateTo) {
+        this.empID = empID;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
+    }
+
+    public int getEmpID() { return empID; }
+
+    public LocalDate getDateFrom() { return dateFrom; }
+
+    public LocalDate getDateTo() { return dateTo; }
 }
