@@ -1,13 +1,5 @@
 package com.example.shiftscheduler.activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.shiftscheduler.R;
-import com.example.shiftscheduler.database.DatabaseHelper;
-import com.example.shiftscheduler.models.EmployeeModel;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -17,12 +9,21 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
+import com.example.shiftscheduler.models.TimeoffModel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class EmployeeTimeOff extends AppCompatActivity {
 
@@ -34,12 +35,13 @@ public class EmployeeTimeOff extends AppCompatActivity {
     String empID;
     DatePickerDialog.OnDateSetListener fromDateListener, toDateListener;
     //Recycler View Setup:
-//    private ArrayList<EmployeeModel> employeeList;
+    private ArrayList<TimeoffModel> timeoffList;
     private RecyclerView recyclerView;
-    private EmployeeListAdapter adapter;
+    private TimeoffListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,11 +53,16 @@ public class EmployeeTimeOff extends AppCompatActivity {
         dateFrom = findViewById(R.id.editDateFrom);
         backbtn = findViewById(R.id.timeOffBack);
         addbtn = findViewById(R.id.addTimeOff);
+        recyclerView = findViewById(R.id.timeOffList);
 
         //Receive Intent
         Intent intent = getIntent();
         name.setText(intent.getStringExtra(EmployeeInfo.EMPLOYEE_NAME));
         empID = intent.getStringExtra(EmployeeInfo.EDITEMPLOYEE_ID);
+
+        //Build recycler view
+        updateTimeoffList();
+        buildRecyclerView();
 
         //Implement date listeners
         fromDateListener = new DatePickerDialog.OnDateSetListener() {
@@ -121,9 +128,21 @@ public class EmployeeTimeOff extends AppCompatActivity {
                     LocalDate toLocalDate = LocalDate.parse(dateTo.getText().toString(), DateTimeFormatter.ISO_LOCAL_DATE);
                     dbHelper.addTimeOff(Integer.parseInt(empID), fromLocalDate, toLocalDate);
                 }
+
+                updateTimeoffList();
+                buildRecyclerView();
+
+                Toast.makeText(EmployeeTimeOff.this, String.valueOf(adapter.getItemCount()), Toast.LENGTH_SHORT).show();
             }
         });
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void onResume() {
+        super.onResume();
+        updateTimeoffList();
+        buildRecyclerView();
     }
 
     private void showDatePickerDialog(DatePickerDialog.OnDateSetListener dateListener) {
@@ -135,6 +154,21 @@ public class EmployeeTimeOff extends AppCompatActivity {
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         );
         datePickerDialog.show();
+    }
+
+    private void buildRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        adapter = new TimeoffListAdapter(timeoffList);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateTimeoffList() {
+        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeTimeOff.this);
+        timeoffList = (ArrayList) dbHelper.getTimeoffs(Integer.parseInt(empID));
     }
 
 }

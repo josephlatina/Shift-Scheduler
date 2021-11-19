@@ -4,11 +4,15 @@ import java.time.LocalDate;
 
 public class TimeoffModel {
     private int empID;
+    private String fName;
+    private String lName;
     private LocalDate dateFrom;
     private LocalDate dateTo;
 
-    public TimeoffModel (int empID, LocalDate dateFrom, LocalDate dateTo) {
+    public TimeoffModel (int empID, String fName, String lName, LocalDate dateFrom, LocalDate dateTo) {
         this.empID = empID;
+        this.fName = fName;
+        this.lName = lName;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
     }
@@ -18,4 +22,8 @@ public class TimeoffModel {
     public LocalDate getDateFrom() { return dateFrom; }
 
     public LocalDate getDateTo() { return dateTo; }
+
+    public String getFName() { return fName; }
+
+    public String getLName() { return lName; }
 }

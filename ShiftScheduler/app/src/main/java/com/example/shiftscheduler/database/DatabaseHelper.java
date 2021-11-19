@@ -6,18 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
-import com.example.shiftscheduler.models.ShiftModel;
 import com.example.shiftscheduler.models.TimeoffModel;
 
 import java.sql.Date;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -587,11 +584,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //retrieve data from the Timeoff table
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public List<TimeoffModel> getTimeoffs() {
+    public List<TimeoffModel> getTimeoffs(int empID) {
         List<TimeoffModel> returnList = new ArrayList<>();
 
         //get data from the database
-        String queryString = "SELECT * FROM " + TIMEOFF_TABLE;
+        String queryString = "SELECT T." + COL_EMPID + ", " + COL_FNAME + ", " + COL_LNAME + ", " + COL_DATEFROM +
+                ", " + COL_DATETO + " FROM " + TIMEOFF_TABLE + " AS T, " + EMPLOYEE_TABLE + " AS E WHERE T." +
+                COL_EMPID + " = E." + COL_EMPID + " AND T." + COL_EMPID + " = " + empID;
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
         Cursor cursor = db.rawQuery(queryString, null);
@@ -599,11 +598,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){ //move it to the first of the result set
             //loop through the results
             do{
-                int employeeID = cursor.getInt(1);
-                LocalDate dateFrom = LocalDate.parse(cursor.getString(2), DateTimeFormatter.ISO_LOCAL_DATE);
-                LocalDate dateTo = LocalDate.parse(cursor.getString(3), DateTimeFormatter.ISO_LOCAL_DATE);
+                int employeeID = cursor.getInt(0);
+                String fName = cursor.getString(1);
+                String lName = cursor.getString(2);
+                LocalDate dateFrom = LocalDate.parse(cursor.getString(3), DateTimeFormatter.ISO_LOCAL_DATE);
+                LocalDate dateTo = LocalDate.parse(cursor.getString(4), DateTimeFormatter.ISO_LOCAL_DATE);
 
-                TimeoffModel entry = new TimeoffModel(employeeID, dateFrom, dateTo);
+                TimeoffModel entry = new TimeoffModel(employeeID, fName, lName, dateFrom, dateTo);
                 returnList.add(entry);
             } while(cursor.moveToNext());
         } else {
