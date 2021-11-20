@@ -9,6 +9,7 @@ import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -172,15 +173,13 @@ public abstract class ShiftModel implements Serializable {
     /**
      * Evaluates whether the shift meets the specified criteria
      * @param database - DatabaseHelper object for the current session
+     * @param errors - existing list of errors
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<ErrorModel> verifyShift(DatabaseHelper database, ArrayList<ErrorModel> errors) {
         // check if shift is full
-        if (employees.size() != employeesNeeded) {
-            errors.add(new ErrorModel(date,
-                     getTime()+": Shift does not have enough employees assigned to it."));
-        }
+        errors = verifyShiftSize(errors);
 
         // check employee availability
         errors = verifyEmployeeAvailability(database, errors);
@@ -193,9 +192,46 @@ public abstract class ShiftModel implements Serializable {
     }
 
     /**
+     * Evaluates whether the shift meets the specified criteria
+     * (without an existing list of errors)
+     * @param database - DatabaseHelper object for the current session
+     * @return errors found
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<ErrorModel> verifyShift(DatabaseHelper database) {
+        return verifyShift(database, new ArrayList<>());
+    }
+
+    /**
+     * Verifies there are enough employees in the shift
+     * @param errors - existing list of errors
+     * @return errors found
+     */
+    public ArrayList<ErrorModel> verifyShiftSize(ArrayList<ErrorModel> errors) {
+        // check if shift is full
+        if (employees.size() != employeesNeeded) {
+            errors.add(new ErrorModel(date,
+                    getTime()+" SHIFT: Not enough employees assigned."));
+        }
+
+        return errors;
+    }
+
+    /**
+     * Verifies there are enough employees in the shift
+     * (without an existing list of errors)
+     * @return errors found
+     */
+    public ArrayList<ErrorModel> verifyShiftSize() {
+        return verifyShiftSize(new ArrayList<>());
+    }
+
+
+    /**
      * Verifies that all employees are available for this shift
      * @param database - DatabaseHelper object for the current session
-     * @return verified
+     * @param errors - existing list of errors
+     * @return errors found
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     protected ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
@@ -214,7 +250,8 @@ public abstract class ShiftModel implements Serializable {
      * Verifies employees' qualifications according to the specification
      * (set in subclasses)
      * @param database - DatabaseHelper object for the current session
-     * @return verified
+     * @param errors - existing list of errors
+     * @return errors found
      */
     protected abstract ArrayList<ErrorModel>
     verifyEmployeeQualifications(DatabaseHelper database, ArrayList<ErrorModel> errors);

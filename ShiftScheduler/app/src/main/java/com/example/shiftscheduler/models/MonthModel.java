@@ -95,7 +95,8 @@ public class MonthModel {
      * Checks every employee to ensure each one works every week involved in this month.
      * @param database - DatabaseHelper object for the current session
      * @param employees - ArrayList of all current (active) employees
-     * @return verified
+     * @param errors - existing list of errors
+     * @return errors found
      */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
     private ArrayList<ErrorModel> verifyEmployeesWorkWeekly(DatabaseHelper database,
