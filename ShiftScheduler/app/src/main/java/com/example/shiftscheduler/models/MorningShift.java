@@ -39,9 +39,10 @@ public class MorningShift extends ShiftModel implements Serializable {
     }
 
     /**
-     * Verifies this morning shift's employees' qualifications according to specifications
+     * Verifies employees' qualifications.
      * @param database - DatabaseHelper object for the current session
-     * @return verified
+     * @param errors - existing list of errors
+     * @return errors found
      */
     @Override
     protected ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,

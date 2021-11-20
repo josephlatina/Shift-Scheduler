@@ -99,6 +99,7 @@ public class DayModel implements Serializable {
     /**
      * Verifies the schedule for this day.
      * @param database - DatabaseHelper object for the current session
+     * @param errors - existing list of errors
      * @return whether day is valid
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -126,5 +127,16 @@ public class DayModel implements Serializable {
 
         // return all found errors
         return errors;
+    }
+
+    /**
+     * Verifies the schedule for this day.
+     * (without an existing list of errors)
+     * @param database - DatabaseHelper object for the current session
+     * @return whether day is valid
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<ErrorModel> verifyDay(DatabaseHelper database) {
+        return verifyDay(database, new ArrayList<>());
     }
 }
