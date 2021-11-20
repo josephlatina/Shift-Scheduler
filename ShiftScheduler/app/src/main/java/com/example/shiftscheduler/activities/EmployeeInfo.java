@@ -15,6 +15,7 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 
+import java.nio.file.attribute.AclFileAttributeView;
 import java.util.List;
 
 public class EmployeeInfo extends AppCompatActivity {
@@ -83,6 +84,108 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_ADDRESS));
         dateOfBirth.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_DOB));
         empID = intent.getStringExtra((EmployeeList.EMPLOYEE_ID));
+        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeInfo.this);
+        AvailabilityModel avail = dbHelper.getAvailability(Integer.parseInt(empID));
+
+        if (avail.getMonShift() == 1) {
+            AvailMonMorn.setChecked(true);
+            AvailMonEven.setChecked(false);
+        }
+        if (avail.getMonShift() == 2) {
+            AvailMonMorn.setChecked(false);
+            AvailMonEven.setChecked(true);
+        }
+        if (avail.getMonShift() == 3) {
+            AvailMonMorn.setChecked(true);
+            AvailMonEven.setChecked(true);
+        }
+
+        if (avail.getMonShift() < 1 || avail.getMonShift() > 3){
+            AvailMonMorn.setChecked(false);
+            AvailMonEven.setChecked(false);
+        }
+
+        // tue availability
+        if (avail.getTueShift() == 1) {
+            AvailTuesMorn.setChecked(true);
+            AvailTuesEven.setChecked(false);
+        }
+        if (avail.getTueShift() == 2) {
+            AvailTuesMorn.setChecked(false);
+            AvailTuesEven.setChecked(true);
+        }
+        if (avail.getTueShift() == 3) {
+            AvailTuesMorn.setChecked(true);
+            AvailTuesEven.setChecked(true);
+        }
+
+        if (avail.getTueShift() < 1 || avail.getTueShift() > 3){
+            AvailTuesMorn.setChecked(false);
+            AvailTuesEven.setChecked(false);
+        }
+
+        //wed availability
+        if (avail.getWedShift() == 1) {
+            AvailWedMorn.setChecked(true);
+            AvailWedEven.setChecked(false);
+        }
+        if (avail.getWedShift() == 2) {
+            AvailWedMorn.setChecked(false);
+            AvailWedEven.setChecked(true);
+        }
+        if (avail.getWedShift() == 3) {
+            AvailWedMorn.setChecked(true);
+            AvailWedEven.setChecked(true);
+        }
+        if (avail.getWedShift() < 1 || avail.getWedShift() > 3){
+            AvailWedMorn.setChecked(false);
+            AvailWedEven.setChecked(false);
+        }
+
+        // thurs availability
+        if (avail.getThursShift() == 1) {
+            AvailThursMorn.setChecked(true);
+            AvailThursEven.setChecked(false);
+        }
+        if (avail.getThursShift() == 2) {
+            AvailThursMorn.setChecked(false);
+            AvailThursEven.setChecked(true);
+        }
+        if (avail.getThursShift() == 3) {
+            AvailThursMorn.setChecked(true);
+            AvailThursEven.setChecked(true);
+        }
+        if (avail.getThursShift() < 1 || avail.getThursShift() > 3){
+            AvailThursMorn.setChecked(false);
+            AvailThursEven.setChecked(false);
+        }
+
+        // fri availability
+        if (avail.getFriShift() == 1) {
+            AvailFriMorn.setChecked(true);
+            AvailFriEven.setChecked(false);
+        }
+        if (avail.getFriShift() == 2) {
+            AvailFriMorn.setChecked(false);
+            AvailFriEven.setChecked(true);
+        }
+        if (avail.getFriShift() == 3) {
+            AvailFriMorn.setChecked(true);
+            AvailFriEven.setChecked(true);
+        }
+        if (avail.getFriShift() < 1 || avail.getFriShift() > 3){
+            AvailFriMorn.setChecked(false);
+            AvailFriEven.setChecked(false);
+        }
+
+        // weekend's availability
+        if (avail.getSatShift() == 1) {
+            AvailSat.setChecked(true);
+        } else AvailSat.setChecked(false);
+
+        if (avail.getSunShift() == 1) {
+            AvailSun.setChecked(true);
+        } else AvailSun.setChecked(false);
 
         //Button listener for edit button
         editbtn.setOnClickListener(new View.OnClickListener() {

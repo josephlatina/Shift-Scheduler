@@ -162,6 +162,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String addQualifications = "INSERT INTO " + QUALIFICATIONS_TABLE + " DEFAULT VALUES";
         String addAvailability = "INSERT INTO " + AVAILABILITY_TABLE + " DEFAULT VALUES";
+
         db.execSQL(addQualifications);
         db.execSQL(addAvailability);
 
@@ -172,6 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cur.close();
         cv.put(COL_QUALIFICATIONID, String.valueOf(avaID));
         cv.put(COL_AVAILABILITYID, String.valueOf(avaID));
+
 
         //check if inserting into the database was successful or not
         long success = db.insert(EMPLOYEE_TABLE,null,cv);

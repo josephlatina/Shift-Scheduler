@@ -16,8 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
+import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class EmployeeAddForm extends AppCompatActivity {
@@ -99,9 +101,11 @@ public class EmployeeAddForm extends AppCompatActivity {
 
                 //Initialize database helper object
                 DatabaseHelper dbHelper = new DatabaseHelper(EmployeeAddForm.this);
-                //Use the addEntry method to insert the new employee object into the database
+
+                // Use the addEntry method to insert the new employee object into the database
                 // and store result in boolean variable
                 boolean success = dbHelper.addEmployee(employee);
+
                 if (opening.isChecked()) {
                     open = 1;
                 }
@@ -112,29 +116,41 @@ public class EmployeeAddForm extends AppCompatActivity {
                 if (AvailMonMorn.isChecked() && !AvailMonEven.isChecked()) monShift = 1;
                 if (!AvailMonMorn.isChecked() && AvailMonEven.isChecked()) monShift = 2;
                 if (AvailMonMorn.isChecked() && AvailMonEven.isChecked()) monShift = 3;
+                if (!AvailMonMorn.isChecked() && !AvailMonEven.isChecked()) monShift = 0;
                 if (AvailTuesMorn.isChecked() && !AvailTuesEven.isChecked()) tueShift = 1;
                 if (!AvailTuesMorn.isChecked() && AvailTuesEven.isChecked()) tueShift = 2;
                 if (AvailTuesMorn.isChecked() && AvailTuesEven.isChecked()) tueShift = 3;
+                if (!AvailTuesMorn.isChecked() && !AvailTuesEven.isChecked()) tueShift = 0;
                 if (AvailWedMorn.isChecked() && !AvailWedEven.isChecked()) wedShift = 1;
                 if (!AvailWedMorn.isChecked() && AvailWedEven.isChecked()) wedShift = 2;
                 if (AvailWedMorn.isChecked() && AvailWedEven.isChecked()) wedShift = 3;
+                if (!AvailWedMorn.isChecked() && !AvailWedEven.isChecked()) wedShift = 0;
                 if (AvailThursMorn.isChecked() && !AvailThursEven.isChecked()) thursShift = 1;
                 if (!AvailThursMorn.isChecked() && AvailThursEven.isChecked()) thursShift = 2;
                 if (AvailThursMorn.isChecked() && AvailThursEven.isChecked()) thursShift = 3;
+                if (!AvailThursMorn.isChecked() && !AvailThursEven.isChecked()) thursShift = 0;
                 if (AvailFriMorn.isChecked() && !AvailFriEven.isChecked()) friShift = 1;
                 if (!AvailFriMorn.isChecked() && AvailFriEven.isChecked()) friShift = 2;
                 if (AvailFriMorn.isChecked() && AvailFriEven.isChecked()) friShift = 3;
+                if (!AvailFriMorn.isChecked() && !AvailFriEven.isChecked()) friShift = 0;
                 if (AvailSat.isChecked()) satShift = 1;
+                if (!AvailSat.isChecked()) satShift = 0;
                 if (AvailSun.isChecked()) sunShift = 1;
-                dbHelper.updateQualification(employee.getEmployeeID(), open, close);
-                //update Availability Table
-                dbHelper.updateAvailability(employee.getEmployeeID(), sunShift, monShift,
+                if (!AvailSun.isChecked()) sunShift = 0;
+
+                // if the employModel has been added as a new employee, then the new availability
+                // model will be added for the employee
+                ArrayList<EmployeeModel> empList;
+                empList = new ArrayList<>();
+                empList = (ArrayList) dbHelper.getEmployees();
+                int empListSize = empList.size();
+
+                dbHelper.updateAvailability(empListSize, sunShift, monShift,
                         tueShift, wedShift, thursShift, friShift, satShift);
 
                 //Generate message indicating if insertion was a success or a failure
                 Toast.makeText(EmployeeAddForm.this, "Success = " + success,
                         Toast.LENGTH_SHORT).show();
-
 
                 //Go back to the EmployeeList button
                 Intent myIntent = new Intent(EmployeeAddForm.this, EmployeeList.class);
@@ -177,6 +193,8 @@ public class EmployeeAddForm extends AppCompatActivity {
         );
         datePickerDialog.show();
     }
+
+
 
 
 }
