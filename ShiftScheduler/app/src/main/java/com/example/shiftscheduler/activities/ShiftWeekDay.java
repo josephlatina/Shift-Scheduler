@@ -39,7 +39,6 @@ public class ShiftWeekDay extends AppCompatActivity {
     Button backbtn;
     EditText shiftdate;
     //Recycler View Setup:
-    private ArrayList<EmployeeModel> employeeList;
     private ArrayList<EmployeeModel> availOpenEmployeeList;
     private ArrayList<EmployeeModel> availCloseEmployeeList;
     private ArrayList<EmployeeModel> schedOpenEmployeeList;
