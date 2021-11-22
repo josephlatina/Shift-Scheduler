@@ -1,5 +1,6 @@
 package com.example.shiftscheduler.activities;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import com.example.shiftscheduler.models.EmployeeModel;
 
 import java.util.ArrayList;
 
-public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapter.EmployeeListViewHolder> {
+public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<EmployeeModel> employeeList;
     private OnEmployeeClickListener listener;
     private int layoutType;
@@ -50,6 +51,31 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
         }
     }
 
+    public static class AvailableWeekdayViewHolder extends RecyclerView.ViewHolder {
+        public ImageView addBtn;
+        public TextView employeeName;
+        public TextView qualification;
+
+        public AvailableWeekdayViewHolder(@NonNull View itemView, final OnEmployeeClickListener listener) {
+            super(itemView);
+            addBtn = itemView.findViewById(R.id.availableAddButton);
+            employeeName = itemView.findViewById(R.id.weekdayAvailable);
+            qualification = itemView.findViewById(R.id.qualificationAvailable);
+
+            addBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEmployeeClick(position);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, int layoutType) {
         this.employeeList = employeeList;
         this.layoutType = layoutType;
@@ -57,24 +83,35 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
 
     @NonNull
     @Override
-    public EmployeeListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         switch (layoutType) {
             case 0:
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_object, parent, false);
-                EmployeeListViewHolder elvh = new EmployeeListViewHolder(v, listener);
+                View employeeObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_object, parent, false);
+                EmployeeListViewHolder elvh = new EmployeeListViewHolder(employeeObject, listener);
                 return elvh;
+            case 1:
+                View weekdayObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_weekday_object, parent, false);
+                AvailableWeekdayViewHolder awvh = new AvailableWeekdayViewHolder(weekdayObject, listener);
+                return awvh;
         }
         return null;
     }
 
+    @NonNull
     @Override
-    public void onBindViewHolder(@NonNull EmployeeListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        EmployeeModel currentEmployee = employeeList.get(position);
+
         switch (layoutType) {
             case 0:
-                EmployeeModel currentEmployee = employeeList.get(position);
-
-                holder.imageView.setImageResource(R.drawable.ic_account_circle); //could become profile pic
-                holder.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                EmployeeListViewHolder elvh = (EmployeeListViewHolder) holder;
+                elvh.imageView.setImageResource(R.drawable.ic_account_circle); //could become profile pic
+                elvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                break;
+            case 1:
+                AvailableWeekdayViewHolder awvh = (AvailableWeekdayViewHolder) holder;
+                awvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                break;
         }
     }
 

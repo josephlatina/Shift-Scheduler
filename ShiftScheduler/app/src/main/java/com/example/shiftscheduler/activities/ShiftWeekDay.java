@@ -51,6 +51,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     private RecyclerView availCloseRecyclerView;
     private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    LocalDate localDate;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -76,9 +77,9 @@ public class ShiftWeekDay extends AppCompatActivity {
         Intent incomingIntent = getIntent();
         String date = incomingIntent.getStringExtra("date");
         shiftdate.setText(date);
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
-        updateEmployeeList(localDate);
+        updateEmployeeList();
         buildAllRecyclerViews();
 
         //Button listener for back
@@ -112,24 +113,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 }
 
                 //update Recycler Views
-                updateEmployeeList(localDate);
-                buildAllRecyclerViews();
-                selectedavailemp.getText().clear();
-            }
-        });
-        //Button listener for Adding Closing Employees
-        addclosebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //schedule an employee for that shift (scheduleEmployee) will update the database
-                if (selectedavailemp.getText().toString().isEmpty() == false) {
-                    int employeeID = Integer.parseInt(selectedavailemp.getText().toString());
-                    DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                    dbHelper.scheduleEmployee(employeeID, localDate, "EVENING");
-                }
-
-                //update Recycler Views
-                updateEmployeeList(localDate);
+                updateEmployeeList();
                 buildAllRecyclerViews();
                 selectedavailemp.getText().clear();
             }
@@ -146,7 +130,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 }
 
                 //update Recycler Views
-                updateEmployeeList(localDate);
+                updateEmployeeList();
                 buildAllRecyclerViews();
                 selectedschedemp.getText().clear();
             }
@@ -163,7 +147,7 @@ public class ShiftWeekDay extends AppCompatActivity {
                 }
 
                 //update Recycler Views
-                updateEmployeeList(localDate);
+                updateEmployeeList();
                 buildAllRecyclerViews();
                 selectedschedemp.getText().clear();
             }
@@ -171,7 +155,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void updateEmployeeList(LocalDate localDate) {
+    public void updateEmployeeList() {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
         availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "MORNING");
         availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "EVENING");
@@ -189,17 +173,30 @@ public class ShiftWeekDay extends AppCompatActivity {
     public void buildAvailRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new EmployeeListAdapter(employeeList, 0);
+        adapter = new EmployeeListAdapter(employeeList, 1);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         adapter.setOnEmployeeClickListener(new EmployeeListAdapter.OnEmployeeClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
                 selectedavailemp.setText(String.valueOf(empID));
+
+                //schedule an employee for that shift (scheduleEmployee) will update the database
+                if (selectedavailemp.getText().toString().isEmpty() == false) {
+                    int employeeID = Integer.parseInt(selectedavailemp.getText().toString());
+                    DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                    dbHelper.scheduleEmployee(employeeID, localDate, "MORNING");
+                }
+
+                //update Recycler Views
+                updateEmployeeList();
+                buildAllRecyclerViews();
+                selectedavailemp.getText().clear();
 
             }
         });
