@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapter.EmployeeListViewHolder> {
     private ArrayList<EmployeeModel> employeeList;
     private OnEmployeeClickListener listener;
+    private int layoutType;
 
     public interface OnEmployeeClickListener {
         void onEmployeeClick(int position);
@@ -49,24 +50,32 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<EmployeeListAdapte
         }
     }
 
-    public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList) {
+    public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, int layoutType) {
         this.employeeList = employeeList;
+        this.layoutType = layoutType;
     }
 
     @NonNull
     @Override
     public EmployeeListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_object, parent, false);
-        EmployeeListViewHolder elvh = new EmployeeListViewHolder(v, listener);
-        return elvh;
+        switch (layoutType) {
+            case 0:
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_object, parent, false);
+                EmployeeListViewHolder elvh = new EmployeeListViewHolder(v, listener);
+                return elvh;
+        }
+        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull EmployeeListViewHolder holder, int position) {
-        EmployeeModel currentEmployee = employeeList.get(position);
+        switch (layoutType) {
+            case 0:
+                EmployeeModel currentEmployee = employeeList.get(position);
 
-        holder.imageView.setImageResource(R.drawable.ic_account_circle); //could become profile pic
-        holder.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                holder.imageView.setImageResource(R.drawable.ic_account_circle); //could become profile pic
+                holder.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+        }
     }
 
     @Override

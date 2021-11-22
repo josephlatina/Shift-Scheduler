@@ -15,11 +15,16 @@
         <entry key="..\:/Projects/ShiftScheduler/app/src/main/res/layout/intro.xml" value="0.25" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_editform.xml" value="0.2692502532928065" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_form.xml" value="0.3278985507246377" />
-        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_info.xml" value="0.2692502532928065" />
+        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_info.xml" value="0.33" />
+        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_list.xml" value="0.5541666666666667" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_object.xml" value="0.2692502532928065" />
+        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff.xml" value="0.5" />
+        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff_object.xml" value="0.5541666666666667" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_calendar.xml" value="0.25" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekday.xml" value="0.5" />
+        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekday_object.xml" value="0.390625" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekend.xml" value="0.5" />
+        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekend_object.xml" value="0.390625" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/test.xml" value="0.33177083333333335" />
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/drawable/ic_calendar.xml" value="0.2921875" />
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/drawable/ic_employee.xml" value="0.2921875" />
@@ -29,11 +34,7 @@
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/employee_form.xml" value="0.33" />
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/employee_info.xml" value="0.3724007561436673" />
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/employee_list.xml" value="0.2760416666666667" />
-        <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/employee_object.xml" value="0.24791666666666667" />
-        <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff.xml" value="0.24791666666666667" />
-        <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff_object.xml" value="0.24791666666666667" />
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/shift_calendar.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekend.xml" value="0.24791666666666667" />
         <entry key="..\:/Users/orion/Documents/Cmpt 395/f21borg/ShiftScheduler/app/src/main/res/menu/bottom_menu.xml" value="0.2760416666666667" />
         <entry key="..\:/Users/zhouz/f21borg/ShiftScheduler/app/src/main/res/layout/employee.xml" value="0.34193840579710144" />
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.26510416666666664" />
@@ -47,8 +48,6 @@
         <entry key="app/src/main/res/layout/employee_info.xml" value="0.3026041666666667" />
         <entry key="app/src/main/res/layout/employee_list.xml" value="0.2609375" />
         <entry key="app/src/main/res/layout/employee_object.xml" value="0.20697463768115942" />
-        <entry key="app/src/main/res/layout/employee_timeoff.xml" value="0.21732522796352582" />
-        <entry key="app/src/main/res/layout/employee_timeoff_object.xml" value="0.21732522796352582" />
         <entry key="app/src/main/res/layout/shift_calendar.xml" value="0.2609375" />
         <entry key="app/src/main/res/layout/shift_day.xml" value="0.375" />
       </map>

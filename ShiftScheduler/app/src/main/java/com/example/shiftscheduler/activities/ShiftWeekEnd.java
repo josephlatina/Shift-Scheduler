@@ -126,7 +126,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
     public void buildAvailRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new EmployeeListAdapter(employeeList);
+        adapter = new EmployeeListAdapter(employeeList,0);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
@@ -145,7 +145,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
     public void buildSchedRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new EmployeeListAdapter(employeeList);
+        adapter = new EmployeeListAdapter(employeeList,0);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
