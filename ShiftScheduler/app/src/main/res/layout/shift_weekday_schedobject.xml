@@ -6,15 +6,16 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_width="195dp"
+        android:layout_width="match_parent"
         android:layout_height="35dp">
 
         <ImageButton
             android:id="@+id/scheduledDeleteButton"
-            app:srcCompat="@drawable/ic_delete"
+            android:layout_alignParentRight="true"
             android:layout_width="40dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="150dp"
+            android:layout_marginRight="5dp"
+            app:srcCompat="@drawable/ic_delete"
             tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         <TextView
