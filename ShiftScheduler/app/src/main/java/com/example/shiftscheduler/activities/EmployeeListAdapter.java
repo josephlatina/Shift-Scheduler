@@ -1,6 +1,5 @@
 package com.example.shiftscheduler.activities;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +75,31 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    public static class ScheduledWeekdayViewHolder extends RecyclerView.ViewHolder {
+        public ImageView deleteBtn;
+        public TextView employeeName;
+        public TextView qualification;
+
+        public ScheduledWeekdayViewHolder(@NonNull View itemView, final OnEmployeeClickListener listener) {
+            super(itemView);
+            deleteBtn = itemView.findViewById(R.id.scheduledDeleteButton);
+            employeeName = itemView.findViewById(R.id.weekdayScheduled);
+            qualification = itemView.findViewById(R.id.qualificationScheduled);
+
+            deleteBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEmployeeClick(position);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, int layoutType) {
         this.employeeList = employeeList;
         this.layoutType = layoutType;
@@ -93,6 +117,10 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 View weekdayObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_weekday_object, parent, false);
                 AvailableWeekdayViewHolder awvh = new AvailableWeekdayViewHolder(weekdayObject, listener);
                 return awvh;
+            case 2:
+                View weekdaySchedObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_weekday_schedobject, parent, false);
+                ScheduledWeekdayViewHolder swvh = new ScheduledWeekdayViewHolder(weekdaySchedObject, listener);
+                return swvh;
         }
         return null;
     }
@@ -111,6 +139,10 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case 1:
                 AvailableWeekdayViewHolder awvh = (AvailableWeekdayViewHolder) holder;
                 awvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                break;
+            case 2:
+                ScheduledWeekdayViewHolder swvh = (ScheduledWeekdayViewHolder) holder;
+                swvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
                 break;
         }
     }
