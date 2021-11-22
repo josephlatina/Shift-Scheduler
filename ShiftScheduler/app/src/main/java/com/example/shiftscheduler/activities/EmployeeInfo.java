@@ -84,6 +84,16 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_ADDRESS));
         dateOfBirth.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_DOB));
         empID = intent.getStringExtra((EmployeeList.EMPLOYEE_ID));
+        //Get intent from Employee Info activity if not Employee List
+        if (empID == null) {
+            empID = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_ID);
+            fullName = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_NAME);
+            //Otherwise, get intent from Employee Edit Form Activity
+            if (empID == null) {
+                empID = intent.getStringExtra(EmployeeEditForm.EMPLOYEE_ID);
+                fullName = intent.getStringExtra(EmployeeEditForm.EMPLOYEE_NAME);
+            }
+        }
         DatabaseHelper dbHelper = new DatabaseHelper(EmployeeInfo.this);
         AvailabilityModel avail = dbHelper.getAvailability(Integer.parseInt(empID));
 
