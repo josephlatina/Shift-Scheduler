@@ -6,47 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".activities.ShiftWeekEnd">
 
-    <EditText
-        android:id="@+id/weekEndSchedSelectedEmployee"
-        android:layout_width="104dp"
-        android:layout_height="40dp"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekEndSchedToolbar"
-        app:layout_constraintVertical_bias="0.0"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-    <TextView
-        android:id="@+id/weekEndAvailableEmpID2"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="@string/empID"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekEndSchedToolbar"
-        app:layout_constraintVertical_bias="0.0" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.05" />
 
-    <ImageButton
-        android:id="@+id/weekEndRemove"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/removeFullDay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekEndSchedToolbar"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_delete"/>
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.95" />
 
     <Toolbar
         android:id="@+id/weekEndAvailToolbar"
@@ -115,34 +87,6 @@
             app:layout_constraintVertical_bias="0.181" />
     </Toolbar>
 
-    <EditText
-        android:id="@+id/weekEndAvailSelectedEmployee"
-        android:layout_width="104dp"
-        android:layout_height="48dp"
-        android:ems="10"
-        android:gravity="center"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
-        tools:ignore="SpeakableTextPresentCheck" />
-
-    <TextView
-        android:id="@+id/weekEndScheduled"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/fullShift"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekEndSchedToolbar"
-        app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/weekEndDate"
         android:layout_width="wrap_content"
@@ -154,31 +98,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.115" />
-
-    <TextView
-        android:id="@+id/weekEndAvailableEmpID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/empID"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.672" />
-
-    <ImageButton
-        android:id="@+id/weekEndAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/addFullDay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636"
-        app:srcCompat="@drawable/ic_person_add"/>
 
     <EditText
         android:id="@+id/weekEndShiftDate"
@@ -200,26 +119,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/scheduledWeekendEmployees"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="52dp"
         android:layout_weight="0.5"
         app:layout_constraintBottom_toTopOf="@+id/weekEndAvailToolbar"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekEndAvailableEmpID2"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/weekEndSchedToolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/availableWeekendEmployees"
         android:layout_width="0dp"
-        android:layout_height="190dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
         android:layout_weight="0.5"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weekEndAvailableEmpID"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintTop_toBottomOf="@+id/weekEndAvailToolbar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
