@@ -114,11 +114,11 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 EmployeeListViewHolder elvh = new EmployeeListViewHolder(employeeObject, listener);
                 return elvh;
             case 1:
-                View weekdayObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_weekday_object, parent, false);
+                View weekdayObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_available_object, parent, false);
                 AvailableWeekdayViewHolder awvh = new AvailableWeekdayViewHolder(weekdayObject, listener);
                 return awvh;
             case 2:
-                View weekdaySchedObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_weekday_schedobject, parent, false);
+                View weekdaySchedObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_scheduled_object, parent, false);
                 ScheduledWeekdayViewHolder swvh = new ScheduledWeekdayViewHolder(weekdaySchedObject, listener);
                 return swvh;
         }
