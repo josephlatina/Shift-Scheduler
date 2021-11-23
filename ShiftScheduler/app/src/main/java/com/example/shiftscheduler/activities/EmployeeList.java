@@ -128,7 +128,7 @@ public class EmployeeList extends AppCompatActivity{
         recyclerView = findViewById(R.id.employeeList_rv);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new EmployeeListAdapter(employeeList);
+        adapter = new EmployeeListAdapter(employeeList,0);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);

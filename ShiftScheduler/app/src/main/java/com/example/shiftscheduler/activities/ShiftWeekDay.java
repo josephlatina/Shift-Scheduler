@@ -37,10 +37,8 @@ public class ShiftWeekDay extends AppCompatActivity {
 
     //references to layout controls
     Button backbtn;
-    ImageButton addopenbtn, addclosebtn, removeopenbtn, removeclosebtn;
-    EditText shiftdate, selectedavailemp, selectedschedemp;
+    EditText shiftdate;
     //Recycler View Setup:
-    private ArrayList<EmployeeModel> employeeList;
     private ArrayList<EmployeeModel> availOpenEmployeeList;
     private ArrayList<EmployeeModel> availCloseEmployeeList;
     private ArrayList<EmployeeModel> schedOpenEmployeeList;
@@ -51,6 +49,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     private RecyclerView availCloseRecyclerView;
     private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
+    LocalDate localDate;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -60,13 +59,7 @@ public class ShiftWeekDay extends AppCompatActivity {
 
         //Link the layout controls
         backbtn = (Button) findViewById(R.id.dayBack);
-        addopenbtn = (ImageButton) findViewById(R.id.addOpening);
-        addclosebtn = (ImageButton) findViewById(R.id.addClosing);
-        removeopenbtn = (ImageButton) findViewById(R.id.removeOpening);
-        removeclosebtn = (ImageButton) findViewById(R.id.removeClosing);
         shiftdate = (EditText) findViewById(R.id.shiftDate);
-        selectedavailemp = (EditText) findViewById(R.id.selectedEmployee);
-        selectedschedemp = (EditText) findViewById(R.id.selectedEmployee2);
         schedOpenRecyclerView = findViewById(R.id.scheduledOpeningEmployees);
         schedCloseRecyclerView = findViewById(R.id.scheduledClosingEmployees);
         availOpenRecyclerView = findViewById(R.id.availableOpeningEmployees);
@@ -76,9 +69,9 @@ public class ShiftWeekDay extends AppCompatActivity {
         Intent incomingIntent = getIntent();
         String date = incomingIntent.getStringExtra("date");
         shiftdate.setText(date);
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
-        updateEmployeeList(localDate);
+        updateEmployeeList();
         buildAllRecyclerViews();
 
         //Button listener for back
@@ -100,78 +93,10 @@ public class ShiftWeekDay extends AppCompatActivity {
         dbHelper.addShift(localDate, "MORNING");
         dbHelper.addShift(localDate, "EVENING");
 
-        //Button listener for Adding Opening Employees
-        addopenbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //schedule an employee for that shift (scheduleEmployee) will update the database
-                if (selectedavailemp.getText().toString().isEmpty() == false) {
-                    int employeeID = Integer.parseInt(selectedavailemp.getText().toString());
-                    DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                    dbHelper.scheduleEmployee(employeeID, localDate, "MORNING");
-                }
-
-                //update Recycler Views
-                updateEmployeeList(localDate);
-                buildAllRecyclerViews();
-                selectedavailemp.getText().clear();
-            }
-        });
-        //Button listener for Adding Closing Employees
-        addclosebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //schedule an employee for that shift (scheduleEmployee) will update the database
-                if (selectedavailemp.getText().toString().isEmpty() == false) {
-                    int employeeID = Integer.parseInt(selectedavailemp.getText().toString());
-                    DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                    dbHelper.scheduleEmployee(employeeID, localDate, "EVENING");
-                }
-
-                //update Recycler Views
-                updateEmployeeList(localDate);
-                buildAllRecyclerViews();
-                selectedavailemp.getText().clear();
-            }
-        });
-        //Button listener for Removing Opening Employees
-        removeopenbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //schedule an employee for that shift (scheduleEmployee) will update the database
-                if (selectedschedemp.getText().toString().isEmpty() == false) {
-                    int employeeID = Integer.parseInt(selectedschedemp.getText().toString());
-                    DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                    dbHelper.descheduleEmployee(employeeID, localDate, "MORNING");
-                }
-
-                //update Recycler Views
-                updateEmployeeList(localDate);
-                buildAllRecyclerViews();
-                selectedschedemp.getText().clear();
-            }
-        });
-        //Button listener for Removing Closing Employees
-        removeclosebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //schedule an employee for that shift (scheduleEmployee) will update the database
-                if (selectedschedemp.getText().toString().isEmpty() == false) {
-                    int employeeID = Integer.parseInt(selectedschedemp.getText().toString());
-                    DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                    dbHelper.descheduleEmployee(employeeID, localDate, "EVENING");
-                }
-
-                //update Recycler Views
-                updateEmployeeList(localDate);
-                buildAllRecyclerViews();
-                selectedschedemp.getText().clear();
-            }
-        });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void updateEmployeeList(LocalDate localDate) {
+    public void updateEmployeeList() {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
         availOpenEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "MORNING");
         availCloseEmployeeList = (ArrayList) dbHelper.getAvailableEmployees(localDate, "EVENING");
@@ -180,45 +105,66 @@ public class ShiftWeekDay extends AppCompatActivity {
     }
 
     public void buildAllRecyclerViews() {
-        buildAvailRecyclerView(availOpenRecyclerView, availOpenEmployeeList);
-        buildAvailRecyclerView(availCloseRecyclerView, availCloseEmployeeList);
-        buildSchedRecyclerView(schedOpenRecyclerView, schedOpenEmployeeList);
-        buildSchedRecyclerView(schedCloseRecyclerView, schedCloseEmployeeList);
+        buildAvailRecyclerView(availOpenRecyclerView, availOpenEmployeeList, "MORNING");
+        buildAvailRecyclerView(availCloseRecyclerView, availCloseEmployeeList, "EVENING");
+        buildSchedRecyclerView(schedOpenRecyclerView, schedOpenEmployeeList, "MORNING");
+        buildSchedRecyclerView(schedCloseRecyclerView, schedCloseEmployeeList, "EVENING");
     }
 
-    public void buildAvailRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
+    public void buildAvailRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList, String time) {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new EmployeeListAdapter(employeeList);
+        adapter = new EmployeeListAdapter(employeeList, 1);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         adapter.setOnEmployeeClickListener(new EmployeeListAdapter.OnEmployeeClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
-                selectedavailemp.setText(String.valueOf(empID));
 
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                if (time.equals("MORNING")) {
+                    dbHelper.scheduleEmployee(empID, localDate, "MORNING");
+                } else {
+                    dbHelper.scheduleEmployee(empID, localDate, "EVENING");
+                }
+
+                //update Recycler Views
+                updateEmployeeList();
+                buildAllRecyclerViews();
             }
         });
     }
 
-    public void buildSchedRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList) {
+    public void buildSchedRecyclerView(RecyclerView recyclerView, ArrayList<EmployeeModel> employeeList, String time) {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        adapter = new EmployeeListAdapter(employeeList);
+        adapter = new EmployeeListAdapter(employeeList,2);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
         adapter.setOnEmployeeClickListener(new EmployeeListAdapter.OnEmployeeClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
-                selectedschedemp.setText(String.valueOf(empID));
+
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                if (time.equals("MORNING")) {
+                    dbHelper.descheduleEmployee(empID, localDate, "MORNING");
+                } else {
+                    dbHelper.descheduleEmployee(empID, localDate, "EVENING");
+                }
+
+                //update Recycler Views
+                updateEmployeeList();
+                buildAllRecyclerViews();
 
             }
         });

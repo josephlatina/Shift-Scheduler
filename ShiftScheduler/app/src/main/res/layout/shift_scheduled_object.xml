@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="35dp">
+
+        <ImageButton
+            android:id="@+id/scheduledDeleteButton"
+            android:layout_alignParentRight="true"
+            android:layout_width="40dp"
+            android:layout_height="35dp"
+            android:layout_marginRight="5dp"
+            app:srcCompat="@drawable/ic_delete"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/weekdayScheduled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="2dp"
+            android:text="Employee Name"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/qualificationScheduled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="18dp"
+            android:text="Qualification"
+            android:textColor="@color/colorPrimary"
+            android:textSize="8sp" />
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

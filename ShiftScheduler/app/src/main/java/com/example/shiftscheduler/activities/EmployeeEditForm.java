@@ -24,6 +24,7 @@ import java.util.List;
 public class EmployeeEditForm extends AppCompatActivity {
 
     public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
+    public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
 
     //references to controls on the layout
     Button save_btn;
@@ -259,6 +260,7 @@ public class EmployeeEditForm extends AppCompatActivity {
 
                 Intent myIntent = new Intent(EmployeeEditForm.this, EmployeeInfo.class);
                 myIntent.putExtra(EMPLOYEE_ID, empID);
+                myIntent.putExtra(EMPLOYEE_NAME, employee.getFName() + " " + employee.getLName());
                 startActivity(myIntent);
             }
         });
