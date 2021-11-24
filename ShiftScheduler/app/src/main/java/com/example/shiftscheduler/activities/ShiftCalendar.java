@@ -12,12 +12,20 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.DayModel;
+import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.EveningShift;
 import com.example.shiftscheduler.models.MonthModel;
+import com.example.shiftscheduler.models.MorningShift;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class ShiftCalendar extends AppCompatActivity {
     //references to layout controls
@@ -90,15 +98,60 @@ public class ShiftCalendar extends AppCompatActivity {
 
             };
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public MonthModel createMonthObject(int month, int year) {
+        LocalDate startDate = LocalDate.of(year, month, 1);
+        ArrayList<DayModel> days = new ArrayList<>();
+
+        //fill in days:
+        LocalDate cursor = startDate;
+        while (cursor.getMonthValue() == month) {
+            days.add(createDayObject(cursor));
+            cursor = cursor.plusDays(1);
+        }
+
+        return new MonthModel(startDate, days);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public DayModel createDayObject(LocalDate date) {
+        boolean isWeekend = (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                            date.getDayOfWeek() == DayOfWeek.SUNDAY);
+
+        if (isWeekend) {
+            return buildWeekEnd(date);
+        } else {
+            return buildWeekDay(date);
+        }
+    }
+
+    public DayModel buildWeekEnd(LocalDate date) {
         return null;
+    }
+
+    public DayModel buildWeekDay(LocalDate date) {
+        //*** DON'T KNOW IF THIS IS CORRECT ***
+
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+
+        //Retrieve Shift IDs
+        int morningShiftID = dbHelper.getShiftID(date, "MORNING");
+        int eveningShiftID = dbHelper.getShiftID(date, "EVENING");
+
+        //Create set of scheduled employees for each shift
+        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(date, "MORNING"));
+        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(date, "EVENING"));
+
+        //Create shift objects for each respective shift for the day
+        MorningShift morningShift = new MorningShift(morningShiftID, date, morningEmployees, 2);
+        EveningShift eveningShift = new EveningShift(eveningShiftID, date, eveningEmployees, 2);
+
+        //Create day object and populate
+        DayModel day = new DayModel(date, morningShift, eveningShift);
+        return day;
     }
 
     public void updateMonthObject(LocalDate date) {
         return;
-    }
-
-    public DayModel createDayObject(LocalDate date) {
-        return null;
     }
 }
