@@ -16,6 +16,7 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.EveningShift;
+import com.example.shiftscheduler.models.FullShift;
 import com.example.shiftscheduler.models.MonthModel;
 import com.example.shiftscheduler.models.MorningShift;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -103,7 +104,7 @@ public class ShiftCalendar extends AppCompatActivity {
         LocalDate startDate = LocalDate.of(year, month, 1);
         ArrayList<DayModel> days = new ArrayList<>();
 
-        //fill in days:
+        //iterate through month and fill in days
         LocalDate cursor = startDate;
         while (cursor.getMonthValue() == month) {
             days.add(createDayObject(cursor));
@@ -126,7 +127,21 @@ public class ShiftCalendar extends AppCompatActivity {
     }
 
     public DayModel buildWeekEnd(LocalDate date) {
-        return null;
+        //*** DON'T KNOW IF THIS IS CORRECT ***
+
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+
+        //Retrieve Shift IDs
+        int fullShiftID = dbHelper.getShiftID(date, "FULL");
+
+        //Create set of scheduled employees
+        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(date, "FULL"));
+
+        //Create shift object
+        FullShift fullShift = new FullShift(fullShiftID, date, morningEmployees, 2);
+
+        //Create day object and populate
+        return new DayModel(date, fullShift);
     }
 
     public DayModel buildWeekDay(LocalDate date) {
@@ -147,11 +162,23 @@ public class ShiftCalendar extends AppCompatActivity {
         EveningShift eveningShift = new EveningShift(eveningShiftID, date, eveningEmployees, 2);
 
         //Create day object and populate
-        DayModel day = new DayModel(date, morningShift, eveningShift);
-        return day;
+        return new DayModel(date, morningShift, eveningShift);
     }
 
-    public void updateMonthObject(LocalDate date) {
-        return;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void updateMonthObject(MonthModel month, LocalDate date) {
+        //build the new day object
+        boolean isWeekend = (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
+                            date.getDayOfWeek() == DayOfWeek.SUNDAY);
+
+        DayModel newDay;
+        if (isWeekend) {
+            newDay = buildWeekEnd(date);
+        } else {
+            newDay = buildWeekDay(date);
+        }
+
+        //update the month object
+        month.updateDay(newDay);
     }
 }
