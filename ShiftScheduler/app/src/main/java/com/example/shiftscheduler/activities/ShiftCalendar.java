@@ -99,6 +99,12 @@ public class ShiftCalendar extends AppCompatActivity {
 
             };
 
+    /**
+     * Builds a specified MonthModel
+     * @param month - value of month
+     * @param year - specific year
+     * @return MonthModel
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public MonthModel createMonthObject(int month, int year) {
         LocalDate startDate = LocalDate.of(year, month, 1);
@@ -114,6 +120,11 @@ public class ShiftCalendar extends AppCompatActivity {
         return new MonthModel(startDate, days);
     }
 
+    /**
+     * Builds a specified DayModel
+     * @param date - LocalDate of day
+     * @return DayModel
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public DayModel createDayObject(LocalDate date) {
         boolean isWeekend = (date.getDayOfWeek() == DayOfWeek.SATURDAY ||
@@ -126,6 +137,11 @@ public class ShiftCalendar extends AppCompatActivity {
         }
     }
 
+    /**
+     * Builds a weekend DayModel
+     * @param date - LocalDate of day
+     * @return DayModel
+     */
     public DayModel buildWeekEnd(LocalDate date) {
         //*** DON'T KNOW IF THIS IS CORRECT ***
 
@@ -144,6 +160,11 @@ public class ShiftCalendar extends AppCompatActivity {
         return new DayModel(date, fullShift);
     }
 
+    /**
+     * Builds a weekday DayModel
+     * @param date - LocalDate of day
+     * @return DayModel
+     */
     public DayModel buildWeekDay(LocalDate date) {
         //*** DON'T KNOW IF THIS IS CORRECT ***
 
@@ -165,6 +186,11 @@ public class ShiftCalendar extends AppCompatActivity {
         return new DayModel(date, morningShift, eveningShift);
     }
 
+    /**
+     * Updates an existing MonthModel with a new DayModel
+     * @param month - existing MonthModel
+     * @param date - LocalDate of new day
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void updateMonthObject(MonthModel month, LocalDate date) {
         //build the new day object
