@@ -686,6 +686,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return shiftID;
     }
 
+    public int getShiftIDOfOneMonth(String year, String month) {
+        int shiftID;
+        //get data from the database
+
+        String queryString = "SELECT " + COL_SHIFTID + " FROM " + WORK_TABLE + " WHERE " + COL_SHIFTID + " in (SELECT " +
+                COL_SHIFTID + " from " + SHIFT_TABLE + " WHERE " + COL_DATE + " LIKE '%" + year + "-" + month + "%')";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+        //If shift exists, return shiftID. Otherwise, return 0.
+        if (cursor.moveToFirst()) {
+            shiftID = cursor.getInt(0);
+        } else {
+            shiftID = 0;
+        }
+        return shiftID;
+    }
+
     /*********************************************************************************************
      Remove methods
      *********************************************************************************************/
