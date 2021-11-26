@@ -1,14 +1,15 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.Switch;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,19 +26,23 @@ import com.example.shiftscheduler.models.ShiftModel;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractSet;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.List;
 import java.util.NavigableSet;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class ShiftWeekDay extends AppCompatActivity {
+    //for passing info to employeeInfo
+    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
+    public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
+    final String SHIFT_DATE = "DATE";
 
     //references to layout controls
     Button backbtn;
     EditText shiftdate;
+    Switch repeat;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> availOpenEmployeeList;
     private ArrayList<EmployeeModel> availCloseEmployeeList;
@@ -50,6 +55,11 @@ public class ShiftWeekDay extends AppCompatActivity {
     private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     LocalDate localDate;
+    String date;
+    MorningShift morningShift;
+    EveningShift eveningShift;
+    ShiftModel givenShift;
+    AlertDialog.Builder alertDialogBuilder;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -64,13 +74,30 @@ public class ShiftWeekDay extends AppCompatActivity {
         schedCloseRecyclerView = findViewById(R.id.scheduledClosingEmployees);
         availOpenRecyclerView = findViewById(R.id.availableOpeningEmployees);
         availCloseRecyclerView = findViewById(R.id.availableClosingEmployees);
+        repeat = findViewById(R.id.weekDaySwitch);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         //receive intent
         Intent incomingIntent = getIntent();
-        String date = incomingIntent.getStringExtra("date");
+        date = incomingIntent.getStringExtra(ShiftCalendar.SHIFT_DATE);
         shiftdate.setText(date);
         localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
+        /* Assume that day objects and shift objects are already pre-created */
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+        //**temp: just for testing purposes
+        dbHelper.addShift(localDate, "MORNING");
+        dbHelper.addShift(localDate, "EVENING");
+
+        //Create shift models
+        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>();                                         //create empty employee list
+        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>();
+        int morningShiftID = dbHelper.getShiftID(localDate, "MORNING");                                    //create shift IDs
+        int eveningShiftID = dbHelper.getShiftID(localDate, "EVENING");
+        morningShift = new MorningShift(morningShiftID, localDate, morningEmployees, 3);          //create shift models
+        eveningShift = new EveningShift(eveningShiftID, localDate, eveningEmployees, 3);
+
+        //Build Recycler Views
         updateEmployeeList();
         buildAllRecyclerViews();
 
@@ -81,17 +108,51 @@ public class ShiftWeekDay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(ShiftWeekDay.this, ShiftCalendar.class);
-                myIntent.putExtra("date", date);
+                myIntent.putExtra(SHIFT_DATE, date);
                 myIntent.putExtra("DayObject", day);
                 startActivity(myIntent);
             }
         });
 
-        /* Assume that day objects and shift objects are already pre-created */
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-        //**temp: just for testing purposes
-        dbHelper.addShift(localDate, "MORNING");
-        dbHelper.addShift(localDate, "EVENING");
+        //Switch listener for Repeat switch
+        repeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                //get the date from 7 days ago
+                LocalDate lastWeekDate = localDate.minusDays(7);
+
+                //if toggle is switch to "on", retrieve employees from last week
+                if (b) {
+                    //clear current scheduled employees
+                    dbHelper.clearScheduledEmployees(localDate, "MORNING");
+                    dbHelper.clearScheduledEmployees(localDate, "EVENING");
+                    updateEmployeeList();
+                    //get the scheduled employees from last week
+                    ArrayList<EmployeeModel> scheduledOpeners = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "MORNING");
+                    ArrayList<EmployeeModel> scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "EVENING");
+                    //schedule them to the current date
+                    for (EmployeeModel employee : scheduledOpeners) {
+                        if (availOpenEmployeeList.contains(employee)) {
+                            dbHelper.scheduleEmployee(employee.getEmployeeID(), localDate, "MORNING");
+                        }
+                    }
+                    for (EmployeeModel employee: scheduledClosers) {
+                        if (availCloseEmployeeList.contains(employee)) {
+                            dbHelper.scheduleEmployee(employee.getEmployeeID(), localDate, "EVENING");
+                        }
+                    }
+                }
+                //otherwise, clear the scheduled lists
+                else {
+                    dbHelper.clearScheduledEmployees(localDate, "MORNING");
+                    dbHelper.clearScheduledEmployees(localDate, "EVENING");
+                }
+
+                //update Recycler Views
+                updateEmployeeList();
+                buildAllRecyclerViews();
+            }
+        });
 
     }
 
@@ -123,15 +184,51 @@ public class ShiftWeekDay extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onEmployeeClick(int position) {
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                int count = 0;
+                int shiftEmp;
+
+                //Determine which employee selected by user
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
 
-                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+                //Add employee first to shift model
                 if (time.equals("MORNING")) {
-                    dbHelper.scheduleEmployee(empID, localDate, "MORNING");
+                    givenShift = morningShift;
                 } else {
-                    dbHelper.scheduleEmployee(empID, localDate, "EVENING");
+                    givenShift = eveningShift;
                 }
+                givenShift.addEmployee(employee);
+                /**
+                 //Call on verifyShift method
+                 ArrayList<ErrorModel> errors = morningShift.verifyShift(dbHelper);
+                 */
+                //If there are more than 2 employees assigned, prompt alert message
+                if (givenShift.getEmployees().size() > 2) {
+                    promptAlertMessage(1, dbHelper, empID, employee, time);
+                    return;
+                }
+                //If there are 2 employees assigned, check for qualified employees
+                else if (givenShift.getEmployees().size() == 2){
+                    //loop to check if there any employees qualified
+                    for (int i = 0; i < 2; i++) {
+                        shiftEmp = givenShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
+                        List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
+                        if (time.equals("MORNING") && qualifications.get(0)) {
+                            count += 1;
+                        }
+                        else if (time.equals("EVENING") && qualifications.get(1)) {
+                            count += 1;
+                        }
+                    }
+                    //if none are, then prompt alert message
+                    if (count == 0) {
+                        promptAlertMessage(2, dbHelper, empID, employee, time);
+                        return;
+                    }
+                }
+                //Otherwise, proceed with scheduling the employee
+                dbHelper.scheduleEmployee(empID, localDate, time);
 
                 //update Recycler Views
                 updateEmployeeList();
@@ -155,10 +252,13 @@ public class ShiftWeekDay extends AppCompatActivity {
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
 
+                //Schedule the given employee to the type of shift provided in the specified day
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
                 if (time.equals("MORNING")) {
+                    morningShift.removeEmployee(employee);
                     dbHelper.descheduleEmployee(empID, localDate, "MORNING");
                 } else {
+                    eveningShift.removeEmployee(employee);
                     dbHelper.descheduleEmployee(empID, localDate, "EVENING");
                 }
 
@@ -173,21 +273,55 @@ public class ShiftWeekDay extends AppCompatActivity {
     public DayModel populateDay(LocalDate localDate) {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
 
-        //Retrieve Shift IDs
-        int morningShiftID = dbHelper.getShiftID(localDate, "MORNING");
-        int eveningShiftID = dbHelper.getShiftID(localDate, "EVENING");
-
-        //Create set of scheduled employees for each shift
-        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(localDate, "MORNING"));
-        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(localDate, "EVENING"));
-
-        //Create shift objects for each respective shift for the day
-        MorningShift morningShift = new MorningShift(morningShiftID, localDate, morningEmployees, 2);
-        EveningShift eveningShift = new EveningShift(eveningShiftID, localDate, eveningEmployees, 2);
-
         //Create day object and populate
         DayModel day = new DayModel(localDate, morningShift, eveningShift);
 
         return day;
     }
+
+    public void promptAlertMessage(int code, DatabaseHelper dbHelper, int empID, EmployeeModel employee, String time) {
+        //Initialization
+        String details1 = "There would be more employees assigned than the normal employees needed. Do you want to continue?";
+        String details2 = "None of the employees assigned are qualified for the shift. Do you want to continue?";
+
+        switch (code) {
+            case 1: alertDialogBuilder.setTitle("Too many employees");
+                    alertDialogBuilder.setMessage(details1);
+                    break;
+            case 2: alertDialogBuilder.setTitle("No qualified employees");
+                    alertDialogBuilder.setMessage(details2);
+                    break;
+        }
+
+        alertDialogBuilder.setCancelable(false)
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        if (time.equals("MORNING")) {
+                            morningShift.removeEmployee(employee);
+                        } else {
+                            eveningShift.removeEmployee(employee);
+                        }
+                        dialog.dismiss();
+
+                        //update Recycler Views
+                        updateEmployeeList();
+                        buildAllRecyclerViews();
+                    }
+                })
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dbHelper.scheduleEmployee(empID, localDate, time);
+                        dialog.dismiss();
+
+                        //update Recycler Views
+                        updateEmployeeList();
+                        buildAllRecyclerViews();
+                    }
+                }).create().show();
+    }
+
 }

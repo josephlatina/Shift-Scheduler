@@ -15,7 +15,6 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 
-import java.nio.file.attribute.AclFileAttributeView;
 import java.util.List;
 
 public class EmployeeInfo extends AppCompatActivity {
@@ -27,7 +26,7 @@ public class EmployeeInfo extends AppCompatActivity {
     Button editbtn;
     Button timeoffbtn;
     ImageButton backbtn;
-    String empID, fullName;
+    String empID, fullName, activityPage, date;
     CheckBox opening, closing;
     CheckBox AvailMonMorn, AvailTuesMorn, AvailWedMorn, AvailThursMorn, AvailFriMorn, AvailSat, AvailSun;
     CheckBox AvailMonEven, AvailTuesEven, AvailWedEven, AvailThursEven, AvailFriEven;
@@ -84,6 +83,7 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_ADDRESS));
         dateOfBirth.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_DOB));
         empID = intent.getStringExtra((EmployeeList.EMPLOYEE_ID));
+
         //Get intent from Employee Info activity if not Employee List
         if (empID == null) {
             empID = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_ID);
