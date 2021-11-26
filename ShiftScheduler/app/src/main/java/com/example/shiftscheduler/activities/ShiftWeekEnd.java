@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
+import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.example.shiftscheduler.models.EveningShift;
 import com.example.shiftscheduler.models.FullShift;
@@ -69,23 +70,29 @@ public class ShiftWeekEnd extends AppCompatActivity {
         shiftdate.setText(date);
         localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
-        //Create shift model
-        NavigableSet<EmployeeModel> fullEmployees = new TreeSet<>();
-        fullShift = new FullShift(0, localDate, fullEmployees, 4);
-
-        //Populate Recycler Views
-        updateEmployeeList();
-        buildAllRecyclerViews();
         /* Assume that day objects and shift objects are already pre-created */
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekEnd.this);
         //**temp: just for testing purposes
         dbHelper.addShift(localDate, "FULL");
 
+        //Create shift model
+        NavigableSet<EmployeeModel> fullEmployees = new TreeSet<>();
+        int fullShiftID = dbHelper.getShiftID(localDate, "FULL");
+        fullShift = new FullShift(fullShiftID, localDate, fullEmployees, 3);
+
+        //Populate Recycler Views
+        updateEmployeeList();
+        buildAllRecyclerViews();
+
         //Button listener for back
         backbtn.setOnClickListener(new View.OnClickListener() {
+            //Populate day object
+            DayModel day = populateDay(localDate);
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(ShiftWeekEnd.this, ShiftCalendar.class);
+                myIntent.putExtra("date", date);
+                myIntent.putExtra("DayObject", day);
                 startActivity(myIntent);
             }
         });
@@ -189,6 +196,10 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 buildAllRecyclerViews();
 
             }
+            @Override
+            public void onItemClick(int position) {
+
+            }
         });
     }
 
@@ -213,6 +224,10 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList();
                 buildAllRecyclerViews();
+            }
+            @Override
+            public void onItemClick(int position) {
+
             }
         });
     }
@@ -256,5 +271,14 @@ public class ShiftWeekEnd extends AppCompatActivity {
                         buildAllRecyclerViews();
                     }
                 }).create().show();
+    }
+
+    public DayModel populateDay(LocalDate localDate) {
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekEnd.this);
+
+        //Create day object and populate
+        DayModel day = new DayModel(localDate, fullShift);
+
+        return day;
     }
 }

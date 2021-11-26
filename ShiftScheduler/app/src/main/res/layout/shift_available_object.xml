@@ -6,6 +6,16 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp">
 
+    <TextView
+        android:id="@+id/qualificationAvailable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="18dp"
+        android:text="Qualifications:"
+        android:textColor="@color/colorPrimary"
+        android:textSize="8sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="35dp">
@@ -29,12 +39,12 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/qualificationAvailable"
+            android:id="@+id/qualificationAvailableDetails"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="65dp"
             android:layout_marginTop="18dp"
-            android:text="Qualification"
+            android:text="Details"
             android:textColor="@color/colorPrimary"
             android:textSize="8sp" />
     </RelativeLayout>

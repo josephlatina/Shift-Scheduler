@@ -152,6 +152,11 @@ public class EmployeeList extends AppCompatActivity{
                 //temp:
 //                Toast.makeText(EmployeeList.this, employee.toString(), Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onItemClick(int position) {
+
+            }
         });
     }
 }

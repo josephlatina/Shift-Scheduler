@@ -43,6 +43,13 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class ShiftWeekDay extends AppCompatActivity {
+    //for passing info to employeeInfo
+    public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
+    public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String EMPLOYEE_PHONE_NUMBER = "com.example.shiftscheduler.activities.PHONE_NUMBER";
+    public static final String EMPLOYEE_EMAIL = "com.example.shiftscheduler.activities.EMPLOYEE_EMAIL";
+    public static final String EMPLOYEE_ADDRESS = "com.example.shiftscheduler.activities.EMPLOYEE_ADDRESS";
+    public static final String EMPLOYEE_DOB = "com.example.shiftscheduler.activities.EMPLOYEE_DOB";
 
     //references to layout controls
     Button backbtn;
@@ -87,11 +94,19 @@ public class ShiftWeekDay extends AppCompatActivity {
         shiftdate.setText(date);
         localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
+        /* Assume that day objects and shift objects are already pre-created */
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
+        //**temp: just for testing purposes
+        dbHelper.addShift(localDate, "MORNING");
+        dbHelper.addShift(localDate, "EVENING");
+
         //Create shift models
-        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>();
+        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>();                                         //create empty employee list
         NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>();
-        morningShift = new MorningShift(0, localDate, morningEmployees, 4);
-        eveningShift = new EveningShift(0, localDate, eveningEmployees, 4);
+        int morningShiftID = dbHelper.getShiftID(localDate, "MORNING");                                    //create shift IDs
+        int eveningShiftID = dbHelper.getShiftID(localDate, "EVENING");
+        morningShift = new MorningShift(morningShiftID, localDate, morningEmployees, 3);          //create shift models
+        eveningShift = new EveningShift(eveningShiftID, localDate, eveningEmployees, 3);
 
         //Build Recycler Views
         updateEmployeeList();
@@ -110,11 +125,6 @@ public class ShiftWeekDay extends AppCompatActivity {
             }
         });
 
-        /* Assume that day objects and shift objects are already pre-created */
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-        //**temp: just for testing purposes
-        dbHelper.addShift(localDate, "MORNING");
-        dbHelper.addShift(localDate, "EVENING");
 
         //Switch listener for Repeat switch
         repeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -236,6 +246,11 @@ public class ShiftWeekDay extends AppCompatActivity {
                 updateEmployeeList();
                 buildAllRecyclerViews();
             }
+
+            @Override
+            public void onItemClick(int position) {
+
+            }
         });
     }
 
@@ -269,23 +284,16 @@ public class ShiftWeekDay extends AppCompatActivity {
                 buildAllRecyclerViews();
 
             }
+
+            @Override
+            public void onItemClick(int position) {
+
+            }
         });
     }
 
     public DayModel populateDay(LocalDate localDate) {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-
-        //Retrieve Shift IDs
-        int morningShiftID = dbHelper.getShiftID(localDate, "MORNING");
-        int eveningShiftID = dbHelper.getShiftID(localDate, "EVENING");
-
-        //Create set of scheduled employees for each shift
-        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(localDate, "MORNING"));
-        NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(localDate, "EVENING"));
-
-        //Create shift objects for each respective shift for the day
-        MorningShift morningShift = new MorningShift(morningShiftID, localDate, morningEmployees, 2);
-        EveningShift eveningShift = new EveningShift(eveningShiftID, localDate, eveningEmployees, 2);
 
         //Create day object and populate
         DayModel day = new DayModel(localDate, morningShift, eveningShift);

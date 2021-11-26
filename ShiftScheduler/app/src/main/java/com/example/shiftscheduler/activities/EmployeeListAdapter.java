@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public interface OnEmployeeClickListener {
         void onEmployeeClick(int position);
+        void onItemClick(int position);
     }
 
     public void setOnEmployeeClickListener(OnEmployeeClickListener listener) {
@@ -68,6 +70,18 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
                             listener.onEmployeeClick(position);
+                        }
+                    }
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(position);
                         }
                     }
                 }
