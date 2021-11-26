@@ -1,5 +1,7 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,10 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.EveningShift;
+import com.example.shiftscheduler.models.FullShift;
+import com.example.shiftscheduler.models.MorningShift;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class ShiftWeekEnd extends AppCompatActivity {
 
@@ -34,6 +43,8 @@ public class ShiftWeekEnd extends AppCompatActivity {
     private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     LocalDate localDate;
+    FullShift fullShift;
+    AlertDialog.Builder alertDialogBuilder;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -46,12 +57,18 @@ public class ShiftWeekEnd extends AppCompatActivity {
         shiftdate = (EditText) findViewById(R.id.weekEndShiftDate);
         schedFullDayRecyclerView = findViewById(R.id.scheduledWeekendEmployees);
         availFullDayRecyclerView = findViewById(R.id.availableWeekendEmployees);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         //receive intent
         Intent incomingIntent = getIntent();
         String date = incomingIntent.getStringExtra("date");
         shiftdate.setText(date);
         localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        //Create shift model
+        NavigableSet<EmployeeModel> fullEmployees = new TreeSet<>();
+        fullShift = new FullShift(0, localDate, fullEmployees, 4);
+
 
         //Populate Recycler Views
         updateEmployeeList();
@@ -95,10 +112,41 @@ public class ShiftWeekEnd extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onEmployeeClick(int position) {
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekEnd.this);
+                int shiftEmp, count = 0;
+
+                //Determine which employee selected by user
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
 
-                DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekEnd.this);
+                //Add employee to shift model
+                fullShift.addEmployee(employee);
+                /**
+                 //Call on verifyShift method
+                 ArrayList<ErrorModel> errors = morningShift.verifyShift(dbHelper);
+                 */
+                //If there are more than 2 employees assigned, prompt alert message
+                if (fullShift.getEmployees().size() > 2) {
+                    promptAlertMessage(1, dbHelper, empID, employee);
+                    return;
+                }
+                //If there are 2 employees assigned, check for qualified employees
+                else if (fullShift.getEmployees().size() == 2){
+                    //loop to check if there any employees qualified
+                    for (int i = 0; i < 2; i++) {
+                        shiftEmp = fullShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
+                        List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
+                        if (qualifications.get(0) && qualifications.get(1)) {
+                            count += 1;
+                        }
+                    }
+                    //if none are, then prompt alert message
+                    if (count == 0) {
+                        promptAlertMessage(2, dbHelper, empID, employee);
+                        return;
+                    }
+                }
+                //Otherwise, proceed with scheduling the employee
                 dbHelper.scheduleEmployee(empID, localDate, "FULL");
 
                 //update Recycler Views
@@ -132,5 +180,46 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 buildAllRecyclerViews();
             }
         });
+    }
+
+    public void promptAlertMessage(int code, DatabaseHelper dbHelper, int empID, EmployeeModel employee) {
+        //Initialization
+        String details1 = "There would be more employees assigned than the normal employees needed. Do you want to continue?";
+        String details2 = "None of the employees assigned are qualified for the shift. Do you want to continue?";
+
+        switch (code) {
+            case 1: alertDialogBuilder.setTitle("Too many employees");
+                alertDialogBuilder.setMessage(details1);
+                break;
+            case 2: alertDialogBuilder.setTitle("No qualified employees");
+                alertDialogBuilder.setMessage(details2);
+                break;
+        }
+
+        alertDialogBuilder.setCancelable(false)
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        fullShift.removeEmployee(employee);
+                        dialog.dismiss();
+
+                        //update Recycler Views
+                        updateEmployeeList();
+                        buildAllRecyclerViews();
+                    }
+                })
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        dbHelper.scheduleEmployee(empID, localDate, "FULL");
+                        dialog.dismiss();
+
+                        //update Recycler Views
+                        updateEmployeeList();
+                        buildAllRecyclerViews();
+                    }
+                }).create().show();
     }
 }

@@ -59,7 +59,6 @@ public class ShiftWeekDay extends AppCompatActivity {
     EveningShift eveningShift;
     ShiftModel givenShift;
     AlertDialog.Builder alertDialogBuilder;
-    int flag;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
