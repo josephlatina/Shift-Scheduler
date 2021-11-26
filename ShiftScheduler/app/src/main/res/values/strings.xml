@@ -52,6 +52,7 @@
     <string name="scheduledEmployees">Scheduled Employees</string>
     <string name="empID">Employee ID</string>
     <string name="date">Date</string>
+    <string name="repeat">Repeat</string>
 
     <!-- TimeOff strings -->
     <string name="timeOff">Request Time Off</string>

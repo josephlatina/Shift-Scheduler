@@ -498,6 +498,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return employees;
     }
 
+    public void clearScheduledEmployees(LocalDate date, String time) {
+        //Retrieve scheduled Employees
+        List<EmployeeModel> scheduledEmployees = getScheduledEmployees(date, time);
+
+        //Deschedule every employee in the scheduled Employees List
+        for (EmployeeModel employee : scheduledEmployees) {
+            descheduleEmployee(employee.getEmployeeID(), date, time);
+        }
+    }
+
     //retrieve employees that work in a specific shift
     public List<EmployeeModel> getScheduledEmployees(LocalDate date, String time) {
         //Initialize List

@@ -8,8 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -26,10 +28,12 @@ import com.example.shiftscheduler.models.EveningShift;
 import com.example.shiftscheduler.models.MorningShift;
 import com.example.shiftscheduler.models.ShiftModel;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NavigableSet;
@@ -43,6 +47,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     //references to layout controls
     Button backbtn;
     EditText shiftdate;
+    Switch repeat;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> availOpenEmployeeList;
     private ArrayList<EmployeeModel> availCloseEmployeeList;
@@ -73,6 +78,7 @@ public class ShiftWeekDay extends AppCompatActivity {
         schedCloseRecyclerView = findViewById(R.id.scheduledClosingEmployees);
         availOpenRecyclerView = findViewById(R.id.availableOpeningEmployees);
         availCloseRecyclerView = findViewById(R.id.availableClosingEmployees);
+        repeat = findViewById(R.id.weekDaySwitch);
         alertDialogBuilder = new AlertDialog.Builder(this);
 
         //receive intent
@@ -81,14 +87,15 @@ public class ShiftWeekDay extends AppCompatActivity {
         shiftdate.setText(date);
         localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
-        updateEmployeeList();
-        buildAllRecyclerViews();
-
         //Create shift models
         NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>();
         NavigableSet<EmployeeModel> eveningEmployees = new TreeSet<>();
         morningShift = new MorningShift(0, localDate, morningEmployees, 4);
         eveningShift = new EveningShift(0, localDate, eveningEmployees, 4);
+
+        //Build Recycler Views
+        updateEmployeeList();
+        buildAllRecyclerViews();
 
         //Button listener for back
         backbtn.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +115,42 @@ public class ShiftWeekDay extends AppCompatActivity {
         //**temp: just for testing purposes
         dbHelper.addShift(localDate, "MORNING");
         dbHelper.addShift(localDate, "EVENING");
+
+        //Switch listener for Repeat switch
+        repeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                //get the date from 7 days ago
+                LocalDate lastWeekDate = localDate.minusDays(7);
+
+                //if toggle is switch to "on", retrieve employees from last week
+                if (b) {
+                    //get the scheduled employees from last week
+                    ArrayList<EmployeeModel> scheduledOpeners = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "MORNING");
+                    ArrayList<EmployeeModel> scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "EVENING");
+                    //schedule them to the current date
+                    for (EmployeeModel employee : scheduledOpeners) {
+                        if (availOpenEmployeeList.contains(employee)) {
+                            dbHelper.scheduleEmployee(employee.getEmployeeID(), localDate, "MORNING");
+                        }
+                    }
+                    for (EmployeeModel employee: scheduledClosers) {
+                        if (availCloseEmployeeList.contains(employee)) {
+                            dbHelper.scheduleEmployee(employee.getEmployeeID(), localDate, "EVENING");
+                        }
+                    }
+                }
+                //otherwise, clear the scheduled lists
+                else {
+                    schedOpenEmployeeList.clear();
+                    schedCloseEmployeeList.clear();
+                }
+
+                //update Recycler Views
+                updateEmployeeList();
+                buildAllRecyclerViews();
+            }
+        });
 
     }
 
