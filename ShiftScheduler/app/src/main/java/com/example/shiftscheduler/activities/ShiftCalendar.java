@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -43,7 +45,14 @@ public class ShiftCalendar extends AppCompatActivity {
         calendar = (CalendarView) findViewById(R.id.calendarView);
 
         //export button listener
-
+        Button btnExport = findViewById(R.id.export_btn);
+        btnExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ShiftCalendar.this, ScheduleExport.class);
+                startActivity(myIntent);
+            }
+        });
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
