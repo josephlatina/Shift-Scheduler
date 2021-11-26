@@ -125,6 +125,10 @@ public class ShiftWeekDay extends AppCompatActivity {
 
                 //if toggle is switch to "on", retrieve employees from last week
                 if (b) {
+                    //clear current scheduled employees
+                    dbHelper.clearScheduledEmployees(localDate, "MORNING");
+                    dbHelper.clearScheduledEmployees(localDate, "EVENING");
+                    updateEmployeeList();
                     //get the scheduled employees from last week
                     ArrayList<EmployeeModel> scheduledOpeners = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "MORNING");
                     ArrayList<EmployeeModel> scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "EVENING");
@@ -142,8 +146,8 @@ public class ShiftWeekDay extends AppCompatActivity {
                 }
                 //otherwise, clear the scheduled lists
                 else {
-                    schedOpenEmployeeList.clear();
-                    schedCloseEmployeeList.clear();
+                    dbHelper.clearScheduledEmployees(localDate, "MORNING");
+                    dbHelper.clearScheduledEmployees(localDate, "EVENING");
                 }
 
                 //update Recycler Views

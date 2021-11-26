@@ -7,8 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Switch;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +37,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
     //references to layout controls
     Button backbtn;
     EditText shiftdate;
+    Switch repeat;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> availFullDayEmployeeList;
     private ArrayList<EmployeeModel> schedFullDayEmployeeList;
@@ -57,6 +60,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
         shiftdate = (EditText) findViewById(R.id.weekEndShiftDate);
         schedFullDayRecyclerView = findViewById(R.id.scheduledWeekendEmployees);
         availFullDayRecyclerView = findViewById(R.id.availableWeekendEmployees);
+        repeat = findViewById(R.id.weekEndSwitch);
         alertDialogBuilder = new AlertDialog.Builder(this);
 
         //receive intent
@@ -68,7 +72,6 @@ public class ShiftWeekEnd extends AppCompatActivity {
         //Create shift model
         NavigableSet<EmployeeModel> fullEmployees = new TreeSet<>();
         fullShift = new FullShift(0, localDate, fullEmployees, 4);
-
 
         //Populate Recycler Views
         updateEmployeeList();
@@ -84,6 +87,38 @@ public class ShiftWeekEnd extends AppCompatActivity {
             public void onClick(View v) {
                 Intent myIntent = new Intent(ShiftWeekEnd.this, ShiftCalendar.class);
                 startActivity(myIntent);
+            }
+        });
+
+        //Switch listener for Repeat switch
+        repeat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                //get the date from 7 days ago
+                LocalDate lastWeekDate = localDate.minusDays(7);
+
+                //if toggle is switch to "on", retrieve employees from last week
+                if (b) {
+                    //clear current scheduled employees
+                    dbHelper.clearScheduledEmployees(localDate, "FULL");
+                    updateEmployeeList();
+                    //get the scheduled employees from last week
+                    ArrayList<EmployeeModel> scheduledWorkers = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "FULL");
+                    //schedule them to the current date
+                    for (EmployeeModel employee : scheduledWorkers) {
+                        if (availFullDayEmployeeList.contains(employee)) {
+                            dbHelper.scheduleEmployee(employee.getEmployeeID(), localDate, "FULL");
+                        }
+                    }
+                }
+                //otherwise, clear the scheduled lists
+                else {
+                    dbHelper.clearScheduledEmployees(localDate, "FULL");
+                }
+
+                //update Recycler Views
+                updateEmployeeList();
+                buildAllRecyclerViews();
             }
         });
     }
