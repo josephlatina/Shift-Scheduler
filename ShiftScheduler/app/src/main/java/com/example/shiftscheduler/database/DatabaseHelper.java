@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.ExportModel;
 import com.example.shiftscheduler.models.TimeoffModel;
 
 import java.sql.Date;
@@ -686,23 +687,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return shiftID;
     }
 
-    public int getShiftIDOfOneMonth(String year, String month) {
-        int shiftID;
-        //get data from the database
+    public List<ExportModel> getExportInfoOfOneMonth(String year, String month) {
+        List<ExportModel> returnList = new ArrayList<>();
 
-        String queryString = "SELECT " + COL_SHIFTID + " FROM " + WORK_TABLE + " WHERE " + COL_SHIFTID + " in (SELECT " +
-                COL_SHIFTID + " from " + SHIFT_TABLE + " WHERE " + COL_DATE + " LIKE '%" + year + "-" + month + "%')";
+        String firstName = "", lastName = "", shiftType = "", date = "";
+
+        //get data from the database
+        String queryString = "SELECT DISTINCT" + COL_FNAME + COL_LNAME + COL_SHIFTTYPE + COL_DATE +
+                " FROM " + SHIFT_TABLE + " JOIN " + WORK_TABLE + " JOIN " + EMPLOYEE_TABLE +
+                " WHERE " + COL_DATE + " LIKE '%" + year + "-" + month + "%')";
 
         SQLiteDatabase db = this.getWritableDatabase();
+
         //Cursor is the [result] set from SQL statement
         Cursor cursor = db.rawQuery(queryString, null);
-        //If shift exists, return shiftID. Otherwise, return 0.
+
         if (cursor.moveToFirst()) {
-            shiftID = cursor.getInt(0);
+            do {
+                firstName = cursor.getString(1);
+                lastName = cursor.getString(2);
+                shiftType = cursor.getString(3);
+                date = cursor.getString(4);
+
+                ExportModel newExportInfo = new ExportModel(firstName, lastName, shiftType, date);
+                returnList.add(newExportInfo);
+            } while (cursor.moveToNext());
         } else {
-            shiftID = 0;
+
         }
-        return shiftID;
+        cursor.close();
+        db.close();
+        return returnList;
     }
 
     /*********************************************************************************************
