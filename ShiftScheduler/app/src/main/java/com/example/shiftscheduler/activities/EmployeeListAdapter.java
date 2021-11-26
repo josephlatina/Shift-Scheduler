@@ -3,6 +3,7 @@ package com.example.shiftscheduler.activities;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -144,17 +145,6 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         EmployeeModel currentEmployee = employeeList.get(position);
-//        String qualificationDetails = " ";
-//        List<Boolean> qualifications = currentEmployee.getQualifications();
-//        if (qualifications.get(0)) {
-//            qualificationDetails += "Opening ";
-//        }
-//        if (qualifications.get(1)) {
-//            qualificationDetails += "Closing";
-//        }
-//        if (qualifications.get(1) == false && qualifications.get(0) == false) {
-//            qualificationDetails += "None";
-//        }
 
         switch (layoutType) {
             case 0:

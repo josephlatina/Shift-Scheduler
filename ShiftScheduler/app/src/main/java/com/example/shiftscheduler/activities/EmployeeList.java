@@ -24,6 +24,7 @@ public class EmployeeList extends AppCompatActivity{
     public static final String EMPLOYEE_EMAIL = "com.example.shiftscheduler.activities.EMPLOYEE_EMAIL";
     public static final String EMPLOYEE_ADDRESS = "com.example.shiftscheduler.activities.EMPLOYEE_ADDRESS";
     public static final String EMPLOYEE_DOB = "com.example.shiftscheduler.activities.EMPLOYEE_DOB";
+    public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
     String empID;
 
 
@@ -147,6 +148,7 @@ public class EmployeeList extends AppCompatActivity{
                 myIntent.putExtra(EMPLOYEE_ADDRESS, employee.getStreet());
                 myIntent.putExtra(EMPLOYEE_DOB, employee.getDOB());
                 myIntent.putExtra(EMPLOYEE_ID, empID);
+                myIntent.putExtra(ACTIVITY_PAGE, "EMPLOYEE_LIST");
                 startActivity(myIntent);
 
                 //temp:

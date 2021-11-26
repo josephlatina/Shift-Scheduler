@@ -22,12 +22,13 @@ public class EmployeeInfo extends AppCompatActivity {
 
     public static final String EDITEMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
     public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
 
     EditText name, phoneNumber, email, streetAddress, dateOfBirth;
     Button editbtn;
     Button timeoffbtn;
     ImageButton backbtn;
-    String empID, fullName;
+    String empID, fullName, activityPage, date;
     CheckBox opening, closing;
     CheckBox AvailMonMorn, AvailTuesMorn, AvailWedMorn, AvailThursMorn, AvailFriMorn, AvailSat, AvailSun;
     CheckBox AvailMonEven, AvailTuesEven, AvailWedEven, AvailThursEven, AvailFriEven;
@@ -84,6 +85,8 @@ public class EmployeeInfo extends AppCompatActivity {
         streetAddress.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_ADDRESS));
         dateOfBirth.setText(intent.getStringExtra(EmployeeList.EMPLOYEE_DOB));
         empID = intent.getStringExtra((EmployeeList.EMPLOYEE_ID));
+        activityPage = intent.getStringExtra(EmployeeList.ACTIVITY_PAGE);
+
         //Get intent from Employee Info activity if not Employee List
         if (empID == null) {
             empID = intent.getStringExtra(EmployeeTimeOff.EMPLOYEE_ID);
@@ -92,6 +95,13 @@ public class EmployeeInfo extends AppCompatActivity {
             if (empID == null) {
                 empID = intent.getStringExtra(EmployeeEditForm.EMPLOYEE_ID);
                 fullName = intent.getStringExtra(EmployeeEditForm.EMPLOYEE_NAME);
+                //Otherwise, get intent from ShiftWeekDay
+                if (empID == null) {
+                    empID = intent.getStringExtra(ShiftWeekDay.EMPLOYEE_ID);
+                    fullName = intent.getStringExtra(ShiftWeekDay.EMPLOYEE_NAME);
+                    activityPage = intent.getStringExtra(ShiftWeekDay.ACTIVITY_PAGE);
+                    date = intent.getStringExtra(ShiftWeekDay.SHIFT_DATE);
+                }
             }
         }
         DatabaseHelper dbHelper = new DatabaseHelper(EmployeeInfo.this);
@@ -211,8 +221,15 @@ public class EmployeeInfo extends AppCompatActivity {
         backbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myIntent = new Intent(EmployeeInfo.this, EmployeeList.class);
-                startActivity(myIntent);
+                if (activityPage.equals("EMPLOYEE_LIST")) {
+                    Intent myIntent = new Intent(EmployeeInfo.this, EmployeeList.class);
+                    startActivity(myIntent);
+                }
+                if (activityPage.equals("SHIFT_WEEKDAY")) {
+                    Intent myIntent = new Intent(EmployeeInfo.this, ShiftWeekDay.class);
+                    myIntent.putExtra(SHIFT_DATE, date);
+                    startActivity(myIntent);
+                }
             }
         });
 

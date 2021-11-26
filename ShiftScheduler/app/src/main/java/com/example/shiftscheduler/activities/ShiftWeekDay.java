@@ -46,10 +46,8 @@ public class ShiftWeekDay extends AppCompatActivity {
     //for passing info to employeeInfo
     public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
     public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
-    public static final String EMPLOYEE_PHONE_NUMBER = "com.example.shiftscheduler.activities.PHONE_NUMBER";
-    public static final String EMPLOYEE_EMAIL = "com.example.shiftscheduler.activities.EMPLOYEE_EMAIL";
-    public static final String EMPLOYEE_ADDRESS = "com.example.shiftscheduler.activities.EMPLOYEE_ADDRESS";
-    public static final String EMPLOYEE_DOB = "com.example.shiftscheduler.activities.EMPLOYEE_DOB";
+    public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
 
     //references to layout controls
     Button backbtn;
@@ -67,6 +65,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     private EmployeeListAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     LocalDate localDate;
+    String date;
     MorningShift morningShift;
     EveningShift eveningShift;
     ShiftModel givenShift;
@@ -90,7 +89,10 @@ public class ShiftWeekDay extends AppCompatActivity {
 
         //receive intent
         Intent incomingIntent = getIntent();
-        String date = incomingIntent.getStringExtra("date");
+        date = incomingIntent.getStringExtra(ShiftCalendar.SHIFT_DATE);
+        if (date == null) {
+            date = incomingIntent.getStringExtra(EmployeeInfo.SHIFT_DATE);
+        }
         shiftdate.setText(date);
         localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
 
@@ -119,7 +121,7 @@ public class ShiftWeekDay extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(ShiftWeekDay.this, ShiftCalendar.class);
-                myIntent.putExtra("date", date);
+                myIntent.putExtra(SHIFT_DATE, date);
                 myIntent.putExtra("DayObject", day);
                 startActivity(myIntent);
             }
@@ -166,6 +168,15 @@ public class ShiftWeekDay extends AppCompatActivity {
             }
         });
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void onResume() {
+        super.onResume();
+        Intent incomingIntent = getIntent();
+        date = incomingIntent.getStringExtra(EmployeeInfo.SHIFT_DATE);
+        updateEmployeeList();
+        buildAllRecyclerViews();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -249,7 +260,15 @@ public class ShiftWeekDay extends AppCompatActivity {
 
             @Override
             public void onItemClick(int position) {
+                EmployeeModel employee = employeeList.get(position);
+                int empID = employee.getEmployeeID();
 
+                Intent myIntent = new Intent(ShiftWeekDay.this, EmployeeInfo.class);
+                myIntent.putExtra(EMPLOYEE_ID, String.valueOf(empID));
+                myIntent.putExtra(EMPLOYEE_NAME, employee.getFName() + " " + employee.getLName());
+                myIntent.putExtra(ACTIVITY_PAGE, "SHIFT_WEEKDAY");
+                myIntent.putExtra(SHIFT_DATE, date);
+                startActivity(myIntent);
             }
         });
     }
