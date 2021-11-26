@@ -53,6 +53,7 @@
     <string name="empID">Employee ID</string>
     <string name="date">Date</string>
     <string name="repeat">Repeat</string>
+    <string name="export">export</string>
 
     <!-- TimeOff strings -->
     <string name="timeOff">Request Time Off</string>

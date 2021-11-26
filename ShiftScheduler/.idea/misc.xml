@@ -20,9 +20,7 @@
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_object.xml" value="0.2692502532928065" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff.xml" value="0.5" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff_object.xml" value="0.5541666666666667" />
-        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_available_object.xml" value="0.75" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_calendar.xml" value="0.25" />
-        <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_scheduled_object.xml" value="0.75" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekday.xml" value="0.5" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekday_object.xml" value="0.75" />
         <entry key="..\:/Projects/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekday_schedobject.xml" value="0.5541666666666667" />
@@ -43,9 +41,9 @@
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/employee_info.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/employee_list.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/employee_timeoff.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/schedule_export.xml" value="0.20625" />
+        <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/schedule_export.xml" value="0.33" />
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/shift_available_object.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/shift_calendar.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/shift_calendar.xml" value="0.25" />
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/shift_scheduled_object.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekday.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/zhouz/Desktop/f21borg/ShiftScheduler/app/src/main/res/layout/shift_weekend.xml" value="0.36666666666666664" />
