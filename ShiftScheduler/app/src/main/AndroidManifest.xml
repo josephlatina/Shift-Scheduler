@@ -7,6 +7,9 @@
         android:label="Shift Scheduler"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.ScheduleExport"
+            android:exported="true" />
+        <activity
             android:name=".activities.TimeoffListAdapter"
             android:exported="true" />
         <activity

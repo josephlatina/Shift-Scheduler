@@ -138,6 +138,7 @@ public class EmployeeList extends AppCompatActivity{
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
                 empID = String.valueOf(employee.getEmployeeID());
+                String activityPage = "EMPLOYEE_LIST";
                 //TBD: fill in logic to open Employee Info page & populate it.
 
                 Intent myIntent = new Intent(EmployeeList.this, EmployeeInfo.class);

@@ -2,6 +2,7 @@ package com.example.shiftscheduler.models;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 public class EmployeeModel implements Comparable<EmployeeModel>, Serializable {
@@ -16,6 +17,7 @@ public class EmployeeModel implements Comparable<EmployeeModel>, Serializable {
     private String phoneNum;
     private String email;
     private boolean isActive;
+    private List<Boolean> qualifications;
 
     public EmployeeModel(int employeeID, String fName, String lName,
                          String city, String street, String province, String postal, String dob,
@@ -31,6 +33,24 @@ public class EmployeeModel implements Comparable<EmployeeModel>, Serializable {
         this.phoneNum = phoneNum;
         this.email = email;
         this.isActive = isActive;
+    }
+
+    //For constructing with qualifications information
+    public EmployeeModel(int employeeID, String fName, String lName,
+                         String city, String street, String province, String postal, String dob,
+                         String phoneNum, String email, boolean isActive, List<Boolean> qualifications) {
+        this.employeeID = employeeID;
+        this.fName = fName;
+        this.lName = lName;
+        this.city = city;
+        this.street = street;
+        this.province = province;
+        this.postal = postal;
+        this.DOB = dob;
+        this.phoneNum = phoneNum;
+        this.email = email;
+        this.isActive = isActive;
+        this.qualifications = qualifications;
     }
 
     public int getEmployeeID() {
@@ -72,6 +92,8 @@ public class EmployeeModel implements Comparable<EmployeeModel>, Serializable {
     public String getEmail() { return email; }
 
     public boolean getStatus() { return isActive; }
+
+    public List<Boolean> getQualifications() { return qualifications; }
 
     public void setfName(String fName) {
         this.fName = fName;

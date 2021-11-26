@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.models.AvailabilityModel;
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.ExportModel;
 import com.example.shiftscheduler.models.TimeoffModel;
 
 import java.sql.Date;
@@ -426,8 +427,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             // error, nothing added to the list
         }
+        //get qualifications
+        List<Boolean> qualifications = getQualifications(employeeID);
+
         EmployeeModel employee = new EmployeeModel(employeeID,
-                fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+                fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
         // close both db and cursor for others to access
         cursor.close();
         db.close();
@@ -498,6 +502,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return employees;
     }
 
+    public void clearScheduledEmployees(LocalDate date, String time) {
+        //Retrieve scheduled Employees
+        List<EmployeeModel> scheduledEmployees = getScheduledEmployees(date, time);
+
+        //Deschedule every employee in the scheduled Employees List
+        for (EmployeeModel employee : scheduledEmployees) {
+            descheduleEmployee(employee.getEmployeeID(), date, time);
+        }
+    }
+
     //retrieve employees that work in a specific shift
     public List<EmployeeModel> getScheduledEmployees(LocalDate date, String time) {
         //Initialize List
@@ -530,8 +544,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String email = cursor.getString(9);
                 boolean isActive = cursor.getInt(10) == 1 ? true: false;
 
+                //get Qualifications
+                List<Boolean> qualifications = getQualifications(employeeID);
+
                 EmployeeModel newEmployee = new EmployeeModel(employeeID,
-                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
                 employees.add(newEmployee);
             } while(cursor.moveToNext());
         } else {
@@ -668,6 +685,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             shiftID = 0;
         }
         return shiftID;
+    }
+
+    public List<ExportModel> getExportInfoOfOneMonth(String year, String month) {
+        List<ExportModel> returnList = new ArrayList<>();
+
+        String firstName = "", lastName = "", shiftType = "", date = "";
+
+        //get data from the database
+        String queryString = "SELECT DISTINCT" + COL_FNAME + COL_LNAME + COL_SHIFTTYPE + COL_DATE +
+                " FROM " + SHIFT_TABLE + " JOIN " + WORK_TABLE + " JOIN " + EMPLOYEE_TABLE +
+                " WHERE " + COL_DATE + " LIKE '%" + year + "-" + month + "%')";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                firstName = cursor.getString(1);
+                lastName = cursor.getString(2);
+                shiftType = cursor.getString(3);
+                date = cursor.getString(4);
+
+                ExportModel newExportInfo = new ExportModel(firstName, lastName, shiftType, date);
+                returnList.add(newExportInfo);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+        cursor.close();
+        db.close();
+        return returnList;
     }
 
     /*********************************************************************************************

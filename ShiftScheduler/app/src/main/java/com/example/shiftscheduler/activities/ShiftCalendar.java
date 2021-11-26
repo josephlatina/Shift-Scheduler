@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -29,6 +31,8 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 
 public class ShiftCalendar extends AppCompatActivity {
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
+
     //references to layout controls
     CalendarView calendar;
     private BottomNavigationView bottomNavigationView;
@@ -39,6 +43,16 @@ public class ShiftCalendar extends AppCompatActivity {
 
         //Link the layout controls
         calendar = (CalendarView) findViewById(R.id.calendarView);
+
+        //export button listener
+        Button btnExport = findViewById(R.id.export_btn);
+        btnExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ShiftCalendar.this, ScheduleExport.class);
+                startActivity(myIntent);
+            }
+        });
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -62,7 +76,7 @@ public class ShiftCalendar extends AppCompatActivity {
                     startActivity(myIntent);
                 } else {
                     Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekDay.class);
-                    myIntent.putExtra("date", date);
+                    myIntent.putExtra(SHIFT_DATE, date);
                     startActivity(myIntent);
                 }
             }
