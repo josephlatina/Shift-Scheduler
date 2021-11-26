@@ -29,6 +29,8 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 
 public class ShiftCalendar extends AppCompatActivity {
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
+
     //references to layout controls
     CalendarView calendar;
     private BottomNavigationView bottomNavigationView;
@@ -62,7 +64,7 @@ public class ShiftCalendar extends AppCompatActivity {
                     startActivity(myIntent);
                 } else {
                     Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekDay.class);
-                    myIntent.putExtra("date", date);
+                    myIntent.putExtra(SHIFT_DATE, date);
                     startActivity(myIntent);
                 }
             }

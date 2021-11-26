@@ -30,6 +30,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
 
     public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EDITEMPLOYEE_ID";
     public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
+    public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
 
     EditText name, dateTo, dateFrom;
     Button addbtn;
@@ -104,6 +105,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
                 Intent myIntent = new Intent(EmployeeTimeOff.this, EmployeeInfo.class);
                 myIntent.putExtra(EMPLOYEE_ID, empID);
                 myIntent.putExtra(EMPLOYEE_NAME, fullName);
+                myIntent.putExtra(ACTIVITY_PAGE, "EMPLOYEE_TIME_OFF");
                 startActivity(myIntent);
             }
         });
