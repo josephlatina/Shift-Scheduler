@@ -209,7 +209,7 @@ public abstract class ShiftModel implements Serializable {
      */
     public ArrayList<ErrorModel> verifyShiftSize(ArrayList<ErrorModel> errors) {
         // check if shift is full
-        if (employees.size() != employeesNeeded) {
+        if (employees.size() < employeesNeeded) {
             errors.add(new ErrorModel(date,
                     getTime()+" SHIFT: Not enough employees assigned."));
         }
@@ -234,7 +234,7 @@ public abstract class ShiftModel implements Serializable {
      * @return errors found
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    protected ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
+    public ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
                                                                ArrayList<ErrorModel> errors) {
         List<EmployeeModel> availableEmployees = database.getAvailableEmployees(date, getTime());
         for (EmployeeModel employee : getEmployees()) {
@@ -247,13 +247,34 @@ public abstract class ShiftModel implements Serializable {
     };
 
     /**
+     * Verifies that all employees are available for this shift
+     * (without an existing list of errors)
+     * @param database - DatabaseHelper object for the current session
+     * @return errors found
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database) {
+        return verifyEmployeeAvailability(database, new ArrayList<>());
+    }
+
+    /**
      * Verifies employees' qualifications according to the specification
      * (set in subclasses)
      * @param database - DatabaseHelper object for the current session
      * @param errors - existing list of errors
      * @return errors found
      */
-    protected abstract ArrayList<ErrorModel>
+    public abstract ArrayList<ErrorModel>
     verifyEmployeeQualifications(DatabaseHelper database, ArrayList<ErrorModel> errors);
+
+    /**
+     * Verifies employees' qualifications according to the specification
+     * (without an existing list of errors)
+     * @param database - DatabaseHelper object for the current session
+     * @return errors found
+     */
+    public ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database) {
+        return verifyEmployeeQualifications(database, new ArrayList<>());
+    }
 }
 
