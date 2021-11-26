@@ -31,10 +31,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class ShiftWeekDay extends AppCompatActivity {
 
@@ -55,6 +57,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     LocalDate localDate;
     MorningShift morningShift;
     EveningShift eveningShift;
+    ShiftModel givenShift;
     AlertDialog.Builder alertDialogBuilder;
     int flag;
 
@@ -138,7 +141,8 @@ public class ShiftWeekDay extends AppCompatActivity {
             @Override
             public void onEmployeeClick(int position) {
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekDay.this);
-                boolean choice = true;
+                int count = 0;
+                int shiftEmp;
 
                 //Determine which employee selected by user
                 EmployeeModel employee = employeeList.get(position);
@@ -146,25 +150,42 @@ public class ShiftWeekDay extends AppCompatActivity {
 
                 //Add employee first to shift model
                 if (time.equals("MORNING")) {
-                    morningShift.addEmployee(employee);
+                    givenShift = morningShift;
                 } else {
-                    eveningShift.addEmployee(employee);
+                    givenShift = eveningShift;
                 }
+                givenShift.addEmployee(employee);
                 /**
                  //Call on verifyShift method
                  ArrayList<ErrorModel> errors = morningShift.verifyShift(dbHelper);
-                 //If no errors detected during verification process, add to database
-                 if (errors.size() == 0) {
-                 dbHelper.scheduleEmployee(empID, localDate, "MORNING");
-                 }
                  */
                 //If there are more than 2 employees assigned, prompt alert message
-                if (morningShift.getEmployees().size() > 2 || eveningShift.getEmployees().size() > 2) {
+                if (givenShift.getEmployees().size() > 2) {
                     promptAlertMessage(1, dbHelper, empID, employee, time);
-                } else {
-                    //if not, proceed with scheduling the employee
-                    dbHelper.scheduleEmployee(empID, localDate, time);
+                    return;
                 }
+                //If there are 2 employees assigned, check for qualified employees
+                else if (givenShift.getEmployees().size() == 2){
+                    //loop to check if there any employees qualified
+                    for (int i = 0; i < 2; i++) {
+                        shiftEmp = givenShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
+                        List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
+                        if (time.equals("MORNING") && qualifications.get(0)) {
+                            count += 1;
+                        }
+                        else if (time.equals("EVENING") && qualifications.get(1)) {
+                            count += 1;
+                        }
+                    }
+                    //if none are, then prompt alert message
+                    if (count == 0) {
+                        promptAlertMessage(2, dbHelper, empID, employee, time);
+                        return;
+                    }
+                }
+                //Otherwise, proceed with scheduling the employee
+                dbHelper.scheduleEmployee(empID, localDate, time);
+
                 //update Recycler Views
                 updateEmployeeList();
                 buildAllRecyclerViews();
@@ -230,7 +251,6 @@ public class ShiftWeekDay extends AppCompatActivity {
         //Initialization
         String details1 = "There would be more employees assigned than the normal employees needed. Do you want to continue?";
         String details2 = "None of the employees assigned are qualified for the shift. Do you want to continue?";
-        flag = 0;
 
         switch (code) {
             case 1: alertDialogBuilder.setTitle("Too many employees");
@@ -243,15 +263,19 @@ public class ShiftWeekDay extends AppCompatActivity {
 
         alertDialogBuilder.setCancelable(false)
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        //If this button is clicked, close dialog box and do nothing
                         if (time.equals("MORNING")) {
                             morningShift.removeEmployee(employee);
                         } else {
                             eveningShift.removeEmployee(employee);
                         }
-                        dialog.cancel();
+                        dialog.dismiss();
+
+                        //update Recycler Views
+                        updateEmployeeList();
+                        buildAllRecyclerViews();
                     }
                 })
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -266,8 +290,6 @@ public class ShiftWeekDay extends AppCompatActivity {
                         buildAllRecyclerViews();
                     }
                 }).create().show();
-
-        return;
     }
 
 }
