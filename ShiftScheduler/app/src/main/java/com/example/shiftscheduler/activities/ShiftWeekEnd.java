@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Switch;
 
 import androidx.annotation.RequiresApi;
@@ -21,9 +20,7 @@ import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
-import com.example.shiftscheduler.models.EveningShift;
 import com.example.shiftscheduler.models.FullShift;
-import com.example.shiftscheduler.models.MorningShift;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -196,10 +193,6 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 buildAllRecyclerViews();
 
             }
-            @Override
-            public void onItemClick(int position) {
-
-            }
         });
     }
 
@@ -224,10 +217,6 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 //update Recycler Views
                 updateEmployeeList();
                 buildAllRecyclerViews();
-            }
-            @Override
-            public void onItemClick(int position) {
-
             }
         });
     }
