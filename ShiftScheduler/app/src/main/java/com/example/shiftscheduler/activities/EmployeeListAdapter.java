@@ -14,6 +14,7 @@ import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<EmployeeModel> employeeList;
@@ -61,7 +62,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             addBtn = itemView.findViewById(R.id.availableAddButton);
             employeeName = itemView.findViewById(R.id.weekdayAvailable);
-            qualification = itemView.findViewById(R.id.qualificationAvailable);
+            qualification = itemView.findViewById(R.id.qualificationAvailableDetails);
 
             addBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,7 +99,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             super(itemView);
             deleteBtn = itemView.findViewById(R.id.scheduledDeleteButton);
             employeeName = itemView.findViewById(R.id.weekdayScheduled);
-            qualification = itemView.findViewById(R.id.qualificationScheduled);
+            qualification = itemView.findViewById(R.id.qualificationScheduledDetails);
 
             deleteBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -143,6 +144,17 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         EmployeeModel currentEmployee = employeeList.get(position);
+//        String qualificationDetails = " ";
+//        List<Boolean> qualifications = currentEmployee.getQualifications();
+//        if (qualifications.get(0)) {
+//            qualificationDetails += "Opening ";
+//        }
+//        if (qualifications.get(1)) {
+//            qualificationDetails += "Closing";
+//        }
+//        if (qualifications.get(1) == false && qualifications.get(0) == false) {
+//            qualificationDetails += "None";
+//        }
 
         switch (layoutType) {
             case 0:
@@ -153,10 +165,34 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case 1:
                 AvailableWeekdayViewHolder awvh = (AvailableWeekdayViewHolder) holder;
                 awvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                String qualificationDetails = " ";
+                List<Boolean> qualifications = currentEmployee.getQualifications();
+                if (qualifications != null && qualifications.get(0)) {
+                    qualificationDetails += "Opening ";
+                }
+                if (qualifications != null && qualifications.get(1)) {
+                    qualificationDetails += "Closing";
+                }
+                if (qualifications != null && qualifications.get(1) == false && qualifications.get(0) == false) {
+                    qualificationDetails += "None";
+                }
+                awvh.qualification.setText(qualificationDetails);
                 break;
             case 2:
                 ScheduledWeekdayViewHolder swvh = (ScheduledWeekdayViewHolder) holder;
                 swvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                String qualificationDetails2 = " ";
+                List<Boolean> qualifications2 = currentEmployee.getQualifications();
+                if (qualifications2 != null && qualifications2.get(0)) {
+                    qualificationDetails2 += "Opening ";
+                }
+                if (qualifications2 != null && qualifications2.get(1)) {
+                    qualificationDetails2 += "Closing";
+                }
+                if (qualifications2 != null && qualifications2.get(1) == false && qualifications2.get(0) == false) {
+                    qualificationDetails2 += "None";
+                }
+                swvh.qualification.setText(qualificationDetails2);
                 break;
         }
     }

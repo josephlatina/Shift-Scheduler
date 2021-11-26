@@ -426,8 +426,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             // error, nothing added to the list
         }
+        //get qualifications
+        List<Boolean> qualifications = getQualifications(employeeID);
+
         EmployeeModel employee = new EmployeeModel(employeeID,
-                fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+                fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
         // close both db and cursor for others to access
         cursor.close();
         db.close();
@@ -540,8 +543,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String email = cursor.getString(9);
                 boolean isActive = cursor.getInt(10) == 1 ? true: false;
 
+                //get Qualifications
+                List<Boolean> qualifications = getQualifications(employeeID);
+
                 EmployeeModel newEmployee = new EmployeeModel(employeeID,
-                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive);
+                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
                 employees.add(newEmployee);
             } while(cursor.moveToNext());
         } else {
