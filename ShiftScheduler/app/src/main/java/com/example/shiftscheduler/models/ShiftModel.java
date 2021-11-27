@@ -95,16 +95,19 @@ public abstract class ShiftModel implements Serializable {
     }
 
     /**
+     * @return size of employee list
+     */
+    public int getEmployeeCount() {
+        return employees.size();
+    }
+
+    /**
      * Assigns an employee to this shift
      * @param employee - new EmployeeModel to be added
      * @return successful
      */
     public boolean addEmployee(EmployeeModel employee) {
-        if (employees.size() < employeesNeeded) {
-            return employees.add(employee);
-        } else {
-            return false;
-        }
+        return employees.add(employee);
     }
 
     /**
@@ -125,14 +128,10 @@ public abstract class ShiftModel implements Serializable {
 
     /**
      * Changes maximum employee count
-     * @param employeesNeeded - new maximum employees allowed
+     * @param employeesNeeded - new amount of employees needed
      */
     public void setEmployeesNeeded(int employeesNeeded) {
         this.employeesNeeded = employeesNeeded;
-        // remove excess employees that no longer fit in this shift
-        while (employees.size() > employeesNeeded) {
-            employees.pollLast();
-        }
     }
 
     /**
