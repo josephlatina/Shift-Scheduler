@@ -17,6 +17,7 @@ import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.DayModel;
 import com.example.shiftscheduler.models.EmployeeModel;
+import com.example.shiftscheduler.models.ErrorModel;
 import com.example.shiftscheduler.models.EveningShift;
 import com.example.shiftscheduler.models.FullShift;
 import com.example.shiftscheduler.models.MonthModel;
@@ -39,6 +40,7 @@ public class ShiftCalendar extends AppCompatActivity {
     Button editSelectedDayBtn;
     Button exportBtn;
     int selectedYear, selectedMonth, selectedDayOfMonth;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -70,6 +72,7 @@ public class ShiftCalendar extends AppCompatActivity {
                     date += selectedDayOfMonth;
                 }
                 LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+
                 int dayOfWeek = localDate.getDayOfWeek().getValue();
 
                 //If It's a weekend, switch to the ShiftWeekEnd Activity. Otherwise, switch to ShiftWeekDay
@@ -84,6 +87,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 }
             }
         });
+
 
 
         exportBtn = (Button) findViewById(R.id.calExport);
@@ -107,6 +111,10 @@ public class ShiftCalendar extends AppCompatActivity {
                 selectedMonth = month;
                 selectedDayOfMonth = dayOfMonth;
                 updateEditLabel(year, month, dayOfMonth);
+                updateCalErrorColours();
+                updateAssignedEmployeeList();
+                updateErrorList();
+
 
             }
         });
@@ -117,11 +125,6 @@ public class ShiftCalendar extends AppCompatActivity {
 
 
     }
-
-
-
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onResume() {
@@ -143,16 +146,46 @@ public class ShiftCalendar extends AppCompatActivity {
 
     }
 
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateAssignedEmployeeList() {
+        LocalDate selectedLocalDate = selectedLocalDate();
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+        ArrayList<EmployeeModel> assignedEmployees;
+        assignedEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+                "MORNING");
+        ArrayList<EmployeeModel> scheduledClosers;
+        scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+                "EVENING");
+        assignedEmployees.addAll(scheduledClosers);
+
+
+
+    }
+
+
+    private void updateCalErrorColours() {
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateErrorList() {
+        LocalDate selectedLocalDate = selectedLocalDate();
+        //get error list
+//        LocalDate firstOfMonth = makeDate(selectedYear, selectedMonth, 1);
+//        MonthModel errorMonth = MonthModel(firstOfMonth, )
+//        ArrayList<ErrorModel> errorList =
+
+
+
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateEditLabel(int year, int month, int dayOfMonth){
         //Concatenate to convert date into string format
-        String date = selectedYear + "-" + (selectedMonth+1) + "-";
-        if (selectedDayOfMonth < 10) {
-            date += "0" + selectedDayOfMonth; //for formatting purposes
-        } else {
-            date += selectedDayOfMonth;
-        }
-        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate localDate = makeDate(year, month, dayOfMonth);
+
 
         String newLabelDayOfWeek = localDate.getDayOfWeek().toString();
         newLabelDayOfWeek = newLabelDayOfWeek.substring(0,1).toUpperCase() +
@@ -169,6 +202,22 @@ public class ShiftCalendar extends AppCompatActivity {
         editSelectedDayBtn.setText(newEditLabel);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private LocalDate makeDate(int year, int month, int dayOfMonth) {
+        String date = selectedYear + "-" + (selectedMonth+1) + "-";
+        if (selectedDayOfMonth < 10) {
+            date += "0" + selectedDayOfMonth; //for formatting purposes
+        }
+        else {
+            date += selectedDayOfMonth;
+        }
+        return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private LocalDate selectedLocalDate() {
+        return makeDate(selectedYear, selectedMonth, selectedDayOfMonth);
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
