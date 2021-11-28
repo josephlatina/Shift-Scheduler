@@ -45,7 +45,7 @@ public class MorningShift extends ShiftModel implements Serializable {
      * @return errors found
      */
     @Override
-    protected ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
+    public ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
                                                                  ArrayList<ErrorModel> errors) {
         List<Boolean> employeeQualifications;
         boolean qualified = false;
