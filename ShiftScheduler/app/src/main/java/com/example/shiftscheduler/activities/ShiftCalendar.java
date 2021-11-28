@@ -136,8 +136,8 @@ public class ShiftCalendar extends AppCompatActivity {
                 LocalDate selectedLocalDate = selectedLocalDate();
 
                 //Build Recycler Views
-                buildEmployeeRecyclerView(employeeRecyclerView, assignedEmployees, selectedLocalDate);
-                buildErrorRecyclerView(errorRecyclerView, errorList, selectedLocalDate);
+//                buildEmployeeRecyclerView(employeeRecyclerView, assignedEmployees, selectedLocalDate);
+//                buildErrorRecyclerView(errorRecyclerView, errorList, selectedLocalDate);
             }
         });
 
