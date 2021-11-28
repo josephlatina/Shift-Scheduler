@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
 
@@ -34,26 +36,39 @@ public class ShiftCalendar extends AppCompatActivity {
     //references to layout controls
     CalendarView calendar;
     private BottomNavigationView bottomNavigationView;
+    Button editSelectedDayBtn;
+    Button exportBtn;
+    int selectedYear, selectedMonth, selectedDayOfMonth;
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shift_calendar);
 
         //Link the layout controls
-        calendar = (CalendarView) findViewById(R.id.calendarView);
 
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+        //editSelectedDay button
+        editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
+        LocalDate localDate = LocalDate.now();
+        selectedYear = localDate.getYear();
+        selectedMonth = localDate.getMonthValue() - 1;
+        selectedDayOfMonth = localDate.getDayOfMonth();
+        updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
+        editSelectedDayBtn.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
-            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
-                //Concatenate to convert date into string format
-                String date = year + "-" + (month+1) + "-";
-                if (dayOfMonth < 10) {
-                    date += "0" + dayOfMonth; //for formatting purposes
-                } else {
-                    date += dayOfMonth;
-                }
+            public void onClick(View v) {
                 //Determine what day of the week and send to its respective activity
+
+                //Concatenate to convert date into string format
+                String date = selectedYear + "-" + (selectedMonth+1) + "-";
+                if (selectedDayOfMonth < 10) {
+                    date += "0" + selectedDayOfMonth; //for formatting purposes
+                } else {
+                    date += selectedDayOfMonth;
+                }
                 LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
                 int dayOfWeek = localDate.getDayOfWeek().getValue();
 
@@ -69,19 +84,91 @@ public class ShiftCalendar extends AppCompatActivity {
                 }
             }
         });
+
+
+        exportBtn = (Button) findViewById(R.id.calExport);
+//        exportBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent myIntent = new Intent(ShiftCalendar.this, Export.class);
+//                startActivity(myIntent);
+//            }
+//        });
+
+
+        calendar = (CalendarView) findViewById(R.id.calendarView);
+
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month,
+                                            int dayOfMonth) {
+                selectedYear = year;
+                selectedMonth = month;
+                selectedDayOfMonth = dayOfMonth;
+                updateEditLabel(year, month, dayOfMonth);
+
+            }
+        });
+
+
         bottomNavigationView = findViewById(R.id.cal_bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+
     }
 
+
+
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onResume() {
         super.onResume();
         //receive intent
+
         Intent incomingIntent = getIntent();
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
 //        if (day != null) {
 //            Toast.makeText(ShiftCalendar.this, day.toString(), Toast.LENGTH_SHORT).show();
 //        }
+
+        editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
+        LocalDate localDate = LocalDate.now();
+        selectedYear = localDate.getYear();
+        selectedMonth = localDate.getMonthValue() - 1;
+        selectedDayOfMonth = localDate.getDayOfMonth();
+        updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
+
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateEditLabel(int year, int month, int dayOfMonth){
+        //Concatenate to convert date into string format
+        String date = selectedYear + "-" + (selectedMonth+1) + "-";
+        if (selectedDayOfMonth < 10) {
+            date += "0" + selectedDayOfMonth; //for formatting purposes
+        } else {
+            date += selectedDayOfMonth;
+        }
+        LocalDate localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+
+        String newLabelDayOfWeek = localDate.getDayOfWeek().toString();
+        newLabelDayOfWeek = newLabelDayOfWeek.substring(0,1).toUpperCase() +
+                newLabelDayOfWeek.substring(1).toLowerCase();
+
+        String newLabelMonth = localDate.getMonth().toString();
+        newLabelMonth = newLabelMonth.substring(0,1).toUpperCase() +
+                newLabelMonth.substring(1).toLowerCase();
+        int newLabelDayOfMonth = localDate.getDayOfMonth();
+
+        String newEditLabel = "Edit " + newLabelDayOfWeek +
+                ", " + newLabelMonth + "." + newLabelDayOfMonth + " Schedule";
+
+        editSelectedDayBtn.setText(newEditLabel);
+    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
