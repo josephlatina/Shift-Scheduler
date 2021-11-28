@@ -16,6 +16,7 @@ import com.example.shiftscheduler.models.ExportModel;
 import com.example.shiftscheduler.models.TimeoffModel;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -441,6 +442,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // retrieve employees with availability open for the given shift
     @RequiresApi(api = Build.VERSION_CODES.O)
     public List<EmployeeModel> getAvailableEmployees(LocalDate date, String time) {
+        int flag = 0;
         //Initialize Lists
         List<Integer> employeeIDs = new ArrayList<>();
         List<EmployeeModel> employees = new ArrayList<>();
