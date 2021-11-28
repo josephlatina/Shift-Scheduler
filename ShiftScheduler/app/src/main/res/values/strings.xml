@@ -61,6 +61,7 @@
     <string name="dateFrom">Date From</string>
     <string name="dateTo">Date To</string>
     <string name="add">Add</string>
+    <string name="edit_selected_day">Edit Selected Day</string>
 
     <!-- export strings -->
     <string name="export_to_pdf_of_a_month">Export To PDF Of A Month</string>

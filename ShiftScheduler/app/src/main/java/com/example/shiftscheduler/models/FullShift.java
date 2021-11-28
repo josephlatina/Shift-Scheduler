@@ -43,7 +43,7 @@ public class FullShift extends ShiftModel implements Serializable {
      * @return errors found
      */
     @Override
-    protected ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
+    public ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
                                                                  ArrayList<ErrorModel> errors) {
         boolean openQualified = false;
         boolean closeQualified = false;
