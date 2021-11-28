@@ -10,7 +10,7 @@
         android:layout_height="35dp">
 
         <TextView
-            android:id="@+id/calWarningLabel"
+            android:id="@+id/calEmployeeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -39,7 +39,7 @@
             android:textSize="8sp" />
 
         <TextView
-            android:id="@+id/calWarningDetails"
+            android:id="@+id/calShiftDetails"
             android:layout_width="89dp"
             android:layout_height="19dp"
             android:layout_alignParentStart="true"

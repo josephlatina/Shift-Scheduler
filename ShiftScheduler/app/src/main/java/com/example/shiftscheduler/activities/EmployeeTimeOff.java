@@ -74,7 +74,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
         fromDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                String date = year + "-" + (month) + "-";
+                String date = year + "-" + (month+1) + "-";
                 if (dayOfMonth < 10) {
                     date += "0" + dayOfMonth; //for formatting purposes
                 } else {
@@ -87,7 +87,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
         toDateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                String date = year + "-" + (month) + "-";
+                String date = year + "-" + (month+1) + "-";
                 if (dayOfMonth < 10) {
                     date += "0" + dayOfMonth; //for formatting purposes
                 } else {

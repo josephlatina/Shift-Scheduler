@@ -10,8 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shiftscheduler.R;
+import com.example.shiftscheduler.database.DatabaseHelper;
 import com.example.shiftscheduler.models.EmployeeModel;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +21,8 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<EmployeeModel> employeeList;
     private OnEmployeeClickListener listener;
     private int layoutType;
+    private DatabaseHelper dbHelper;
+    private LocalDate date;
 
     public interface OnEmployeeClickListener {
         void onEmployeeClick(int position);
@@ -101,9 +105,45 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    public static class EmployeeListCalViewHolder extends RecyclerView.ViewHolder {
+        public TextView employeeName;
+        public TextView qualification;
+        public TextView qualificationDetails;
+        public TextView shiftLabel;
+        public TextView shiftLabelDetails;
+
+        public EmployeeListCalViewHolder(@NonNull View itemView, final OnEmployeeClickListener listener) {
+            super(itemView);
+            employeeName = itemView.findViewById(R.id.calEmployeeLabel);
+            qualification = itemView.findViewById(R.id.calQualifications);
+            qualificationDetails = itemView.findViewById(R.id.calQualificationsDetails);
+            shiftLabel = itemView.findViewById(R.id.calShiftLabel);
+            shiftLabelDetails = itemView.findViewById(R.id.calShiftDetails);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onEmployeeClick(position);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
     public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, int layoutType) {
         this.employeeList = employeeList;
         this.layoutType = layoutType;
+    }
+
+    public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, DatabaseHelper dbHelper, LocalDate date, int layoutType) {
+        this.employeeList = employeeList;
+        this.layoutType = layoutType;
+        this.dbHelper = dbHelper;
+        this.date = date;
     }
 
     @NonNull
@@ -122,6 +162,10 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 View weekdaySchedObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.shift_scheduled_object, parent, false);
                 ScheduledWeekdayViewHolder swvh = new ScheduledWeekdayViewHolder(weekdaySchedObject, listener);
                 return swvh;
+            case 3:
+                View employeeCalObject = LayoutInflater.from(parent.getContext()).inflate(R.layout.employee_cal_object, parent, false);
+                EmployeeListCalViewHolder elcvh = new EmployeeListCalViewHolder(employeeCalObject, listener);
+                return elcvh;
         }
         return null;
     }
@@ -170,6 +214,29 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     qualificationDetails2 += "None";
                 }
                 swvh.qualification.setText(qualificationDetails2);
+                break;
+            case 3:
+                EmployeeListCalViewHolder elcvh = (EmployeeListCalViewHolder) holder;
+                //Employee Name
+                elcvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                if (!currentEmployee.getStatus()) elcvh.itemView.setAlpha((float)0.5);
+                else elcvh.itemView.setAlpha((float)1);
+                //Qualifications
+                String qualificationDetails3 = " ";
+                List<Boolean> qualifications3 = currentEmployee.getQualifications();
+                if (qualifications3 != null && qualifications3.get(0)) {
+                    qualificationDetails3 += "Opening ";
+                }
+                if (qualifications3 != null && qualifications3.get(1)) {
+                    qualificationDetails3 += "Closing";
+                }
+                if (qualifications3 != null && qualifications3.get(1) == false && qualifications3.get(0) == false) {
+                    qualificationDetails3 += "None";
+                }
+                elcvh.qualificationDetails.setText(qualificationDetails3);
+                //Shift
+                String shiftType = dbHelper.getShiftType(currentEmployee.getEmployeeID(), date);
+                elcvh.shiftLabelDetails.setText(shiftType.toUpperCase());
                 break;
         }
     }
