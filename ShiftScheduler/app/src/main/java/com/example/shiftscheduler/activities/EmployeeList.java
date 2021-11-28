@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
+import com.example.shiftscheduler.models.CleanSort;
 import com.example.shiftscheduler.models.EmployeeModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class EmployeeList extends AppCompatActivity{
     //for passing info to employeeInfo
@@ -125,6 +128,7 @@ public class EmployeeList extends AppCompatActivity{
     }
 
     public void buildRecyclerView() {
+        Collections.sort(employeeList, new CleanSort());
         recyclerView = findViewById(R.id.employeeList_rv);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
