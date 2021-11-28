@@ -104,8 +104,8 @@ public class EmployeeList extends AppCompatActivity{
                     switch(item.getItemId()) {
                         case R.id.employeeFragment:
                             break;
-                        case R.id.settingsFragment:
-                            break;
+//                        case R.id.settingsFragment:
+//                            break;
                         case R.id.scheduleFragment:
                             Intent scheudleIntent = new Intent(EmployeeList.this, ShiftCalendar.class);
                             startActivity(scheudleIntent);

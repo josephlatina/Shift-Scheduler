@@ -10,8 +10,8 @@
         android:id="@+id/scheduleFragment"
         android:enabled="true"
         android:icon="@drawable/ic_calendar"/>
-    <item android:title="Settings"
-        android:id="@+id/settingsFragment"
-        android:enabled="true"
-        android:icon="@drawable/settings_icon"/>
+<!--    <item android:title="Settings"-->
+<!--        android:id="@+id/settingsFragment"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/settings_icon"/>-->
 </menu>
