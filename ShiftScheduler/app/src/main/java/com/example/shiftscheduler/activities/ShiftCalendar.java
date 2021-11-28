@@ -59,6 +59,7 @@ public class ShiftCalendar extends AppCompatActivity {
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
         editSelectedDayBtn.setOnClickListener(new View.OnClickListener() {
+
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
@@ -90,16 +91,18 @@ public class ShiftCalendar extends AppCompatActivity {
 
 
 
-        exportBtn = (Button) findViewById(R.id.calExport);
-//        exportBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent myIntent = new Intent(ShiftCalendar.this, Export.class);
-//                startActivity(myIntent);
-//            }
-//        });
-
-
+        //export button listener
+        exportBtn = findViewById(R.id.calExport);
+        exportBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(ShiftCalendar.this, ScheduleExport.class);
+                startActivity(myIntent);
+            }
+        });
+          
+          
+          
         calendar = (CalendarView) findViewById(R.id.calendarView);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
