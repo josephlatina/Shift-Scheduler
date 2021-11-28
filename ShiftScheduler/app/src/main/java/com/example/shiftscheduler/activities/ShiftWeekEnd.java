@@ -45,6 +45,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     LocalDate localDate;
     FullShift fullShift;
+    List<EmployeeModel> scheduledEmployees;
     AlertDialog.Builder alertDialogBuilder;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -75,7 +76,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
         //Create shift model
         NavigableSet<EmployeeModel> fullEmployees = new TreeSet<>();
         int fullShiftID = dbHelper.getShiftID(localDate, "FULL");
-        fullShift = new FullShift(fullShiftID, localDate, fullEmployees, 3);
+        fullShift = new FullShift(fullShiftID, localDate, fullEmployees, 2);
 
         //Populate Recycler Views
         updateEmployeeList();
@@ -104,20 +105,21 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 //if toggle is switch to "on", retrieve employees from last week
                 if (b) {
                     //clear current scheduled employees
-                    dbHelper.clearScheduledEmployees(localDate, "FULL");
+                    clearAssignedEmployees(dbHelper);
                     updateEmployeeList();
                     //get the scheduled employees from last week
                     ArrayList<EmployeeModel> scheduledWorkers = (ArrayList) dbHelper.getScheduledEmployees(lastWeekDate, "FULL");
                     //schedule them to the current date
                     for (EmployeeModel employee : scheduledWorkers) {
                         if (availFullDayEmployeeList.contains(employee)) {
+                            fullShift.addEmployee(employee);
                             dbHelper.scheduleEmployee(employee.getEmployeeID(), localDate, "FULL");
                         }
                     }
                 }
                 //otherwise, clear the scheduled lists
                 else {
-                    dbHelper.clearScheduledEmployees(localDate, "FULL");
+                    clearAssignedEmployees(dbHelper);
                 }
 
                 //update Recycler Views
@@ -165,14 +167,14 @@ public class ShiftWeekEnd extends AppCompatActivity {
                  ArrayList<ErrorModel> errors = morningShift.verifyShift(dbHelper);
                  */
                 //If there are more than 2 employees assigned, prompt alert message
-                if (fullShift.getEmployees().size() > 2) {
+                if (fullShift.getEmployees().size() > fullShift.getEmployeesNeeded()) {
                     promptAlertMessage(1, dbHelper, empID, employee);
                     return;
                 }
                 //If there are 2 employees assigned, check for qualified employees
-                else if (fullShift.getEmployees().size() == 2){
+                else if (fullShift.getEmployees().size() == fullShift.getEmployeesNeeded()){
                     //loop to check if there any employees qualified
-                    for (int i = 0; i < 2; i++) {
+                    for (int i = 0; i < fullShift.getEmployeesNeeded(); i++) {
                         shiftEmp = fullShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
                         List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
                         if (qualifications.get(0) && qualifications.get(1)) {
@@ -210,8 +212,28 @@ public class ShiftWeekEnd extends AppCompatActivity {
             public void onEmployeeClick(int position) {
                 EmployeeModel employee = employeeList.get(position);
                 int empID = employee.getEmployeeID();
-
+                int shiftEmp = 0, count = 0;
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftWeekEnd.this);
+
+                fullShift.removeEmployee(employee);
+
+                //check for qualifications
+                if (fullShift.getEmployees().size() >= fullShift.getEmployeesNeeded()){
+                    //loop to check if there any employees qualified
+                    for (int i = 0; i < fullShift.getEmployeesNeeded(); i++) {
+                        shiftEmp = fullShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
+                        List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
+                        if (qualifications.get(0) && qualifications.get(1)) {
+                            count += 1;
+                        }
+                    }
+                    //if none are, then prompt alert message
+                    if (count == 0) {
+                        promptAlertMessage(3, dbHelper, empID, employee);
+                        return;
+                    }
+                }
+                //Otherwise, proceed with descheduling the employee
                 dbHelper.descheduleEmployee(empID, localDate, "FULL");
 
                 //update Recycler Views
@@ -225,6 +247,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
         //Initialization
         String details1 = "There would be more employees assigned than the normal employees needed. Do you want to continue?";
         String details2 = "None of the employees assigned are qualified for the shift. Do you want to continue?";
+        String details3 = "Removing the employee would leave the shift with no qualified employees. Do you want to continue?";
 
         switch (code) {
             case 1: alertDialogBuilder.setTitle("Too many employees");
@@ -233,33 +256,68 @@ public class ShiftWeekEnd extends AppCompatActivity {
             case 2: alertDialogBuilder.setTitle("No qualified employees");
                 alertDialogBuilder.setMessage(details2);
                 break;
+            case 3: alertDialogBuilder.setTitle("No qualified employees");
+                alertDialogBuilder.setMessage(details3);
+                break;
         }
 
-        alertDialogBuilder.setCancelable(false)
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        fullShift.removeEmployee(employee);
-                        dialog.dismiss();
+        if (code == 1 || code == 2) {
+            alertDialogBuilder.setCancelable(false)
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            fullShift.removeEmployee(employee);
 
-                        //update Recycler Views
-                        updateEmployeeList();
-                        buildAllRecyclerViews();
-                    }
-                })
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        dbHelper.scheduleEmployee(empID, localDate, "FULL");
-                        dialog.dismiss();
+                            //update Recycler Views
+                            updateEmployeeList();
+                            buildAllRecyclerViews();
 
-                        //update Recycler Views
-                        updateEmployeeList();
-                        buildAllRecyclerViews();
-                    }
-                }).create().show();
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            dbHelper.scheduleEmployee(empID, localDate, "FULL");
+
+                            //update Recycler Views
+                            updateEmployeeList();
+                            buildAllRecyclerViews();
+
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+        } else {
+            alertDialogBuilder.setCancelable(false)
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            fullShift.addEmployee(employee);
+
+                            //update Recycler Views
+                            updateEmployeeList();
+                            buildAllRecyclerViews();
+
+                            dialog.dismiss();
+                        }
+                    })
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.O)
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                            dbHelper.descheduleEmployee(empID, localDate, "FULL");
+
+                            //update Recycler Views
+                            updateEmployeeList();
+                            buildAllRecyclerViews();
+
+                            dialog.dismiss();
+                        }
+                    }).create().show();
+        }
     }
 
     public DayModel populateDay(LocalDate localDate) {
@@ -269,5 +327,15 @@ public class ShiftWeekEnd extends AppCompatActivity {
         DayModel day = new DayModel(localDate, fullShift);
 
         return day;
+    }
+
+    public void clearAssignedEmployees(DatabaseHelper dbHelper) {
+        //clear current scheduled employees
+        dbHelper.clearScheduledEmployees(localDate, "FULL");
+        //Remove employees
+        scheduledEmployees = new ArrayList<EmployeeModel>(fullShift.getEmployees());
+        for (int i = 0; i < scheduledEmployees.size(); i++) {
+            fullShift.removeEmployee(scheduledEmployees.get(i));
+        }
     }
 }
