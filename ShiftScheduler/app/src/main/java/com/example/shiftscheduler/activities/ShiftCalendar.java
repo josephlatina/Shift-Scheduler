@@ -165,21 +165,27 @@ public class ShiftCalendar extends AppCompatActivity {
 
 
 
+
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateCalErrorColours() {
+        LocalDate selectedLocalDate = selectedLocalDate();
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateErrorList() {
         LocalDate selectedLocalDate = selectedLocalDate();
-        //get error list
-//        LocalDate firstOfMonth = makeDate(selectedYear, selectedMonth, 1);
-//        MonthModel errorMonth = MonthModel(firstOfMonth, )
-//        ArrayList<ErrorModel> errorList =
-
-
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 

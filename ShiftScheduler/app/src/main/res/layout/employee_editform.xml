@@ -11,50 +11,6 @@
         android:layout_height="wrap_content"
         tools:context=".activities.EmployeeEditForm">
 
-        <EditText
-            android:id="@+id/editInfoPreferencesLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="815dp"
-            android:ems="10"
-            android:focusable="false"
-            android:gravity="center"
-            android:inputType="textPersonName"
-            android:text="@string/preferences"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <CheckBox
-            android:id="@+id/editPrefOpenCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:text="@string/opening"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/editInfoPreferencesLabel"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toStartOf="@+id/editInfoPreferencesLabel"
-            app:layout_constraintTop_toBottomOf="@+id/editInfoPreferencesLabel"
-            app:layout_constraintVertical_bias="0.08" />
-
-        <CheckBox
-            android:id="@+id/editPrefCloseCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:text="@string/closing"
-            app:layout_constraintBottom_toBottomOf="@+id/editPrefOpenCheckBox"
-            app:layout_constraintEnd_toEndOf="@+id/editInfoPreferencesLabel"
-            app:layout_constraintHorizontal_bias="0.8"
-            app:layout_constraintStart_toStartOf="@+id/editInfoPreferencesLabel"
-            app:layout_constraintTop_toTopOf="@+id/editPrefOpenCheckBox"
-            app:layout_constraintVertical_bias="0.02" />
-
         <ImageButton
             android:id="@+id/editInfo_back"
             android:layout_width="55dp"
@@ -255,7 +211,7 @@
             android:id="@+id/editSave"
             android:layout_width="156dp"
             android:layout_height="51dp"
-            android:layout_marginTop="940dp"
+            android:layout_marginTop="780dp"
             android:text="@string/save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -266,7 +222,7 @@
             android:id="@+id/infoAvailibilityLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="550dp"
+            android:layout_marginTop="524dp"
             android:ems="10"
             android:focusable="false"
             android:gravity="center"
@@ -275,7 +231,7 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="SpeakableTextPresentCheck" />
