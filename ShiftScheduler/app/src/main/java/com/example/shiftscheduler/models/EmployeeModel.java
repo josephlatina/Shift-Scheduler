@@ -1,7 +1,10 @@
 package com.example.shiftscheduler.models;
 
+import com.example.shiftscheduler.activities.EmployeeEditForm;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
