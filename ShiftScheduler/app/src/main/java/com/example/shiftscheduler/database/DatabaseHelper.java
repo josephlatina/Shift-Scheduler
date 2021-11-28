@@ -689,6 +689,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return shiftID;
     }
 
+    public String getShiftType(int empID, LocalDate date) {
+        String shiftType = "";
+
+        //get data from database
+        String queryString = "SELECT " + COL_SHIFTTYPE + " FROM " + SHIFT_TABLE + " AS S, " + WORK_TABLE + " AS W" +
+                " WHERE W." + COL_SHIFTID + " = S." + COL_SHIFTID +
+                " AND DATE(S." + COL_DATE + ") = ? AND W." + COL_EMPID + " = ? ";
+        SQLiteDatabase db = this.getWritableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), String.valueOf(empID)});
+        //Receive result
+        if (cursor.moveToFirst()) {
+            shiftType += cursor.getString(0);
+        }
+
+        return shiftType;
+    }
+
     public List<ExportModel> getExportInfoOfOneMonth(String year, String month) {
         List<ExportModel> returnList = new ArrayList<>();
 
