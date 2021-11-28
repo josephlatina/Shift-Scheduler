@@ -60,6 +60,8 @@
     <string name="dateFrom">Date From</string>
     <string name="dateTo">Date To</string>
     <string name="add">Add</string>
+    <string name="export">Export</string>
+    <string name="edit_selected_day">Edit Selected Day</string>
 
 
 </resources>
