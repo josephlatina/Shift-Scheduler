@@ -1,6 +1,8 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -39,6 +41,7 @@ public class EmployeeEditForm extends AppCompatActivity {
     int open = 0, close = 0;
     int sunShift =0, monShift=0, tueShift=0, wedShift=0, thursShift=0, friShift=0, satShift=0;
     DatePickerDialog.OnDateSetListener dobListener;
+    AlertDialog.Builder alertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class EmployeeEditForm extends AppCompatActivity {
         AvailWedEven = (CheckBox) findViewById(R.id.editInfoAvailWedEven);
         AvailThursEven = (CheckBox) findViewById(R.id.editInfoAvailThursEven);
         AvailFriEven = (CheckBox) findViewById(R.id.editInfoAvailFriEven);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         //Retrieve employee information
         Intent intent = getIntent();
@@ -213,6 +217,13 @@ public class EmployeeEditForm extends AppCompatActivity {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean errorExists;
+
+                //Error check
+                errorExists = checkForErrors();
+                if (errorExists) {
+                    return;
+                }
                 if (opening.isChecked()) {
                     open = 1;
                 }
@@ -310,5 +321,37 @@ public class EmployeeEditForm extends AppCompatActivity {
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         );
         datePickerDialog.show();
+    }
+
+    private boolean checkForErrors() {
+        boolean flag = false;
+
+        //Initialize variables
+        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeEditForm.this);
+
+        //Check for empty fields
+        if (fname.getText().toString().isEmpty() || lname.getText().toString().isEmpty() ||
+                city.getText().toString().isEmpty() || street.getText().toString().isEmpty() ||
+                province.getText().toString().isEmpty() || postalCode.getText().toString().isEmpty() ||
+                dob.getText().toString().isEmpty() || phoneNum.getText().toString().isEmpty() ||
+                email.getText().toString().isEmpty()) {
+            alertDialogBuilder.setTitle("Empty field(s)");
+            alertDialogBuilder.setMessage("Please populate employee personal information.");
+
+            //set flag
+            flag = true;
+
+            //create alert dialog and show it
+            alertDialogBuilder.setCancelable(false)
+                    .setNegativeButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, just close
+                            // the dialog box and do nothing
+                            dialog.cancel();
+                        }
+                    }).create().show();
+        }
+
+        return flag;
     }
 }
