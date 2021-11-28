@@ -690,12 +690,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<ExportModel> getExportInfoOfOneMonth(String year, String month) {
         List<ExportModel> returnList = new ArrayList<>();
 
-        String firstName = "", lastName = "", shiftType = "", date = "";
+        int employeeID = 0, shiftID = 0;
+        String fName = "", lName = "", city = "", street = "", province = "",
+                postal = "", dateOfBirth = "", phone = "", email = "",
+                shiftType = "", date = "";
 
         //get data from the database
-        String queryString = "SELECT DISTINCT" + COL_FNAME + COL_LNAME + COL_SHIFTTYPE + COL_DATE +
-                " FROM " + SHIFT_TABLE + " JOIN " + WORK_TABLE + " JOIN " + EMPLOYEE_TABLE +
-                " WHERE " + COL_DATE + " LIKE '%" + year + "-" + month + "%')";
+        String queryString = "SELECT DISTINCT E." + COL_EMPID + ", " + COL_FNAME + ", " + COL_LNAME +
+                ", " + COL_CITY + ", " + COL_STREET + ", " + COL_PROVINCE + ", " + COL_POSTAL + ", " +
+                COL_DOB + ", " + COL_PHONENUM + ", " + COL_EMAIL + ", " + COL_ISACTIVE + ", S." +
+                COL_SHIFTID + ", " + COL_SHIFTTYPE + ", " + COL_DATE +
+                " FROM " + SHIFT_TABLE + " AS S JOIN " + WORK_TABLE + " AS W JOIN " + EMPLOYEE_TABLE + " AS E " +
+                " WHERE " + COL_DATE + " LIKE '%" + year + "-" + month + "%' AND " +
+                " S." + COL_SHIFTID + " = W." + COL_SHIFTID + " AND " +
+                " W." + COL_EMPID + " = E." + COL_EMPID;
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -704,12 +712,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                firstName = cursor.getString(1);
-                lastName = cursor.getString(2);
-                shiftType = cursor.getString(3);
-                date = cursor.getString(4);
+                employeeID = cursor.getInt(0);
+                fName = cursor.getString(1);
+                lName = cursor.getString(2);
+                city = cursor.getString(3);
+                street = cursor.getString(4);
+                province = cursor.getString(5);
+                postal = cursor.getString(6);
+                dateOfBirth = cursor.getString(7);
+                phone = cursor.getString(8);
+                email = cursor.getString(9);
+                boolean isActive = cursor.getInt(10) == 1 ? true: false;
+                shiftID = cursor.getInt(11);
+                shiftType = cursor.getString(12);
+                date = cursor.getString(13);
 
-                ExportModel newExportInfo = new ExportModel(firstName, lastName, shiftType, date);
+                ExportModel newExportInfo = new ExportModel(employeeID, fName, lName, city, street,
+                        province, postal, dateOfBirth, phone, email, isActive, shiftID, shiftType, date);
                 returnList.add(newExportInfo);
             } while (cursor.moveToNext());
         } else {
