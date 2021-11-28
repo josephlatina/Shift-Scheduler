@@ -1,8 +1,11 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -33,6 +36,7 @@ public class EmployeeAddForm extends AppCompatActivity {
     int open = 0, close = 0;
     int sunShift =0, monShift=0, tueShift=0, wedShift=0, thursShift=0, friShift=0, satShift=0;
     DatePickerDialog.OnDateSetListener dobListener;
+    AlertDialog.Builder alertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,7 @@ public class EmployeeAddForm extends AppCompatActivity {
         AvailWedEven = (CheckBox) findViewById(R.id.addAvailWedEven);
         AvailThursEven = (CheckBox) findViewById(R.id.addAvailThursEven);
         AvailFriEven = (CheckBox) findViewById(R.id.addAvailFriEven);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         //Button listener for back
         ImageButton buttonOpenEmployeeForm = (ImageButton) findViewById(R.id.addBack);
@@ -79,7 +84,16 @@ public class EmployeeAddForm extends AppCompatActivity {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Initialize variables
                 EmployeeModel employee;
+                boolean errorExists;
+
+                //Error check
+                errorExists = checkForErrors();
+                if (errorExists) {
+                    return;
+                }
+
                 //Try creating an employee object
                 try {
                     employee = new EmployeeModel(-1,
@@ -192,6 +206,38 @@ public class EmployeeAddForm extends AppCompatActivity {
                 Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         );
         datePickerDialog.show();
+    }
+
+    private boolean checkForErrors() {
+        boolean flag = false;
+
+        //Initialize variables
+        DatabaseHelper dbHelper = new DatabaseHelper(EmployeeAddForm.this);
+
+        //Check for empty fields
+        if (fname.getText().toString().isEmpty() || lname.getText().toString().isEmpty() ||
+                city.getText().toString().isEmpty() || street.getText().toString().isEmpty() ||
+                province.getText().toString().isEmpty() || postalCode.getText().toString().isEmpty() ||
+                dob.getText().toString().isEmpty() || phoneNum.getText().toString().isEmpty() ||
+                email.getText().toString().isEmpty()) {
+            alertDialogBuilder.setTitle("Empty field(s)");
+            alertDialogBuilder.setMessage("Please populate employee personal information.");
+
+            //set flag
+            flag = true;
+
+            //create alert dialog and show it
+            alertDialogBuilder.setCancelable(false)
+                    .setNegativeButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, just close
+                            // the dialog box and do nothing
+                            dialog.cancel();
+                        }
+                    }).create().show();
+        }
+
+        return flag;
     }
 
 
