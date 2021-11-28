@@ -136,6 +136,8 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 EmployeeListViewHolder elvh = (EmployeeListViewHolder) holder;
                 elvh.imageView.setImageResource(R.drawable.ic_account_circle); //could become profile pic
                 elvh.employeeName.setText(String.format("%s, %s", currentEmployee.getLName(), currentEmployee.getFName()));
+                if (!currentEmployee.getStatus()) elvh.itemView.setAlpha((float)0.5);
+                else elvh.itemView.setAlpha((float)1);
                 break;
             case 1:
                 AvailableWeekdayViewHolder awvh = (AvailableWeekdayViewHolder) holder;
