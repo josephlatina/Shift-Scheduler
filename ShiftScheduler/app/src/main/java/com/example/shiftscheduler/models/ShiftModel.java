@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
@@ -91,6 +92,8 @@ public abstract class ShiftModel implements Serializable {
      * @return set of assigned employees
      */
     public Set<EmployeeModel> getEmployees() {
+        //return defensive copy
+        Set<EmployeeModel> resultEmployees = new HashSet<>(employees);
         return employees;
     }
 
