@@ -233,8 +233,8 @@ public class ShiftCalendar extends AppCompatActivity {
                         case R.id.employeeFragment:
                             Intent employeeIntent = new Intent(ShiftCalendar.this, EmployeeList.class);
                             startActivity(employeeIntent);
-                        case R.id.settingsFragment:
-                            break;
+//                        case R.id.settingsFragment:
+//                            break;
                         case R.id.scheduleFragment:
                             break;
                     }
