@@ -141,7 +141,10 @@ public abstract class ShiftModel implements Serializable {
      * @return shift time (set by subclass)
      */
     public String getTime() {
-        return time.toString();
+        if (time != null)
+            return time.toString();
+        else
+            return null;
     }
 
     /**
