@@ -153,39 +153,36 @@ public class ShiftCalendar extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateAssignedEmployeeList() {
-        LocalDate selectedLocalDate = selectedLocalDate();
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-        ArrayList<EmployeeModel> assignedEmployees;
-        assignedEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
-                "MORNING");
-        ArrayList<EmployeeModel> scheduledClosers;
-        scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
-                "EVENING");
-        assignedEmployees.addAll(scheduledClosers);
-
-
-
+//        LocalDate selectedLocalDate = selectedLocalDate();
+//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+//        ArrayList<EmployeeModel> assignedEmployees;
+//        assignedEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+//                "MORNING");
+//        ArrayList<EmployeeModel> scheduledClosers;
+//        scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+//                "EVENING");
+//        assignedEmployees.addAll(scheduledClosers);
 
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateCalErrorColours() {
-        LocalDate selectedLocalDate = selectedLocalDate();
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
+//        LocalDate selectedLocalDate = selectedLocalDate();
+//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+//        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+//        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+//        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateErrorList() {
-        LocalDate selectedLocalDate = selectedLocalDate();
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
+//        LocalDate selectedLocalDate = selectedLocalDate();
+//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+//        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+//        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+//        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 
