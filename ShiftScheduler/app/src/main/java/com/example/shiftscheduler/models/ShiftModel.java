@@ -35,7 +35,7 @@ public abstract class ShiftModel implements Serializable {
     private final LocalDate date;
     private NavigableSet<EmployeeModel> employees;
     private int employeesNeeded;
-    private final ShiftTime time = null;
+    private ShiftTime time = null;
     private final int icon = 0;
 
     /**
