@@ -63,6 +63,9 @@ public class ShiftCalendar extends AppCompatActivity {
         employeeRecyclerView = findViewById(R.id.calSelectedEmployeeRecyclerView);
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
 
+        //Update month model
+//        updateErrorList();    //Only works if current month and year displayed in calendar view is known and passed to global variables selectedMonth and selectedYear
+
         //editSelectedDay button
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
         LocalDate localDate = LocalDate.now();
@@ -114,7 +117,7 @@ public class ShiftCalendar extends AppCompatActivity {
         });
           
           
-          
+        //Calendar Logic
         calendar = (CalendarView) findViewById(R.id.calendarView);
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -122,24 +125,29 @@ public class ShiftCalendar extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month,
                                             int dayOfMonth) {
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
                 selectedYear = year;
                 selectedMonth = month;
                 selectedDayOfMonth = dayOfMonth;
                 updateEditLabel(year, month, dayOfMonth);
-                updateCalErrorColours();
 
                 //Update Employee and Error List
                 updateAssignedEmployeeList();
-                updateErrorList();
 
                 //Get local date
                 LocalDate selectedLocalDate = selectedLocalDate();
 
+                //Create day object
+                DayModel selectedDay = createDayObject(selectedLocalDate);
+                ArrayList<ErrorModel> errorDayList = selectedDay.verifyDay(dbHelper);
+
                 //Build Recycler Views
                 buildEmployeeRecyclerView(employeeRecyclerView, assignedEmployees, selectedLocalDate);
-                buildErrorRecyclerView(errorRecyclerView, errorList, selectedLocalDate);
+                buildErrorRecyclerView(errorRecyclerView, errorDayList, selectedLocalDate);
             }
         });
+
+
 
 
         bottomNavigationView = findViewById(R.id.cal_bottom_navigation_view);
@@ -152,7 +160,6 @@ public class ShiftCalendar extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         //receive intent
-
         Intent incomingIntent = getIntent();
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
 //        if (day != null) {
@@ -165,6 +172,8 @@ public class ShiftCalendar extends AppCompatActivity {
         selectedMonth = localDate.getMonthValue() - 1;
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
+
+//        updateErrorList();    //Only works if current month and year displayed in calendar view is known and passed to global variables selectedMonth and selectedYear
 
     }
 
@@ -193,17 +202,15 @@ public class ShiftCalendar extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateCalErrorColours() {
-        LocalDate selectedLocalDate = selectedLocalDate();
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
         MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
         ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
+        errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateErrorList() {
-        LocalDate selectedLocalDate = selectedLocalDate();
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
         MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
         ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
