@@ -40,31 +40,31 @@
 
         <TextView
             android:id="@+id/calShiftDetails"
-            android:layout_width="89dp"
-            android:layout_height="19dp"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="305dp"
+            android:layout_marginStart="275dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="26dp"
+            android:layout_marginBottom="5dp"
             android:text="MORNING"
             android:textSize="14sp" />
 
         <TextView
             android:id="@+id/calShiftLabel"
-            android:layout_width="33dp"
-            android:layout_height="19dp"
+            android:layout_width="37dp"
+            android:layout_height="21dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="271dp"
+            android:layout_marginStart="237dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="105dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="110dp"
+            android:layout_marginBottom="6dp"
             android:text="Shift:"
             android:textSize="14sp" />
 
