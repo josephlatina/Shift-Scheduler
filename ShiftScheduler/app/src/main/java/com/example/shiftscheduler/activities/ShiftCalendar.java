@@ -197,7 +197,7 @@ public class ShiftCalendar extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
         MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
         ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
+        errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 
