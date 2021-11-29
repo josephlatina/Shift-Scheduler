@@ -241,12 +241,16 @@ public abstract class ShiftModel implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
                                                                ArrayList<ErrorModel> errors) {
-        List<EmployeeModel> availableEmployees = database.getAvailableEmployees(date, getTime());
+        List<EmployeeModel> availableEmployees = database.getCurrentAvailableEmployees(date, getTime());
         for (EmployeeModel employee : getEmployees()) {
             if (!availableEmployees.contains(employee)) { //employee is not available
-                errors.add(new ErrorModel(date, getTime()+" SHIFT - "+employee.getFName()+" "+
+                errors.add(new ErrorModel(date, getTime()+" SHIFT: "+employee.getFName()+" "+
                         employee.getLName()+" is scheduled but not available."));
-            }
+            } 
+//            else if (database.hasTimeOff(employee, date)) {
+//                errors.add(new ErrorModel(date, getTime()+" SHIFT: "+employee.getFName()+" "+
+//                        employee.getLName()+" is scheduled but has a timeoff request for this day."));
+//            }
         }
         return errors;
     };
