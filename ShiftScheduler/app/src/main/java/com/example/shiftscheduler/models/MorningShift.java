@@ -39,12 +39,48 @@ public class MorningShift extends ShiftModel implements Serializable {
     }
 
     /**
+     * Verifies there are enough employees in the shift
+     * @param errors - existing list of errors
+     * @return errors found
+     */
+    public ArrayList<ErrorModel> verifyShiftSize(ArrayList<ErrorModel> errors) {
+        // check if shift is full
+        if (getEmployees().size() < getEmployeesNeeded()) {
+            errors.add(new ErrorModel(getDate(),"MORNING SHIFT: Not enough employees assigned."));
+        }
+
+        return errors;
+    }
+
+    /**
+     * Verifies that all employees are available for this shift
+     * @param database - DatabaseHelper object for the current session
+     * @param errors - existing list of errors
+     * @return errors found
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
+                                                            ArrayList<ErrorModel> errors) {
+        List<EmployeeModel> availableEmployees = database.getCurrentAvailableEmployees(getDate(), getTime());
+        for (EmployeeModel employee : getEmployees()) {
+            if (!availableEmployees.contains(employee)) { //employee is not available
+                errors.add(new ErrorModel(getDate(), "MORNING SHIFT: "+employee.getFName()+" "+
+                        employee.getLName()+" is scheduled but not available."));
+            }
+//            else if (database.hasTimeOff(employee, date)) {
+//                errors.add(new ErrorModel(getDate, "MORNING SHIFT: "+employee.getFName()+" "+
+//                        employee.getLName()+" is scheduled but has a timeoff request for this day."));
+//            }
+        }
+        return errors;
+    };
+
+    /**
      * Verifies employees' qualifications.
      * @param database - DatabaseHelper object for the current session
      * @param errors - existing list of errors
      * @return errors found
      */
-    @Override
     public ArrayList<ErrorModel> verifyEmployeeQualifications(DatabaseHelper database,
                                                                  ArrayList<ErrorModel> errors) {
         List<Boolean> employeeQualifications;
@@ -59,7 +95,7 @@ public class MorningShift extends ShiftModel implements Serializable {
 
         if (!qualified) {
             errors.add(new ErrorModel(getDate(),
-                    "MORNING SHIFT - No employees are qualified to open."));
+                    "MORNING SHIFT: No employees are qualified to open."));
         }
 
         return errors;
