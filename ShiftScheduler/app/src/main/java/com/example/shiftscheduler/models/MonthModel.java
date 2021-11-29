@@ -85,7 +85,7 @@ public class MonthModel {
         }
 
         // verify all employees work every week
-        errors = verifyEmployeesWorkWeekly(database, employees, errors);
+//        errors = verifyEmployeesWorkWeekly(database, employees, errors);
 
         // return all found errors
         return errors;

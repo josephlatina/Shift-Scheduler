@@ -136,8 +136,8 @@ public class ShiftCalendar extends AppCompatActivity {
                 LocalDate selectedLocalDate = selectedLocalDate();
 
                 //Build Recycler Views
-//                buildEmployeeRecyclerView(employeeRecyclerView, assignedEmployees, selectedLocalDate);
-//                buildErrorRecyclerView(errorRecyclerView, errorList, selectedLocalDate);
+                buildEmployeeRecyclerView(employeeRecyclerView, assignedEmployees, selectedLocalDate);
+                buildErrorRecyclerView(errorRecyclerView, errorList, selectedLocalDate);
             }
         });
 
@@ -172,42 +172,42 @@ public class ShiftCalendar extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateAssignedEmployeeList() {
-//        LocalDate selectedLocalDate = selectedLocalDate();
-//        int dayOfWeek = selectedLocalDate.getDayOfWeek().getValue();
-//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-//
-//        //Check if weekday or weekend
-//        if (dayOfWeek == 6 || dayOfWeek == 7) {
-//            assignedEmployees = (ArrayList<EmployeeModel>) dbHelper.getScheduledEmployees(selectedLocalDate, "FULL");
-//        } else {
-//            assignedEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
-//                    "MORNING");
-//            ArrayList<EmployeeModel> scheduledClosers;
-//            scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
-//                    "EVENING");
-//            assignedEmployees.addAll(scheduledClosers);
-//        }
+        LocalDate selectedLocalDate = selectedLocalDate();
+        int dayOfWeek = selectedLocalDate.getDayOfWeek().getValue();
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+
+        //Check if weekday or weekend
+        if (dayOfWeek == 6 || dayOfWeek == 7) {
+            assignedEmployees = (ArrayList<EmployeeModel>) dbHelper.getScheduledEmployees(selectedLocalDate, "FULL");
+        } else {
+            assignedEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+                    "MORNING");
+            ArrayList<EmployeeModel> scheduledClosers;
+            scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+                    "EVENING");
+            assignedEmployees.addAll(scheduledClosers);
+        }
 
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateCalErrorColours() {
-//        LocalDate selectedLocalDate = selectedLocalDate();
-//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-//        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-//        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-//        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
+        LocalDate selectedLocalDate = selectedLocalDate();
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+        ArrayList<ErrorModel> errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateErrorList() {
-//        LocalDate selectedLocalDate = selectedLocalDate();
-//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-//        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-//        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-//        errorList = curMonth.verifyMonth(dbHelper, employees);
+        LocalDate selectedLocalDate = selectedLocalDate();
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+        errorList = curMonth.verifyMonth(dbHelper, employees);
 
     }
 
@@ -354,10 +354,10 @@ public class ShiftCalendar extends AppCompatActivity {
         int fullShiftID = dbHelper.getShiftID(date, "FULL");
 
         //Create set of scheduled employees
-        NavigableSet<EmployeeModel> morningEmployees = new TreeSet<>(dbHelper.getScheduledEmployees(date, "FULL"));
+        NavigableSet<EmployeeModel> employees = new TreeSet<>(dbHelper.getScheduledEmployees(date, "FULL"));
 
         //Create shift object
-        FullShift fullShift = new FullShift(fullShiftID, date, morningEmployees, 2);
+        FullShift fullShift = new FullShift(fullShiftID, date, employees, 2);
 
         //Create day object and populate
         return new DayModel(date, fullShift);
