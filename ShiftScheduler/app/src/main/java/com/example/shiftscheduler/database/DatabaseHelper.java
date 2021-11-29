@@ -543,8 +543,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),
-                String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
+        Cursor cursor = db.rawQuery(queryString, new String[]{});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set
             //loop through the results
