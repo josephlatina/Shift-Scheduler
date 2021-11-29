@@ -439,7 +439,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return employee;
     }
 
-    // retrieve employees with availability open for the given shift
+    // retrieve available employees based on availability pattern, scheduled days, and timeoffs
     @RequiresApi(api = Build.VERSION_CODES.O)
     public List<EmployeeModel> getAvailableEmployees(LocalDate date, String time) {
         int flag = 0;
@@ -482,6 +482,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //check for employees that have timeoffs
         queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + TIMEOFF_TABLE +
                 " AS T WHERE E." + COL_EMPID + " = T." + COL_EMPID + " AND DATE(T." + COL_DATEFROM + ") <= ? AND DATE(T." + COL_DATETO + ") >= ? )";
+        //access database
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),
+                String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()) { //move it to the first of the result set
+            //loop through the results
+            do {
+                int employeeID = cursor.getInt(0);
+                employeeIDs.add(employeeID);    //add employeeID to the list
+            } while (cursor.moveToNext());
+        }
+        //loop to fill in resulting list of the retrieved employees
+        for (int i=0; i < employeeIDs.size(); i++) {
+            int empID = employeeIDs.get(i);
+            employees.add(getEmployee(empID));
+        }
+
+        return employees;
+    }
+
+    // retrieve available employees solely based on their availability pattern
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public List<EmployeeModel> getCurrentAvailableEmployees(LocalDate date, String time) {
+        int flag = 0;
+        //Initialize Lists
+        List<Integer> employeeIDs = new ArrayList<>();
+        List<EmployeeModel> employees = new ArrayList<>();
+        //extract day of the week and store result in ShiftDay
+        int dayOfWeek = date.getDayOfWeek().getValue();
+        List<String> ShiftDay = new ArrayList<>();
+        switch (dayOfWeek) {
+            case 1: ShiftDay.add(COL_MONSHIFT); break;
+            case 2: ShiftDay.add(COL_TUESHIFT); break;
+            case 3: ShiftDay.add(COL_WEDSHIFT); break;
+            case 4: ShiftDay.add(COL_THURSSHIFT); break;
+            case 5: ShiftDay.add(COL_FRISHIFT); break;
+            case 6: ShiftDay.add(COL_SATSHIFT); break;
+            case 7: ShiftDay.add(COL_SUNSHIFT); break;
+        }
+        //extract shift time
+        int ShiftTime = 0;
+        switch (time) {
+            case "MORNING": ShiftTime = 1; break;
+            case "EVENING": ShiftTime = 2; break;
+            case "FULL": ShiftTime = 1; break;
+        }
+        //create query string
+        String queryString = "SELECT E." + COL_EMPID + " FROM " + AVAILABILITY_TABLE + " AS A, " +
+                EMPLOYEE_TABLE + " AS E " + " WHERE E." + COL_AVAILABILITYID + " = A." + COL_AVAILABILITYID +
+                " AND (A." + ShiftDay.get(0) + " = " + ShiftTime;
+        //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
+        if (dayOfWeek != 6 && dayOfWeek != 7) {
+            queryString += " OR A." + ShiftDay.get(0) + " = 3)";
+        } else {
+            queryString += ")";
+        }
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
