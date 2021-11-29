@@ -35,7 +35,7 @@ public abstract class ShiftModel implements Serializable {
     private final LocalDate date;
     private NavigableSet<EmployeeModel> employees;
     private int employeesNeeded;
-    private ShiftTime time = null;
+    private ShiftTime time;
     private final int icon = 0;
 
     /**
@@ -144,7 +144,7 @@ public abstract class ShiftModel implements Serializable {
         if (time != null)
             return time.toString();
         else
-            return null;
+            return "";
     }
 
     /**
