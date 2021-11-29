@@ -216,7 +216,7 @@ public abstract class ShiftModel implements Serializable {
         // check if shift is full
         if (employees.size() < employeesNeeded) {
             errors.add(new ErrorModel(date,
-                    getTime()+" SHIFT: Not enough employees assigned."));
+                    time+" SHIFT: Not enough employees assigned."));
         }
 
         return errors;
@@ -239,21 +239,8 @@ public abstract class ShiftModel implements Serializable {
      * @return errors found
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
-                                                               ArrayList<ErrorModel> errors) {
-        List<EmployeeModel> availableEmployees = database.getCurrentAvailableEmployees(date, getTime());
-        for (EmployeeModel employee : getEmployees()) {
-            if (!availableEmployees.contains(employee)) { //employee is not available
-                errors.add(new ErrorModel(date, getTime()+" SHIFT: "+employee.getFName()+" "+
-                        employee.getLName()+" is scheduled but not available."));
-            } 
-//            else if (database.hasTimeOff(employee, date)) {
-//                errors.add(new ErrorModel(date, getTime()+" SHIFT: "+employee.getFName()+" "+
-//                        employee.getLName()+" is scheduled but has a timeoff request for this day."));
-//            }
-        }
-        return errors;
-    };
+    public abstract ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
+                                                               ArrayList<ErrorModel> errors);
 
     /**
      * Verifies that all employees are available for this shift
