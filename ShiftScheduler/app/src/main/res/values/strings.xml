@@ -73,6 +73,7 @@
     <string name="employee_name">Employee Name</string>
     <string name="warning">WARNING:</string>
     <string name="warningdetails">warningDetails</string>
+    <string name="errors_present">Errors Present</string>
 
 
 </resources>
