@@ -88,11 +88,14 @@ public class DayModel implements Serializable {
      * @return found employee
      */
     public boolean containsEmployee(EmployeeModel employee) {
+        if (employee == null) {
+            return false;
+        }
         if (fullShift != null) {
             return fullShift.getEmployees().contains(employee);
         } else {
             return (morningShift.getEmployees().contains(employee) ||
-                    getEveningShift().getEmployees().contains(employee));
+                    eveningShift.getEmployees().contains(employee));
         }
     }
 
