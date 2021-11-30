@@ -868,4 +868,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+
+    public boolean hasTimeOff(EmployeeModel EmployeeModel, LocalDate date) {
+        int empID;
+
+        //do they have a timeoff request that includes the LocalDate? True/False
+        String queryString = "SELECT T." + COL_EMPID +
+                " FROM " + TIMEOFF_TABLE + " AS T JOIN" + EMPLOYEE_TABLE + " AS E " +
+                " WHERE T." + COL_EMPID + " = E." + COL_EMPID + " AND " +
+                date + " BETWEEN " + COL_DATEFROM + " and " + COL_DATETO;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
+        //If empID's timeoff exists, return empID for check. Otherwise, return 0.
+        if (cursor.moveToFirst()) {
+            empID = cursor.getInt(0);
+        } else {
+            empID = 0;
+        }
+
+        if (empID == EmployeeModel.getEmployeeID()) return true;
+        else return false;
+    }
+
 }

@@ -67,10 +67,10 @@ public class MorningShift extends ShiftModel implements Serializable {
                 errors.add(new ErrorModel(getDate(), "MORNING SHIFT: "+employee.getFName()+" "+
                         employee.getLName()+" is scheduled but not available."));
             }
-//            else if (database.hasTimeOff(employee, date)) {
-//                errors.add(new ErrorModel(getDate, "MORNING SHIFT: "+employee.getFName()+" "+
-//                        employee.getLName()+" is scheduled but has a timeoff request for this day."));
-//            }
+            else if (database.hasTimeOff(employee, getDate())) {
+                errors.add(new ErrorModel(getDate(), "MORNING SHIFT: "+employee.getFName()+" "+
+                        employee.getLName()+" is scheduled but has a timeoff request for this day."));
+            }
         }
         return errors;
     };
