@@ -468,7 +468,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //create query string
         String queryString = "SELECT E." + COL_EMPID + " FROM " + AVAILABILITY_TABLE + " AS A, " +
                 EMPLOYEE_TABLE + " AS E " + " WHERE E." + COL_AVAILABILITYID + " = A." + COL_AVAILABILITYID +
-                " AND (A." + ShiftDay.get(0) + " = " + ShiftTime;
+                " AND E." + COL_ISACTIVE + " = 1" + " AND (A." + ShiftDay.get(0) + " = " + ShiftTime;
         //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
         if (dayOfWeek != 6 && dayOfWeek != 7) {
             queryString += " OR A." + ShiftDay.get(0) + " = 3)";
@@ -533,17 +533,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //create query string
         String queryString = "SELECT E." + COL_EMPID + " FROM " + AVAILABILITY_TABLE + " AS A, " +
                 EMPLOYEE_TABLE + " AS E " + " WHERE E." + COL_AVAILABILITYID + " = A." + COL_AVAILABILITYID +
-                " AND (A." + ShiftDay.get(0) + " = " + ShiftTime;
+                " AND E." + COL_ISACTIVE + " = 1" + " AND (A." + ShiftDay.get(0) + " = " + ShiftTime;
         //if it's a weekday, add extra string that checks the scenario of employee being available for both opening and closing
         if (dayOfWeek != 6 && dayOfWeek != 7) {
             queryString += " OR A." + ShiftDay.get(0) + " = 3)";
         } else {
             queryString += ")";
         }
+        //check for employees that have timeoffs
+        queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + TIMEOFF_TABLE +
+                " AS T WHERE E." + COL_EMPID + " = T." + COL_EMPID + " AND DATE(T." + COL_DATEFROM + ") <= ? AND DATE(T." + COL_DATETO + ") >= ? )";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{});
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set
             //loop through the results
