@@ -540,13 +540,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             queryString += ")";
         }
-        //check for employees that have timeoffs
-        queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + TIMEOFF_TABLE +
-                " AS T WHERE E." + COL_EMPID + " = T." + COL_EMPID + " AND DATE(T." + COL_DATEFROM + ") <= ? AND DATE(T." + COL_DATETO + ") >= ? )";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
+        Cursor cursor = db.rawQuery(queryString, new String[]{});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set
             //loop through the results
