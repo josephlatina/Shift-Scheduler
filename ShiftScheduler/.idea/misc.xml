@@ -56,6 +56,7 @@
         <entry key="app/src/main/res/layout/employee_info.xml" value="0.3026041666666667" />
         <entry key="app/src/main/res/layout/employee_list.xml" value="0.2609375" />
         <entry key="app/src/main/res/layout/employee_object.xml" value="0.20697463768115942" />
+        <entry key="app/src/main/res/layout/schedule_export.xml" value="0.2776268115942029" />
         <entry key="app/src/main/res/layout/shift_calendar.xml" value="0.2609375" />
         <entry key="app/src/main/res/layout/shift_day.xml" value="0.375" />
       </map>
