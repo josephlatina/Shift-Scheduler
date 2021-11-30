@@ -28,6 +28,8 @@ import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -67,7 +69,7 @@ public class ScheduleExport extends AppCompatActivity {
     }
 
     public void exportPDF(View view) {
-        
+
         String [] txt_MonthYear;
         String month = "", year = "";
 
@@ -94,6 +96,14 @@ public class ScheduleExport extends AppCompatActivity {
         exportList = new ArrayList<>();
         DatabaseHelper dbHelper = new DatabaseHelper(ScheduleExport.this);
         exportList = (ArrayList) dbHelper.getExportInfoOfOneMonth(year, month);
+
+        Comparator<ExportModel> compareByDate = new Comparator<ExportModel>() {
+            @Override
+            public int compare(ExportModel e1, ExportModel e2) {
+                return e1.getDate().compareTo(e2.getDate());
+            }
+        };
+        Collections.sort(exportList, compareByDate); //sort the exportList by date
 //------------------------------------------------------------------------------------------------
 // For my test
 //        try {
