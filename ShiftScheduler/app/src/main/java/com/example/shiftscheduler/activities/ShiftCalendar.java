@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -188,8 +189,25 @@ public class ShiftCalendar extends AppCompatActivity {
                         }).create().show();
 
             }
+
         });
 
+        //if error list is empty, make error button invisible, otherwise the opposite.
+        if(errorList.size() == 0){
+            errorBtn.setEnabled(false);
+            errorBtn.setVisibility(View.INVISIBLE);
+            TextView errorLabel = findViewById(R.id.errorLabel);
+            errorLabel.setEnabled(false);
+            errorLabel.setVisibility(View.INVISIBLE);
+        }
+        else{
+            errorBtn.setEnabled(true);
+            errorBtn.setVisibility(View.VISIBLE);
+            TextView errorLabel = findViewById(R.id.errorLabel);
+            errorLabel.setEnabled(true);
+            errorLabel.setVisibility(View.VISIBLE);
+
+        }
 
 
         //navigationbar stuff
@@ -222,7 +240,22 @@ public class ShiftCalendar extends AppCompatActivity {
         //update errors
         updateErrorList();
         buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
+        //if error list is empty, make error button invisible, otherwise the opposite.
+        if(errorList.size() == 0){
+            errorBtn.setEnabled(false);
+            errorBtn.setVisibility(View.INVISIBLE);
+            TextView errorLabel = findViewById(R.id.errorLabel);
+            errorLabel.setEnabled(false);
+            errorLabel.setVisibility(View.INVISIBLE);
+        }
+        else{
+            errorBtn.setEnabled(true);
+            errorBtn.setVisibility(View.VISIBLE);
+            TextView errorLabel = findViewById(R.id.errorLabel);
+            errorLabel.setEnabled(true);
+            errorLabel.setVisibility(View.VISIBLE);
 
+        }
 
     }
 
