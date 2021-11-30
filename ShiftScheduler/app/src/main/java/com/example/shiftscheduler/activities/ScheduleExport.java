@@ -1,5 +1,7 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
@@ -32,6 +34,7 @@ public class ScheduleExport extends AppCompatActivity {
     TextView selectedMonthYear;
 
     private ArrayList<ExportModel> exportList;
+    AlertDialog.Builder alertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class ScheduleExport extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.schedule_export);
         selectedMonthYear = findViewById(R.id.selectedMonth);
+        alertDialogBuilder = new AlertDialog.Builder(this);
     }
 
     public void selectMonth(View view) {
@@ -67,11 +71,26 @@ public class ScheduleExport extends AppCompatActivity {
 
 
         String [] txt_MonthYear;
-        String month, year;
+        String month = "", year = "";
 
         txt_MonthYear = selectedMonthYear.getText().toString().split("-");
-        month = txt_MonthYear[0];
-        year = txt_MonthYear[1];
+        if (txt_MonthYear.length == 1) {
+            alertDialogBuilder.setTitle("Empty Field");
+            alertDialogBuilder.setMessage("Please select a month and a year.");
+
+            alertDialogBuilder.setCancelable(false)
+                    .setNegativeButton("OK",new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog,int id) {
+                            // if this button is clicked, just close
+                            // the dialog box and do nothing
+                            dialog.cancel();
+                        }
+                    }).create().show();
+            return;
+        } else {
+            month += txt_MonthYear[0];
+            year += txt_MonthYear[1];
+        }
 
         //get the exportList contains all shifts for that given month
         exportList = new ArrayList<>();
