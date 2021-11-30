@@ -118,6 +118,7 @@ public class EmployeeList extends AppCompatActivity{
 
     public void onResume() {
         super.onResume();
+        super.onResume();
         updateEmployeeList();
         buildRecyclerView();
     }

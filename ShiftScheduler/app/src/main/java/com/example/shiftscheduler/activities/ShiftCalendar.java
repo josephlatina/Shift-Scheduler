@@ -33,6 +33,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.NavigableSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class ShiftCalendar extends AppCompatActivity {
     public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
@@ -63,8 +64,7 @@ public class ShiftCalendar extends AppCompatActivity {
         employeeRecyclerView = findViewById(R.id.calSelectedEmployeeRecyclerView);
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
 
-        //Update month model
-//        updateErrorList();    //Only works if current month and year displayed in calendar view is known and passed to global variables selectedMonth and selectedYear
+
 
         //editSelectedDay button
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
@@ -102,7 +102,12 @@ public class ShiftCalendar extends AppCompatActivity {
                     startActivity(myIntent);
                 }
             }
+
+
+
+
         });
+
 
 
 
@@ -125,31 +130,34 @@ public class ShiftCalendar extends AppCompatActivity {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView view, int year, int month,
                                             int dayOfMonth) {
+
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+                //update selected day
                 selectedYear = year;
                 selectedMonth = month;
                 selectedDayOfMonth = dayOfMonth;
+
+                //update edit button label
                 updateEditLabel(year, month, dayOfMonth);
 
-                //Update Employee and Error List
+                //set button to be current selected date
+                editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
+
+                //update employees
                 updateAssignedEmployeeList();
+                buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
+                //update errors
+                updateErrorList();
+                buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
 
-                //Get local date
-                LocalDate selectedLocalDate = selectedLocalDate();
-
-                //Create day object
-                DayModel selectedDay = createDayObject(selectedLocalDate);
-                ArrayList<ErrorModel> errorDayList = selectedDay.verifyDay(dbHelper);
-
-                //Build Recycler Views
-                buildEmployeeRecyclerView(employeeRecyclerView, assignedEmployees, selectedLocalDate);
-                buildErrorRecyclerView(errorRecyclerView, errorDayList, selectedLocalDate);
             }
         });
 
 
+        //Update month model
+        updateErrorList();
 
-
+        //navigationbar stuff
         bottomNavigationView = findViewById(R.id.cal_bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
 
@@ -162,18 +170,24 @@ public class ShiftCalendar extends AppCompatActivity {
         //receive intent
         Intent incomingIntent = getIntent();
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
-//        if (day != null) {
-//            Toast.makeText(ShiftCalendar.this, day.toString(), Toast.LENGTH_SHORT).show();
-//        }
 
-        editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
+        //set by default the current selected day to current date
         LocalDate localDate = LocalDate.now();
         selectedYear = localDate.getYear();
         selectedMonth = localDate.getMonthValue() - 1;
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
 
-//        updateErrorList();    //Only works if current month and year displayed in calendar view is known and passed to global variables selectedMonth and selectedYear
+        //set button to be current selected date
+        editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
+
+        //update employees
+        updateAssignedEmployeeList();
+        buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
+        //update errors
+        updateErrorList();
+        buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
+
 
     }
 
@@ -199,22 +213,20 @@ public class ShiftCalendar extends AppCompatActivity {
 
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void updateCalErrorColours() {
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        errorList = curMonth.verifyMonth(dbHelper, employees);
-
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateErrorList() {
+
+//        testing for whole month
+//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+//        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+//        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+//        errorList = curMonth.verifyMonth(dbHelper, employees);
+
+        //testing for single day
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        errorList = curMonth.verifyMonth(dbHelper, employees);
+        DayModel selectedDay = createDayObject(selectedLocalDate());
+        errorList = selectedDay.verifyDay(dbHelper);
+
 
     }
 
@@ -242,16 +254,17 @@ public class ShiftCalendar extends AppCompatActivity {
 
     /**
      * @param employeeRecyclerView
-     * @param employeeList
      * @param date
      * For building the employee Recycler view everytime a day is selected on the calendar view
      */
-    private void buildEmployeeRecyclerView(RecyclerView employeeRecyclerView, ArrayList<EmployeeModel> employeeList, LocalDate date) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void buildEmployeeRecyclerView(RecyclerView employeeRecyclerView, LocalDate date) {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
 
+        updateAssignedEmployeeList();
         employeeRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        employeeListAdapter = new EmployeeListAdapter(employeeList, dbHelper, date, 3);
+        employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, 3);
 
         employeeRecyclerView.setLayoutManager(layoutManager);
         employeeRecyclerView.setAdapter(employeeListAdapter);
@@ -259,19 +272,30 @@ public class ShiftCalendar extends AppCompatActivity {
 
     /**
      * @param errorRecyclerView
-     * @param errorList
      * @param date
      * For building the error Recycler view everytime a day is selected on the calendar view
      */
-    private void buildErrorRecyclerView(RecyclerView errorRecyclerView, ArrayList<ErrorModel> errorList, LocalDate date) {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void buildErrorRecyclerView(RecyclerView errorRecyclerView, LocalDate date) {
 
+        //update current error list
+        updateErrorList();
+
+        //filter out errors which apply to particular date
+        ArrayList<ErrorModel> curDateErrors;
+
+        curDateErrors = (ArrayList<ErrorModel>) errorList.stream()
+                .filter(error -> ((error.getEndDate()).compareTo(date)) >= 0)
+                .filter(error -> (error.getStartDate().compareTo(date)) <= 0)
+                .collect(Collectors.toList());
+
+        //populate recyclerview
         errorRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        errorListAdapter = new ErrorListAdapter(errorList);
-
+        errorListAdapter = new ErrorListAdapter(curDateErrors);
         errorRecyclerView.setLayoutManager(layoutManager);
         errorRecyclerView.setAdapter(errorListAdapter);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
