@@ -64,7 +64,8 @@ public class ShiftCalendar extends AppCompatActivity {
         employeeRecyclerView = findViewById(R.id.calSelectedEmployeeRecyclerView);
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
 
-
+        //Update month model
+        updateErrorList();
 
         //editSelectedDay button
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
@@ -147,15 +148,13 @@ public class ShiftCalendar extends AppCompatActivity {
                 updateAssignedEmployeeList();
                 buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
                 //update errors
-                updateErrorList();
+//                updateErrorList();
                 buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
 
             }
         });
 
 
-        //Update month model
-        updateErrorList();
 
         //navigationbar stuff
         bottomNavigationView = findViewById(R.id.cal_bottom_navigation_view);
@@ -216,16 +215,20 @@ public class ShiftCalendar extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateErrorList() {
 
+        LocalDate localDate = LocalDate.now();
+        selectedMonth = localDate.getMonthValue();
+        selectedYear = localDate.getYear();
+
 //        testing for whole month
-//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-//        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-//        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-//        errorList = curMonth.verifyMonth(dbHelper, employees);
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+        MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
+        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
+        errorList = curMonth.verifyMonth(dbHelper, employees);
 
         //testing for single day
-        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
-        DayModel selectedDay = createDayObject(selectedLocalDate());
-        errorList = selectedDay.verifyDay(dbHelper);
+//        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+//        DayModel selectedDay = createDayObject(selectedLocalDate());
+//        errorList = selectedDay.verifyDay(dbHelper);
 
 
     }
