@@ -85,7 +85,7 @@ public class MonthModel {
         }
 
         // verify all employees work every week
-//        errors = verifyEmployeesWorkWeekly(database, employees, errors);
+        errors = verifyEmployeesWorkWeekly(database, employees, errors);
 
         // return all found errors
         return errors;
@@ -122,7 +122,7 @@ public class MonthModel {
             while (!cursor.isEqual(lastSaturday.plusDays(1))) {
                 //lock employeeWorks as true if it is ever true
                 if (!employeeWorks) {
-                    employeeWorks = this.getDay(cursor).containsEmployee(currentEmployee);
+                    employeeWorks = database.isScheduled(currentEmployee, cursor);
                 }
 
                 if (cursor.getDayOfWeek() == DayOfWeek.SATURDAY) { //reaches end of week
@@ -132,13 +132,21 @@ public class MonthModel {
                         for (int i = 6; i >= 0; i--) { //check for availability this week
                             //lock employeeAvailable as true if it is ever true
                             if (!employeeAvailable) {
-                                employeeAvailable =
+
+                                //check if employee is available to work
+                                if (database.getCurrentAvailableEmployees(cursor.minusDays(i),
+                                                        "MORNING").contains(currentEmployee) ||
                                         database.getCurrentAvailableEmployees(cursor.minusDays(i),
-                                                "MORNING").contains(currentEmployee) ||
-                                                database.getCurrentAvailableEmployees(cursor.minusDays(i),
                                                         "EVENING").contains(currentEmployee) ||
                                                 database.getCurrentAvailableEmployees(cursor.minusDays(i),
-                                                        "FULL").contains(currentEmployee);
+                                                        "FULL").contains(currentEmployee)) {
+
+                                    //check if employee doesn't have time off requested
+                                    if (!database.hasTimeOff(currentEmployee, cursor.minusDays(i))) {
+                                        employeeAvailable = true;
+                                    }
+
+                                }
                             }
                         }
                         //if employee is available and hasn't worked this week, create an error
