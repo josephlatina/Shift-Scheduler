@@ -82,7 +82,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 //Determine what day of the week and send to its respective activity
 
                 //Concatenate to convert date into string format
-                String date = selectedYear + "-" + (selectedMonth+1) + "-";
+                String date = selectedYear + "-" + (selectedMonth) + "-";
                 if (selectedDayOfMonth < 10) {
                     date += "0" + selectedDayOfMonth; //for formatting purposes
                 } else {
