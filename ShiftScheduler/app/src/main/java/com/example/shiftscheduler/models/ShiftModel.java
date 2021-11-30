@@ -94,7 +94,7 @@ public abstract class ShiftModel implements Serializable {
     public Set<EmployeeModel> getEmployees() {
         //return defensive copy
         Set<EmployeeModel> resultEmployees = new HashSet<>(employees);
-        return employees;
+        return resultEmployees;
     }
 
     /**
