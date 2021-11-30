@@ -886,8 +886,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             empID = 0;
         }
 
+        cursor.close();
+        db.close();
+
         if (empID == EmployeeModel.getEmployeeID()) return true;
         else return false;
+    }
+
+    public boolean isScheduled(EmployeeModel employee, LocalDate date) {
+        //Initialize List
+        List<EmployeeModel> employees = new ArrayList<>();
+
+        //get data from the database
+        String queryString = "SELECT E." + COL_EMPID + "," + COL_FNAME + "," + COL_LNAME + "," +
+                COL_CITY + "," + COL_STREET + "," + COL_PROVINCE + "," + COL_POSTAL + "," +
+                COL_DOB + "," + COL_PHONENUM + "," + COL_EMAIL + "," + COL_ISACTIVE +
+                " FROM " + EMPLOYEE_TABLE + " AS E, " + WORK_TABLE + " AS W, " +
+                SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID +
+                " = S." + COL_SHIFTID + " AND DATE(S." + COL_DATE +
+                ") = ? ";
+        SQLiteDatabase db = this.getReadableDatabase();
+        //Cursor is the [result] set from SQL statement
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString()))});
+        //check if the result successfully brought back from the database
+        if (cursor.moveToFirst()){ //move it to the first of the result set
+            //loop through the results
+            do{
+                int employeeID = cursor.getInt(0);
+                String fName = cursor.getString(1);
+                String lName = cursor.getString(2);
+                String city = cursor.getString(3);
+                String street = cursor.getString(4);
+                String province = cursor.getString(5);
+                String postal = cursor.getString(6);
+                String dateOfBirth = cursor.getString(7);
+                String phone = cursor.getString(8);
+                String email = cursor.getString(9);
+                boolean isActive = cursor.getInt(10) == 1 ? true: false;
+
+                //get Qualifications
+                List<Boolean> qualifications = getQualifications(employeeID);
+
+                EmployeeModel newEmployee = new EmployeeModel(employeeID,
+                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
+                employees.add(newEmployee);
+            } while(cursor.moveToNext());
+        } else {
+            // error, nothing added to the list
+        }
+
+        // close both db and cursor for others to access
+        cursor.close();
+        db.close();
+
+        if (employees.contains(employee)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
