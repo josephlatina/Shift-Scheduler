@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.collection.ArraySet;
 
 import com.example.shiftscheduler.R;
 import com.example.shiftscheduler.database.DatabaseHelper;
@@ -104,6 +105,7 @@ public class ScheduleExport extends AppCompatActivity {
             }
         };
         Collections.sort(exportList, compareByDate); //sort the exportList by date
+
 //------------------------------------------------------------------------------------------------
 // For my test
 //        try {
@@ -160,11 +162,20 @@ public class ScheduleExport extends AppCompatActivity {
 
             List<String[]> rows = new ArrayList<String[]>();
 
+            List<String> emailArray = new ArrayList<>();
             for (ExportModel export: exportList ){
                 String[] strArray = {
                         export.getfName(), export.getlName(), export.getShiftType(), export.getDate()
                 };
                 rows.add(strArray);
+                emailArray.add(export.getEmail());
+            }
+            // Create a new ArrayList
+            ArrayList<String> newEmailList = new ArrayList<>();
+            for (int i=0; i<emailArray.size(); i++) {
+                if (!newEmailList.contains(emailArray.get(i))) {
+                    newEmailList.add(emailArray.get(i));
+                }
             }
 
             PdfPTable table = new PdfPTable(headers.length);
@@ -183,9 +194,15 @@ public class ScheduleExport extends AppCompatActivity {
                 }
                 table.completeRow();
             }
-
-            mDoc.addTitle("Shift Schedulers For This Month");
             mDoc.add(table);
+
+            // print the email list
+            mDoc.addTitle("Shift Schedulers For This Month");
+            mDoc.add ( Chunk.NEWLINE );
+            mDoc.add(new Paragraph("The emails list: "));
+            for (int i=0; i<newEmailList.size(); i++) {
+                mDoc.add(new Paragraph(newEmailList.get(i)));
+            }
 
             //close the document
             mDoc.close();
