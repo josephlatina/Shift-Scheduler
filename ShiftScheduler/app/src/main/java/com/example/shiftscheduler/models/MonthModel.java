@@ -17,15 +17,28 @@ import java.util.List;
 public class MonthModel {
     private final LocalDate startDate;
     private final ArrayList<DayModel> days;
+    private LocalDate firstSundayBefore;
+    private LocalDate lastSaturdayAfter;
 
     /**
      * Constructor.
      * @param startDate - LocalDate of the first day of month
      * @param days - DayModels for each date in month
      */
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public MonthModel(LocalDate startDate, ArrayList<DayModel> days) {
         this.startDate = startDate;
         this.days = days;
+
+        this.firstSundayBefore = startDate;
+        while (this.firstSundayBefore.getDayOfWeek() != DayOfWeek.SUNDAY) {
+            this.firstSundayBefore = this.firstSundayBefore.minusDays(1);
+        }
+
+        this.lastSaturdayAfter = startDate.plusMonths(1).minusDays(1);
+        while (this.lastSaturdayAfter.getDayOfWeek() != DayOfWeek.SATURDAY) {
+            this.lastSaturdayAfter = this.lastSaturdayAfter.plusDays(1);
+        }
     }
 
     /**
@@ -102,24 +115,14 @@ public class MonthModel {
     private ArrayList<ErrorModel> verifyEmployeesWorkWeekly(DatabaseHelper database,
                                                             List<EmployeeModel> employees,
                                                             ArrayList<ErrorModel> errors) {
-        // 1. find the Sunday at/before startDate
-        LocalDate firstSunday = startDate;
-        while (firstSunday.getDayOfWeek() != DayOfWeek.SUNDAY) {
-            firstSunday = firstSunday.minusDays(1);
-        }
 
-        // 2. find the Saturday at/after the last day of the month
-        LocalDate lastSaturday = startDate.plusMonths(1).minusDays(1);
-        while (lastSaturday.getDayOfWeek() != DayOfWeek.SATURDAY) {
-            lastSaturday = lastSaturday.plusDays(1);
-        }
-
-        // 3. ensure every available employee works at least one shift on every week between them
+        //ensure every available employee works at least one shift on every week between
+        //firstSundayBefore and lastSaturdayAfter
         for (EmployeeModel currentEmployee : employees) {
-            LocalDate cursor = firstSunday;
+            LocalDate cursor = firstSundayBefore;
             boolean employeeWorks = false;
 
-            while (!cursor.isEqual(lastSaturday.plusDays(1))) {
+            while (!cursor.isEqual(lastSaturdayAfter.plusDays(1))) {
                 //lock employeeWorks as true if it is ever true
                 if (!employeeWorks) {
                     employeeWorks = database.isScheduled(currentEmployee, cursor);
