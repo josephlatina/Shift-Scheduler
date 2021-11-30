@@ -133,11 +133,11 @@ public class MonthModel {
                             //lock employeeAvailable as true if it is ever true
                             if (!employeeAvailable) {
                                 employeeAvailable =
-                                        database.getAvailableEmployees(cursor.minusDays(i),
+                                        database.getCurrentAvailableEmployees(cursor.minusDays(i),
                                                 "MORNING").contains(currentEmployee) ||
-                                                database.getAvailableEmployees(cursor.minusDays(i),
+                                                database.getCurrentAvailableEmployees(cursor.minusDays(i),
                                                         "EVENING").contains(currentEmployee) ||
-                                                database.getAvailableEmployees(cursor.minusDays(i),
+                                                database.getCurrentAvailableEmployees(cursor.minusDays(i),
                                                         "FULL").contains(currentEmployee);
                             }
                         }

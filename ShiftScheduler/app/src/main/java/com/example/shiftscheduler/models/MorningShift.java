@@ -61,7 +61,7 @@ public class MorningShift extends ShiftModel implements Serializable {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public ArrayList<ErrorModel> verifyEmployeeAvailability(DatabaseHelper database,
                                                             ArrayList<ErrorModel> errors) {
-        List<EmployeeModel> availableEmployees = database.getCurrentAvailableEmployees(getDate(), getTime());
+        List<EmployeeModel> availableEmployees = database.getCurrentAvailableEmployees(getDate(), "MORNING");
         for (EmployeeModel employee : getEmployees()) {
             if (!availableEmployees.contains(employee)) { //employee is not available
                 errors.add(new ErrorModel(getDate(), "MORNING SHIFT: "+employee.getFName()+" "+
