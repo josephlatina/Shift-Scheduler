@@ -209,6 +209,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             //check if inserting into the database was successful or not
             long success = db.insert(SHIFT_TABLE,null,cv);
+            cursor.close();
             db.close();
             if (success == -1) {
                 return false;
@@ -266,6 +267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             //check if inserting into the database was successful or not
             long success = db.insert(TIMEOFF_TABLE,null,cv);
+            cursor.close();
             db.close();
             if (success == -1) {
                 return false;
@@ -557,7 +559,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             int empID = employeeIDs.get(i);
             employees.add(getEmployee(empID));
         }
-
+        cursor.close();
+        db.close();
         return employees;
     }
 
