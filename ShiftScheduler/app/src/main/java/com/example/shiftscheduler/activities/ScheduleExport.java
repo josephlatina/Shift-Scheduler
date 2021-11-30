@@ -24,6 +24,7 @@ import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,11 +66,8 @@ public class ScheduleExport extends AppCompatActivity {
                 .build().show();
     }
 
-    public void exportPDF(View view) throws FileNotFoundException {
-
-
-
-
+    public void exportPDF(View view) {
+        
         String [] txt_MonthYear;
         String month = "", year = "";
 
@@ -136,8 +134,9 @@ public class ScheduleExport extends AppCompatActivity {
             PdfWriter.getInstance(mDoc, new FileOutputStream(mFilePath));
             //open the document for writing
             mDoc.open();
-            //get text from EditText i.e. mTextEt
-            String mText = "Schedules For Year: " + year + ", Month: " + month + "\n";
+            //print the title for the document
+            String monthString = new DateFormatSymbols().getMonths()[Integer.parseInt(month)-1];
+            String mText = "Schedules For Year: " + year + ", Month: " + monthString + "\n";
 
             //add author of the document (optional)
             mDoc.addAuthor("TEAM Borg");
