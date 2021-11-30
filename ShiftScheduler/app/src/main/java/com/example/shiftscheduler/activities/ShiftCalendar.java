@@ -1,5 +1,7 @@
 package com.example.shiftscheduler.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,7 +34,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.NavigableSet;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
@@ -43,7 +49,9 @@ public class ShiftCalendar extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     Button editSelectedDayBtn;
     Button exportBtn;
+    ImageButton errorBtn;
     int selectedYear, selectedMonth, selectedDayOfMonth;
+    AlertDialog.Builder alertDialogBuilder;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> assignedEmployees;
     private ArrayList<ErrorModel> errorList;
@@ -63,6 +71,8 @@ public class ShiftCalendar extends AppCompatActivity {
         //Link the layout controls
         employeeRecyclerView = findViewById(R.id.calSelectedEmployeeRecyclerView);
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
+        errorBtn = findViewById(R.id.errorButton);
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         //Update month model
         updateErrorList();
@@ -150,6 +160,32 @@ public class ShiftCalendar extends AppCompatActivity {
                 //update errors
 //                updateErrorList();
                 buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
+
+            }
+        });
+
+        //Error Button Listener
+        errorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String errorDays = "Days To Fix: \n";
+                List<LocalDate> uniqueErrorList = errorList.stream().map(ErrorModel::getStartDate).distinct().collect(Collectors.toList());
+                for (int i = 0; i < uniqueErrorList.size(); i++) {
+                    errorDays += uniqueErrorList.get(i).toString();
+                    errorDays += "\n";
+                }
+
+                alertDialogBuilder.setTitle("Existing Errors");
+                alertDialogBuilder.setMessage(errorDays);
+
+                alertDialogBuilder.setCancelable(false)
+                        .setNegativeButton("OK",new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                // if this button is clicked, just close
+                                // the dialog box and do nothing
+                                dialog.cancel();
+                            }
+                        }).create().show();
 
             }
         });
