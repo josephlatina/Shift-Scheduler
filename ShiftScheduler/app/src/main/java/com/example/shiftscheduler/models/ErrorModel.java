@@ -58,6 +58,11 @@ public class ErrorModel {
         else return startDate + " to " + endDate + ": " + details;
     }
 
+    public String toWeeklyString() {
+        if (endDate == null) return null;
+        else return startDate + " to " + endDate + ": " + weeklyDetails;
+    }
+
     /**
      * @return startDate
      */
