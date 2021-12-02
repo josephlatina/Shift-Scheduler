@@ -82,7 +82,7 @@ public class ShiftCalendar extends AppCompatActivity {
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
         LocalDate localDate = LocalDate.now();
         selectedYear = localDate.getYear();
-        selectedMonth = localDate.getMonthValue() - 1;
+        selectedMonth = localDate.getMonthValue();
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
         editSelectedDayBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,14 +146,40 @@ public class ShiftCalendar extends AppCompatActivity {
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
                 //update selected day
                 selectedYear = year;
-                selectedMonth = month;
+                selectedMonth = month+1;
                 selectedDayOfMonth = dayOfMonth;
 
                 //update edit button label
-                updateEditLabel(year, month, dayOfMonth);
+                updateEditLabel(year, month+1, dayOfMonth);
 
                 //set button to be current selected date
                 editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
+
+                editSelectedDayBtn.setOnClickListener(new View.OnClickListener() {
+
+                  @RequiresApi(api = Build.VERSION_CODES.O)
+                  @Override
+                  public void onClick(View v) {
+                      //Determine what day of the week and send to its respective activity
+
+                      //Concatenate to convert date into string format
+                      LocalDate localDate = makeDate(year, month+1, dayOfMonth);
+
+                      int dayOfWeek = localDate.getDayOfWeek().getValue();
+
+                      //If It's a weekend, switch to the ShiftWeekEnd Activity. Otherwise, switch to ShiftWeekDay
+                      if (dayOfWeek == 6 || dayOfWeek == 7) {
+                          Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekEnd.class);
+                          myIntent.putExtra("date", localDate.toString());
+                          startActivity(myIntent);
+                      } else {
+                          Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekDay.class);
+                          myIntent.putExtra(SHIFT_DATE, localDate.toString());
+                          startActivity(myIntent);
+                      }
+                  }
+              });
+
 
                 //update employees
                 updateAssignedEmployeeList();
@@ -227,7 +253,7 @@ public class ShiftCalendar extends AppCompatActivity {
         //set by default the current selected day to current date
         LocalDate localDate = LocalDate.now();
         selectedYear = localDate.getYear();
-        selectedMonth = localDate.getMonthValue() - 1;
+        selectedMonth = localDate.getMonthValue();
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
 
@@ -372,12 +398,17 @@ public class ShiftCalendar extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private LocalDate makeDate(int year, int month, int dayOfMonth) {
-        String date = selectedYear + "-" + (selectedMonth+1) + "-";
-        if (selectedDayOfMonth < 10) {
-            date += "0" + selectedDayOfMonth; //for formatting purposes
+        String date = year + "-";
+        if (month < 10) {
+            date += "0" + month + "-";
+        } else {
+            date += month + "-";
+        }
+        if (dayOfMonth < 10) {
+            date += "0" + dayOfMonth; //for formatting purposes
         }
         else {
-            date += selectedDayOfMonth;
+            date += dayOfMonth;
         }
         return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
     }
