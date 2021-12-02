@@ -148,6 +148,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 selectedYear = year;
                 selectedMonth = month+1;
                 selectedDayOfMonth = dayOfMonth;
+                LocalDate localDate = makeDate(year, month+1, dayOfMonth);
 
                 //update edit button label
                 updateEditLabel(year, month+1, dayOfMonth);
@@ -163,7 +164,6 @@ public class ShiftCalendar extends AppCompatActivity {
                       //Determine what day of the week and send to its respective activity
 
                       //Concatenate to convert date into string format
-                      LocalDate localDate = makeDate(year, month+1, dayOfMonth);
 
                       int dayOfWeek = localDate.getDayOfWeek().getValue();
 
@@ -183,10 +183,12 @@ public class ShiftCalendar extends AppCompatActivity {
 
                 //update employees
                 updateAssignedEmployeeList();
-                buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
+                buildEmployeeRecyclerView(employeeRecyclerView, localDate);
                 //update errors
 //                updateErrorList();
-                buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
+                DayModel currentDay = createDayObject(localDate);
+                errorList = currentDay.verifyDay(dbHelper);
+                buildErrorRecyclerView(errorRecyclerView, localDate);
 
             }
         });
@@ -377,20 +379,20 @@ public class ShiftCalendar extends AppCompatActivity {
     private void buildErrorRecyclerView(RecyclerView errorRecyclerView, LocalDate date) {
 
         //update current error list
-        updateErrorList();
-
-        //filter out errors which apply to particular date
-        ArrayList<ErrorModel> curDateErrors;
-
-        curDateErrors = (ArrayList<ErrorModel>) errorList.stream()
-                .filter(error -> ((error.getEndDate()).compareTo(date)) >= 0)
-                .filter(error -> (error.getStartDate().compareTo(date)) <= 0)
-                .collect(Collectors.toList());
+//        updateErrorList();
+//
+//        //filter out errors which apply to particular date
+//        ArrayList<ErrorModel> curDateErrors;
+//
+//        curDateErrors = (ArrayList<ErrorModel>) errorList.stream()
+//                .filter(error -> ((error.getEndDate()).compareTo(date)) >= 0)
+//                .filter(error -> (error.getStartDate().compareTo(date)) <= 0)
+//                .collect(Collectors.toList());
 
         //populate recyclerview
         errorRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        errorListAdapter = new ErrorListAdapter(curDateErrors);
+        errorListAdapter = new ErrorListAdapter(errorList);
         errorRecyclerView.setLayoutManager(layoutManager);
         errorRecyclerView.setAdapter(errorListAdapter);
 
