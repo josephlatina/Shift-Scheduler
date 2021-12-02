@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.shiftscheduler.database.DatabaseHelper;
 
+import java.lang.reflect.Array;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -17,8 +18,7 @@ import java.util.List;
 public class MonthModel {
     private final LocalDate startDate;
     private final ArrayList<DayModel> days;
-    private LocalDate firstSundayBefore;
-    private LocalDate lastSaturdayAfter;
+    private ArrayList<LocalDate> sundays = new ArrayList<>();
 
     /**
      * Constructor.
@@ -30,14 +30,30 @@ public class MonthModel {
         this.startDate = startDate;
         this.days = days;
 
-        this.firstSundayBefore = startDate;
-        while (this.firstSundayBefore.getDayOfWeek() != DayOfWeek.SUNDAY) {
-            this.firstSundayBefore = this.firstSundayBefore.minusDays(1);
+        LocalDate firstSundayBefore = startDate;
+        switch (startDate.getDayOfWeek()) {
+            case SUNDAY:
+                break;
+            case MONDAY:
+                firstSundayBefore = startDate.minusDays(1); break;
+            case TUESDAY:
+                firstSundayBefore = startDate.minusDays(2); break;
+            case WEDNESDAY:
+                firstSundayBefore = startDate.minusDays(3); break;
+            case THURSDAY:
+                firstSundayBefore = startDate.minusDays(4); break;
+            case FRIDAY:
+                firstSundayBefore = startDate.minusDays(5); break;
+            case SATURDAY:
+                firstSundayBefore = startDate.minusDays(6); break;
         }
 
-        this.lastSaturdayAfter = startDate.plusMonths(1).minusDays(1);
-        while (this.lastSaturdayAfter.getDayOfWeek() != DayOfWeek.SATURDAY) {
-            this.lastSaturdayAfter = this.lastSaturdayAfter.plusDays(1);
+        sundays.add(firstSundayBefore);
+        int weekCount = 1;
+        int monthValue = startDate.getMonthValue();
+        while (firstSundayBefore.plusWeeks(weekCount).getMonthValue() == monthValue) {
+            sundays.add(firstSundayBefore.plusWeeks(weekCount));
+            weekCount++;
         }
     }
 
@@ -85,11 +101,10 @@ public class MonthModel {
     /**
      * Verifies this month according to specifications.
      * @param database - DatabaseHelper object for the current session
-     * @param employees - ArrayList of all current working EmployeeModels
      * @return verified
      */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
-    public ArrayList<ErrorModel> verifyMonth(DatabaseHelper database, List<EmployeeModel> employees) {
+    public ArrayList<ErrorModel> verifyMonth(DatabaseHelper database) {
         ArrayList<ErrorModel> errors = new ArrayList<>();
 
         // verify all days individually
@@ -98,7 +113,7 @@ public class MonthModel {
         }
 
         // verify all employees work every week
-        errors = verifyEmployeesWorkWeekly(database, employees, errors);
+        errors = verifyEmployeesWorkWeekly(database, errors);
 
         // return all found errors
         return errors;
@@ -111,60 +126,104 @@ public class MonthModel {
      * @param errors - existing list of errors
      * @return errors found
      */
+//    @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
+//    private ArrayList<ErrorModel> verifyEmployeesWorkWeekly(DatabaseHelper database,
+//                                                            List<EmployeeModel> employees,
+//                                                            ArrayList<ErrorModel> errors) {
+//
+//        //ensure every available employee works at least one shift on every week between
+//        //firstSundayBefore and lastSaturdayAfter
+//        for (EmployeeModel currentEmployee : employees) {
+//            LocalDate cursor = firstSundayBefore;
+//            boolean employeeWorks = false;
+//
+//            while (!cursor.isEqual(lastSaturdayAfter.plusDays(1))) {
+//                //lock employeeWorks as true if it is ever true
+//                if (!employeeWorks) {
+//                    employeeWorks = database.isScheduled(currentEmployee, cursor);
+//                }
+//
+//                if (cursor.getDayOfWeek() == DayOfWeek.SATURDAY) { //reaches end of week
+//                    if (!employeeWorks) { //employee hasn't worked this week
+//                        //check if employee is available:
+//                        boolean employeeAvailable = false;
+//                        for (int i = 6; i >= 0; i--) { //check for availability this week
+//                            //lock employeeAvailable as true if it is ever true
+//                            if (!employeeAvailable) {
+//
+//                                //check if employee is available to work
+//                                if (database.getCurrentAvailableEmployees(cursor.minusDays(i),
+//                                                        "MORNING").contains(currentEmployee) ||
+//                                        database.getCurrentAvailableEmployees(cursor.minusDays(i),
+//                                                        "EVENING").contains(currentEmployee) ||
+//                                                database.getCurrentAvailableEmployees(cursor.minusDays(i),
+//                                                        "FULL").contains(currentEmployee)) {
+//
+//                                    //check if employee doesn't have time off requested
+//                                    if (!database.hasTimeOff(currentEmployee, cursor.minusDays(i))) {
+//                                        employeeAvailable = true;
+//                                    }
+//
+//                                }
+//                            }
+//                        }
+//                        //if employee is available and hasn't worked this week, create an error
+//                        if (employeeAvailable) {
+//                            String details = currentEmployee.getFName() +" "+
+//                                    currentEmployee.getLName() + " does not work this week.";
+//                            errors.add(new ErrorModel(cursor.minusDays(6), cursor, details));
+//                        }
+//                    }
+//                    //employee has worked (passes for this week)
+//                    employeeWorks = false; //reset employeeWorks for the next week
+//                }
+//                cursor = cursor.plusDays(1); //point cursor to the next day
+//            }
+//       }
+//        return errors;
+//    }
+
+    /**
+     * Checks every employee to ensure each one works every week involved in this month.
+     * @param database - DatabaseHelper object for the current session
+     * @param errors - existing list of errors
+     * @return errors found
+     */
     @RequiresApi(api = Build.VERSION_CODES.O) //for LocalDate
     private ArrayList<ErrorModel> verifyEmployeesWorkWeekly(DatabaseHelper database,
-                                                            List<EmployeeModel> employees,
-                                                            ArrayList<ErrorModel> errors) {
+                                                             ArrayList<ErrorModel> errors) {
+        //get list of employees from db
+        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) database.getEmployees();
 
-        //ensure every available employee works at least one shift on every week between
-        //firstSundayBefore and lastSaturdayAfter
-        for (EmployeeModel currentEmployee : employees) {
-            LocalDate cursor = firstSundayBefore;
-            boolean employeeWorks = false;
+        //iterate though each sunday
+        for (LocalDate sunday : sundays) {
 
-            while (!cursor.isEqual(lastSaturdayAfter.plusDays(1))) {
-                //lock employeeWorks as true if it is ever true
-                if (!employeeWorks) {
-                    employeeWorks = database.isScheduled(currentEmployee, cursor);
-                }
+            //iterate though employees
+            for (EmployeeModel employee : employees) {
 
-                if (cursor.getDayOfWeek() == DayOfWeek.SATURDAY) { //reaches end of week
-                    if (!employeeWorks) { //employee hasn't worked this week
-                        //check if employee is available:
-                        boolean employeeAvailable = false;
-                        for (int i = 6; i >= 0; i--) { //check for availability this week
-                            //lock employeeAvailable as true if it is ever true
-                            if (!employeeAvailable) {
+                //check for any scheduled shifts from sunday to saturday
+                if (!database.employeeIsScheduledBetween(employee, sunday, sunday.plusDays(6))) {
 
-                                //check if employee is available to work
-                                if (database.getCurrentAvailableEmployees(cursor.minusDays(i),
-                                                        "MORNING").contains(currentEmployee) ||
-                                        database.getCurrentAvailableEmployees(cursor.minusDays(i),
-                                                        "EVENING").contains(currentEmployee) ||
-                                                database.getCurrentAvailableEmployees(cursor.minusDays(i),
-                                                        "FULL").contains(currentEmployee)) {
-
-                                    //check if employee doesn't have time off requested
-                                    if (!database.hasTimeOff(currentEmployee, cursor.minusDays(i))) {
-                                        employeeAvailable = true;
-                                    }
-
-                                }
-                            }
-                        }
-                        //if employee is available and hasn't worked this week, create an error
-                        if (employeeAvailable) {
-                            String details = currentEmployee.getFName() +" "+
-                                    currentEmployee.getLName() + " does not work this week";
-                            errors.add(new ErrorModel(cursor.minusDays(6), cursor, "",details));
+                    //check if they have time off all week
+                    boolean employeeHasTimeOff = true;
+                    for (int i = 0; i < 7; i++) {
+                        if (!database.hasTimeOff(employee, sunday.plusDays(i))) {
+                            employeeHasTimeOff = false;
+                            break;
                         }
                     }
-                    //employee has worked (passes for this week)
-                    employeeWorks = false; //reset employeeWorks for the next week
+
+                    //make an error
+                    if (!employeeHasTimeOff) {
+                        String details = employee.getFName() +" "+ employee.getLName() +
+                                " does not work this week.";
+                        errors.add(new ErrorModel(sunday, sunday.plusDays(6), "", details));
+                    }
                 }
-                cursor = cursor.plusDays(1); //point cursor to the next day
             }
         }
+
         return errors;
     }
+
 }

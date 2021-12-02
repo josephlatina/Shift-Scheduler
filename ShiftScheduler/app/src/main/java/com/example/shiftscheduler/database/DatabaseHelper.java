@@ -947,7 +947,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean employeeIsScheduledBetween(EmployeeModel employee, LocalDate startDate, LocalDate endDate) {
-        List<EmployeeModel> employees = new ArrayList<>();
+        List<Integer> employeeIDs = new ArrayList<>();
 
         String queryString = "SELECT DISTINCT E." + COL_EMPID + "," + COL_FNAME + "," + COL_LNAME + "," +
                 COL_CITY + "," + COL_STREET + "," + COL_PROVINCE + "," + COL_POSTAL + "," +
@@ -966,23 +966,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             //loop through the results
             do{
                 int employeeID = cursor.getInt(0);
-                String fName = cursor.getString(1);
-                String lName = cursor.getString(2);
-                String city = cursor.getString(3);
-                String street = cursor.getString(4);
-                String province = cursor.getString(5);
-                String postal = cursor.getString(6);
-                String dateOfBirth = cursor.getString(7);
-                String phone = cursor.getString(8);
-                String email = cursor.getString(9);
-                boolean isActive = cursor.getInt(10) == 1 ? true: false;
+//                String fName = cursor.getString(1);
+//                String lName = cursor.getString(2);
+//                String city = cursor.getString(3);
+//                String street = cursor.getString(4);
+//                String province = cursor.getString(5);
+//                String postal = cursor.getString(6);
+//                String dateOfBirth = cursor.getString(7);
+//                String phone = cursor.getString(8);
+//                String email = cursor.getString(9);
+//                boolean isActive = cursor.getInt(10) == 1 ? true: false;
 
                 //get Qualifications
-                List<Boolean> qualifications = getQualifications(employeeID);
+//                List<Boolean> qualifications = getQualifications(employeeID);
 
-                EmployeeModel newEmployee = new EmployeeModel(employeeID,
-                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
-                employees.add(newEmployee);
+//                EmployeeModel newEmployee = new EmployeeModel(employeeID,
+//                        fName,lName, city, street, province, postal, dateOfBirth, phone, email, isActive, qualifications);
+                employeeIDs.add(employeeID);
             } while(cursor.moveToNext());
         } else {
             // error, nothing added to the list
@@ -992,7 +992,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        if (employees.contains(employee)) {
+        if (employeeIDs.contains(employee.getEmployeeID())) {
             return true;
         } else {
             return false;
