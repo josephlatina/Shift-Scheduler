@@ -155,8 +155,8 @@ public class MonthModel {
                         //if employee is available and hasn't worked this week, create an error
                         if (employeeAvailable) {
                             String details = currentEmployee.getFName() +" "+
-                                    currentEmployee.getLName() + " does not work from " + firstSundayBefore + " to " + lastSaturdayAfter;
-                            errors.add(new ErrorModel(cursor.minusDays(6), cursor, "", details));
+                                    currentEmployee.getLName() + " does not work this week";
+                            errors.add(new ErrorModel(cursor.minusDays(6), cursor, "",details));
                         }
                     }
                     //employee has worked (passes for this week)

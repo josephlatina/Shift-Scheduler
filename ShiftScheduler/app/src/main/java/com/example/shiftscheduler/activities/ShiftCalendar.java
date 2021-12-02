@@ -217,7 +217,7 @@ public class ShiftCalendar extends AppCompatActivity {
                     errorDays += "\n";
                 }
                 errorDays += "\nEmployee Schedules To Fix: \n";
-                List<String> uniqueErrorList2 = errorList.stream().map(ErrorModel::getWeeklyDetails).distinct().collect(Collectors.toList());
+                List<String> uniqueErrorList2 = errorList.stream().map(ErrorModel::toWeeklyString).distinct().collect(Collectors.toList());
                 for (int i = 0; i < uniqueErrorList2.size(); i++) {
                     if (uniqueErrorList2.get(i) != null) {
                         errorDays += uniqueErrorList2.get(i);
