@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,12 +36,15 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 public class ShiftCalendar extends AppCompatActivity {
     public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
@@ -50,7 +54,8 @@ public class ShiftCalendar extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     Button editSelectedDayBtn;
     Button exportBtn;
-    ImageButton errorBtn;
+    Button errorBtn;
+    EditText errorLabel;
     int selectedYear, selectedMonth, selectedDayOfMonth;
     AlertDialog.Builder alertDialogBuilder;
     //Recycler View Setup:
@@ -74,15 +79,16 @@ public class ShiftCalendar extends AppCompatActivity {
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
         errorBtn = findViewById(R.id.errorButton);
         alertDialogBuilder = new AlertDialog.Builder(this);
+        errorLabel = findViewById(R.id.errorLabel);
 
         //Update month model
-        updateErrorList();
+//        updateErrorList();
 
         //editSelectedDay button
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
         LocalDate localDate = LocalDate.now();
         selectedYear = localDate.getYear();
-        selectedMonth = localDate.getMonthValue() - 1;
+        selectedMonth = localDate.getMonthValue();
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
         editSelectedDayBtn.setOnClickListener(new View.OnClickListener() {
@@ -146,21 +152,49 @@ public class ShiftCalendar extends AppCompatActivity {
                 DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
                 //update selected day
                 selectedYear = year;
-                selectedMonth = month;
+                selectedMonth = month+1;
                 selectedDayOfMonth = dayOfMonth;
+                LocalDate localDate = makeDate(year, month+1, dayOfMonth);
 
                 //update edit button label
-                updateEditLabel(year, month, dayOfMonth);
+                updateEditLabel(year, month+1, dayOfMonth);
 
                 //set button to be current selected date
                 editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
 
+                editSelectedDayBtn.setOnClickListener(new View.OnClickListener() {
+
+                  @RequiresApi(api = Build.VERSION_CODES.O)
+                  @Override
+                  public void onClick(View v) {
+                      //Determine what day of the week and send to its respective activity
+
+                      //Concatenate to convert date into string format
+
+                      int dayOfWeek = localDate.getDayOfWeek().getValue();
+
+                      //If It's a weekend, switch to the ShiftWeekEnd Activity. Otherwise, switch to ShiftWeekDay
+                      if (dayOfWeek == 6 || dayOfWeek == 7) {
+                          Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekEnd.class);
+                          myIntent.putExtra("date", localDate.toString());
+                          startActivity(myIntent);
+                      } else {
+                          Intent myIntent = new Intent(ShiftCalendar.this, ShiftWeekDay.class);
+                          myIntent.putExtra(SHIFT_DATE, localDate.toString());
+                          startActivity(myIntent);
+                      }
+                  }
+              });
+
+
                 //update employees
                 updateAssignedEmployeeList();
-                buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
+                buildEmployeeRecyclerView(employeeRecyclerView, localDate);
                 //update errors
 //                updateErrorList();
-                buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
+                DayModel currentDay = createDayObject(localDate);
+                errorList = currentDay.verifyDay(dbHelper);
+                buildErrorRecyclerView(errorRecyclerView, localDate);
 
             }
         });
@@ -169,11 +203,26 @@ public class ShiftCalendar extends AppCompatActivity {
         errorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Build Month Model and its respective errorlist
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+                List<String> chosenMonthYear = new ArrayList<String>(Arrays.asList(errorLabel.getText().toString().split("-")));
+                MonthModel currentMonth = createMonthObject(Integer.parseInt(chosenMonthYear.get(0)),Integer.parseInt(chosenMonthYear.get(1)));
+
+                //Set up alert dialog for errors
+                errorList = currentMonth.verifyMonth(dbHelper, dbHelper.getEmployees());
                 String errorDays = "Days To Fix: \n";
                 List<LocalDate> uniqueErrorList = errorList.stream().map(ErrorModel::getStartDate).distinct().collect(Collectors.toList());
                 for (int i = 0; i < uniqueErrorList.size(); i++) {
                     errorDays += uniqueErrorList.get(i).toString();
                     errorDays += "\n";
+                }
+                errorDays += "\nEmployee Schedules To Fix: \n";
+                List<String> uniqueErrorList2 = errorList.stream().map(ErrorModel::getWeeklyDetails).distinct().collect(Collectors.toList());
+                for (int i = 0; i < uniqueErrorList2.size(); i++) {
+                    if (uniqueErrorList2.get(i) != null) {
+                        errorDays += uniqueErrorList2.get(i);
+                        errorDays += "\n";
+                    }
                 }
 
                 alertDialogBuilder.setTitle("Existing Errors");
@@ -192,22 +241,30 @@ public class ShiftCalendar extends AppCompatActivity {
 
         });
 
-        //if error list is empty, make error button invisible, otherwise the opposite.
-        if(errorList.size() == 0){
-            errorBtn.setEnabled(false);
-            errorBtn.setVisibility(View.INVISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(false);
-            errorLabel.setVisibility(View.INVISIBLE);
-        }
-        else{
-            errorBtn.setEnabled(true);
-            errorBtn.setVisibility(View.VISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(true);
-            errorLabel.setVisibility(View.VISIBLE);
+        //Select month to verify
+        errorLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectMonth(view);
+            }
+        });
 
-        }
+        //if error list is empty, make error button invisible, otherwise the opposite.
+//        if(errorList.size() == 0){
+//            errorBtn.setEnabled(false);
+//            errorBtn.setVisibility(View.INVISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(false);
+//            errorLabel.setVisibility(View.INVISIBLE);
+//        }
+//        else{
+//            errorBtn.setEnabled(true);
+//            errorBtn.setVisibility(View.VISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(true);
+//            errorLabel.setVisibility(View.VISIBLE);
+//
+//        }
 
 
         //navigationbar stuff
@@ -224,10 +281,12 @@ public class ShiftCalendar extends AppCompatActivity {
         Intent incomingIntent = getIntent();
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
 
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+
         //set by default the current selected day to current date
         LocalDate localDate = LocalDate.now();
         selectedYear = localDate.getYear();
-        selectedMonth = localDate.getMonthValue() - 1;
+        selectedMonth = localDate.getMonthValue();
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
 
@@ -238,25 +297,47 @@ public class ShiftCalendar extends AppCompatActivity {
         updateAssignedEmployeeList();
         buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
         //update errors
-        updateErrorList();
+//        updateErrorList();
+        DayModel currentDay = createDayObject(localDate);
+        errorList = currentDay.verifyDay(dbHelper);
         buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
         //if error list is empty, make error button invisible, otherwise the opposite.
-        if(errorList.size() == 0){
-            errorBtn.setEnabled(false);
-            errorBtn.setVisibility(View.INVISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(false);
-            errorLabel.setVisibility(View.INVISIBLE);
-        }
-        else{
-            errorBtn.setEnabled(true);
-            errorBtn.setVisibility(View.VISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(true);
-            errorLabel.setVisibility(View.VISIBLE);
+//        if(errorList.size() == 0){
+//            errorBtn.setEnabled(false);
+//            errorBtn.setVisibility(View.INVISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(false);
+//            errorLabel.setVisibility(View.INVISIBLE);
+//        }
+//        else{
+//            errorBtn.setEnabled(true);
+//            errorBtn.setVisibility(View.VISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(true);
+//            errorLabel.setVisibility(View.VISIBLE);
+//
+//        }
 
-        }
+    }
 
+    public void selectMonth(View view) {
+        Calendar today = Calendar.getInstance();
+
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ShiftCalendar.this,
+                new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) {
+                        // on date set
+                        errorLabel.setText(Integer.toString(selectedMonth+1) + "-" + Integer.toString(selectedYear));
+                    }
+                }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+
+        builder.setActivatedMonth(Calendar.NOVEMBER)
+                .setMinYear(2020)
+                .setActivatedYear(2021)
+                .setMaxYear(2030)
+                .setTitle("Select month year")
+                .build().show();
     }
 
 
@@ -351,20 +432,20 @@ public class ShiftCalendar extends AppCompatActivity {
     private void buildErrorRecyclerView(RecyclerView errorRecyclerView, LocalDate date) {
 
         //update current error list
-        updateErrorList();
-
-        //filter out errors which apply to particular date
-        ArrayList<ErrorModel> curDateErrors;
-
-        curDateErrors = (ArrayList<ErrorModel>) errorList.stream()
-                .filter(error -> ((error.getEndDate()).compareTo(date)) >= 0)
-                .filter(error -> (error.getStartDate().compareTo(date)) <= 0)
-                .collect(Collectors.toList());
+//        updateErrorList();
+//
+//        //filter out errors which apply to particular date
+//        ArrayList<ErrorModel> curDateErrors;
+//
+//        curDateErrors = (ArrayList<ErrorModel>) errorList.stream()
+//                .filter(error -> ((error.getEndDate()).compareTo(date)) >= 0)
+//                .filter(error -> (error.getStartDate().compareTo(date)) <= 0)
+//                .collect(Collectors.toList());
 
         //populate recyclerview
         errorRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        errorListAdapter = new ErrorListAdapter(curDateErrors);
+        errorListAdapter = new ErrorListAdapter(errorList);
         errorRecyclerView.setLayoutManager(layoutManager);
         errorRecyclerView.setAdapter(errorListAdapter);
 
@@ -372,12 +453,17 @@ public class ShiftCalendar extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private LocalDate makeDate(int year, int month, int dayOfMonth) {
-        String date = selectedYear + "-" + (selectedMonth+1) + "-";
-        if (selectedDayOfMonth < 10) {
-            date += "0" + selectedDayOfMonth; //for formatting purposes
+        String date = year + "-";
+        if (month < 10) {
+            date += "0" + month + "-";
+        } else {
+            date += month + "-";
+        }
+        if (dayOfMonth < 10) {
+            date += "0" + dayOfMonth; //for formatting purposes
         }
         else {
-            date += selectedDayOfMonth;
+            date += dayOfMonth;
         }
         return LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
     }
