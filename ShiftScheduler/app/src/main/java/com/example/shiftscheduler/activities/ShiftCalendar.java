@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,12 +36,15 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 public class ShiftCalendar extends AppCompatActivity {
     public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
@@ -50,7 +54,8 @@ public class ShiftCalendar extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     Button editSelectedDayBtn;
     Button exportBtn;
-    ImageButton errorBtn;
+    Button errorBtn;
+    EditText errorLabel;
     int selectedYear, selectedMonth, selectedDayOfMonth;
     AlertDialog.Builder alertDialogBuilder;
     //Recycler View Setup:
@@ -74,9 +79,10 @@ public class ShiftCalendar extends AppCompatActivity {
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
         errorBtn = findViewById(R.id.errorButton);
         alertDialogBuilder = new AlertDialog.Builder(this);
+        errorLabel = findViewById(R.id.errorLabel);
 
         //Update month model
-        updateErrorList();
+//        updateErrorList();
 
         //editSelectedDay button
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
@@ -197,11 +203,26 @@ public class ShiftCalendar extends AppCompatActivity {
         errorBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Build Month Model and its respective errorlist
+                DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+                List<String> chosenMonthYear = new ArrayList<String>(Arrays.asList(errorLabel.getText().toString().split("-")));
+                MonthModel currentMonth = createMonthObject(Integer.parseInt(chosenMonthYear.get(0)),Integer.parseInt(chosenMonthYear.get(1)));
+
+                //Set up alert dialog for errors
+                errorList = currentMonth.verifyMonth(dbHelper, dbHelper.getEmployees());
                 String errorDays = "Days To Fix: \n";
                 List<LocalDate> uniqueErrorList = errorList.stream().map(ErrorModel::getStartDate).distinct().collect(Collectors.toList());
                 for (int i = 0; i < uniqueErrorList.size(); i++) {
                     errorDays += uniqueErrorList.get(i).toString();
                     errorDays += "\n";
+                }
+                errorDays += "\nEmployee Schedules To Fix: \n";
+                List<String> uniqueErrorList2 = errorList.stream().map(ErrorModel::getWeeklyDetails).distinct().collect(Collectors.toList());
+                for (int i = 0; i < uniqueErrorList2.size(); i++) {
+                    if (uniqueErrorList2.get(i) != null) {
+                        errorDays += uniqueErrorList2.get(i);
+                        errorDays += "\n";
+                    }
                 }
 
                 alertDialogBuilder.setTitle("Existing Errors");
@@ -220,22 +241,30 @@ public class ShiftCalendar extends AppCompatActivity {
 
         });
 
-        //if error list is empty, make error button invisible, otherwise the opposite.
-        if(errorList.size() == 0){
-            errorBtn.setEnabled(false);
-            errorBtn.setVisibility(View.INVISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(false);
-            errorLabel.setVisibility(View.INVISIBLE);
-        }
-        else{
-            errorBtn.setEnabled(true);
-            errorBtn.setVisibility(View.VISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(true);
-            errorLabel.setVisibility(View.VISIBLE);
+        //Select month to verify
+        errorLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectMonth(view);
+            }
+        });
 
-        }
+        //if error list is empty, make error button invisible, otherwise the opposite.
+//        if(errorList.size() == 0){
+//            errorBtn.setEnabled(false);
+//            errorBtn.setVisibility(View.INVISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(false);
+//            errorLabel.setVisibility(View.INVISIBLE);
+//        }
+//        else{
+//            errorBtn.setEnabled(true);
+//            errorBtn.setVisibility(View.VISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(true);
+//            errorLabel.setVisibility(View.VISIBLE);
+//
+//        }
 
 
         //navigationbar stuff
@@ -252,6 +281,8 @@ public class ShiftCalendar extends AppCompatActivity {
         Intent incomingIntent = getIntent();
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
 
+        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
+
         //set by default the current selected day to current date
         LocalDate localDate = LocalDate.now();
         selectedYear = localDate.getYear();
@@ -266,25 +297,47 @@ public class ShiftCalendar extends AppCompatActivity {
         updateAssignedEmployeeList();
         buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
         //update errors
-        updateErrorList();
+//        updateErrorList();
+        DayModel currentDay = createDayObject(localDate);
+        errorList = currentDay.verifyDay(dbHelper);
         buildErrorRecyclerView(errorRecyclerView, selectedLocalDate());
         //if error list is empty, make error button invisible, otherwise the opposite.
-        if(errorList.size() == 0){
-            errorBtn.setEnabled(false);
-            errorBtn.setVisibility(View.INVISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(false);
-            errorLabel.setVisibility(View.INVISIBLE);
-        }
-        else{
-            errorBtn.setEnabled(true);
-            errorBtn.setVisibility(View.VISIBLE);
-            TextView errorLabel = findViewById(R.id.errorLabel);
-            errorLabel.setEnabled(true);
-            errorLabel.setVisibility(View.VISIBLE);
+//        if(errorList.size() == 0){
+//            errorBtn.setEnabled(false);
+//            errorBtn.setVisibility(View.INVISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(false);
+//            errorLabel.setVisibility(View.INVISIBLE);
+//        }
+//        else{
+//            errorBtn.setEnabled(true);
+//            errorBtn.setVisibility(View.VISIBLE);
+//            TextView errorLabel = findViewById(R.id.errorLabel);
+//            errorLabel.setEnabled(true);
+//            errorLabel.setVisibility(View.VISIBLE);
+//
+//        }
 
-        }
+    }
 
+    public void selectMonth(View view) {
+        Calendar today = Calendar.getInstance();
+
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(ShiftCalendar.this,
+                new MonthPickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(int selectedMonth, int selectedYear) {
+                        // on date set
+                        errorLabel.setText(Integer.toString(selectedMonth+1) + "-" + Integer.toString(selectedYear));
+                    }
+                }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+
+        builder.setActivatedMonth(Calendar.NOVEMBER)
+                .setMinYear(2020)
+                .setActivatedYear(2021)
+                .setMaxYear(2030)
+                .setTitle("Select month year")
+                .build().show();
     }
 
 

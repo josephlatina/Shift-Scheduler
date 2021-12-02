@@ -11,6 +11,7 @@ public class ErrorModel {
     private LocalDate startDate;
     private LocalDate endDate;
     private String details;
+    private String weeklyDetails;
 
     /**
      * Constructor. (One Date)
@@ -33,6 +34,19 @@ public class ErrorModel {
         this.startDate = startDate;
         this.endDate = endDate;
         this.details = details;
+    }
+
+    /**
+     * Constructor. (for VerifyEmployeesWorkWeekly)
+     * @param startDate - start of error date range
+     * @param endDate - end of error date range
+     * @param details - error details
+     */
+    public ErrorModel(LocalDate startDate, LocalDate endDate, String details, String weeklyDetails) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.details = details;
+        this.weeklyDetails = weeklyDetails;
     }
 
     /**
@@ -80,6 +94,13 @@ public class ErrorModel {
      */
     public String getDetails() {
         return details;
+    }
+
+    /**
+     * @return weekly error details
+     */
+    public String getWeeklyDetails() {
+        return weeklyDetails;
     }
 
     /**
