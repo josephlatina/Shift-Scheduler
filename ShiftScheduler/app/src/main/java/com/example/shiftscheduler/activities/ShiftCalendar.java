@@ -157,7 +157,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 LocalDate localDate = makeDate(year, month+1, dayOfMonth);
 
                 //update edit button label
-                updateEditLabel(year, month+1, dayOfMonth);
+                updateEditLabel(year, month, dayOfMonth);
 
                 //set button to be current selected date
                 editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
@@ -209,7 +209,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 MonthModel currentMonth = createMonthObject(Integer.parseInt(chosenMonthYear.get(0)),Integer.parseInt(chosenMonthYear.get(1)));
 
                 //Set up alert dialog for errors
-                errorList = currentMonth.verifyMonth(dbHelper, dbHelper.getEmployees());
+                errorList = currentMonth.verifyMonth(dbHelper);
                 String errorDays = "Days To Fix: \n";
                 List<LocalDate> uniqueErrorList = errorList.stream().map(ErrorModel::getStartDate).distinct().collect(Collectors.toList());
                 for (int i = 0; i < uniqueErrorList.size(); i++) {
@@ -372,8 +372,7 @@ public class ShiftCalendar extends AppCompatActivity {
 //        testing for whole month
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
         MonthModel curMonth = createMonthObject(selectedMonth, selectedYear);
-        ArrayList<EmployeeModel> employees = (ArrayList<EmployeeModel>) dbHelper.getEmployees();
-        errorList = curMonth.verifyMonth(dbHelper, employees);
+        errorList = curMonth.verifyMonth(dbHelper);
 
         //testing for single day
 //        DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
