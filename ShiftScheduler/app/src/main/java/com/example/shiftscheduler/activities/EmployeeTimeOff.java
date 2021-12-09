@@ -33,7 +33,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
     public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
 
     EditText name, dateTo, dateFrom;
-    Button addbtn;
+    Button addbtn, calendarbtn;
     ImageButton backbtn;
     String empID, fullName;
     DatePickerDialog.OnDateSetListener fromDateListener, toDateListener;
@@ -57,6 +57,7 @@ public class EmployeeTimeOff extends AppCompatActivity {
         dateFrom = findViewById(R.id.editDateFrom);
         backbtn = findViewById(R.id.timeOffBack);
         addbtn = findViewById(R.id.addTimeOff);
+        calendarbtn = findViewById(R.id.calendarButton);
         recyclerView = findViewById(R.id.timeOffList);
         alertDialogBuilder = new AlertDialog.Builder(this);
 
@@ -148,6 +149,15 @@ public class EmployeeTimeOff extends AppCompatActivity {
 
                 updateTimeoffList();
                 buildRecyclerView();
+            }
+        });
+
+        //button listener for calendar
+        calendarbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(EmployeeTimeOff.this, ShiftCalendar.class);
+                startActivity(myIntent);
             }
         });
 
