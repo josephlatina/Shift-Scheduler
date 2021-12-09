@@ -39,7 +39,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
     public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
     public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
-    final String SHIFT_DATE = "DATE";
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
 
     //references to layout controls
     Button backbtn;
