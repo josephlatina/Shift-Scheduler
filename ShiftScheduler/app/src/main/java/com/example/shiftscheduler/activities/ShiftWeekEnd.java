@@ -167,14 +167,14 @@ public class ShiftWeekEnd extends AppCompatActivity {
                  ArrayList<ErrorModel> errors = morningShift.verifyShift(dbHelper);
                  */
                 //If there are more than 2 employees assigned, prompt alert message
-                if (fullShift.getEmployees().size() > fullShift.getEmployeesNeeded()) {
+                if (fullShift.getEmployees().size() > 2) {
                     promptAlertMessage(1, dbHelper, empID, employee);
                     return;
                 }
                 //If there are 2 employees assigned, check for qualified employees
-                else if (fullShift.getEmployees().size() == fullShift.getEmployeesNeeded()){
+                else if (fullShift.getEmployees().size() == 2){
                     //loop to check if there any employees qualified
-                    for (int i = 0; i < fullShift.getEmployeesNeeded(); i++) {
+                    for (int i = 0; i < 2; i++) {
                         shiftEmp = fullShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
                         List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
                         if (qualifications.get(0) && qualifications.get(1)) {
@@ -218,9 +218,9 @@ public class ShiftWeekEnd extends AppCompatActivity {
                 fullShift.removeEmployee(employee);
 
                 //check for qualifications
-                if (fullShift.getEmployees().size() >= fullShift.getEmployeesNeeded()){
+                if (fullShift.getEmployees().size() >= 2){
                     //loop to check if there any employees qualified
-                    for (int i = 0; i < fullShift.getEmployeesNeeded(); i++) {
+                    for (int i = 0; i < 2; i++) {
                         shiftEmp = fullShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
                         List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
                         if (qualifications.get(0) && qualifications.get(1)) {

@@ -157,7 +157,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 LocalDate localDate = makeDate(year, month+1, dayOfMonth);
 
                 //update edit button label
-                updateEditLabel(year, month, dayOfMonth);
+                updateEditLabel(year, month+1, dayOfMonth);
 
                 //set button to be current selected date
                 editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
