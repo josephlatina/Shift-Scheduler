@@ -57,6 +57,7 @@ public class ShiftCalendar extends AppCompatActivity {
     Button exportBtn;
     Button errorBtn;
     EditText errorLabel;
+    String date;
     int selectedYear, selectedMonth, selectedDayOfMonth;
     AlertDialog.Builder alertDialogBuilder;
     //Recycler View Setup:
@@ -289,7 +290,10 @@ public class ShiftCalendar extends AppCompatActivity {
         LocalDate localDate;
         //receive intent
         Intent incomingIntent = getIntent();
-        String date = incomingIntent.getStringExtra(ShiftWeekDay.SHIFT_DATE);
+        date = incomingIntent.getStringExtra(ShiftWeekDay.SHIFT_DATE);
+        if (date == null) {
+            date = incomingIntent.getStringExtra(ShiftWeekEnd.SHIFT_DATE);
+        }
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
 
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
@@ -430,16 +434,26 @@ public class ShiftCalendar extends AppCompatActivity {
 
         updateAssignedEmployeeList();
         employeeRecyclerView.setHasFixedSize(true);
-        employeeClosingRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        closingLayoutManager = new LinearLayoutManager(this);
-        employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, 3);
-        employeeClosingListAdapter =new EmployeeListAdapter(assignedClosingEmployees, dbHelper, date, 3);
+
+        int dayOfWeek = date.getDayOfWeek().getValue();
+
+        if (dayOfWeek == 6 || dayOfWeek == 7) {
+            employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, "FULL", 3);
+        } else {
+            employeeClosingRecyclerView.setHasFixedSize(true);
+            closingLayoutManager = new LinearLayoutManager(this);
+
+            employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, "MORNING", 3);
+            employeeClosingListAdapter = new EmployeeListAdapter(assignedClosingEmployees, dbHelper, date, "EVENING", 3);
+
+            employeeClosingRecyclerView.setLayoutManager(closingLayoutManager);
+            employeeClosingRecyclerView.setAdapter(employeeClosingListAdapter);
+        }
 
         employeeRecyclerView.setLayoutManager(layoutManager);
         employeeRecyclerView.setAdapter(employeeListAdapter);
-        employeeClosingRecyclerView.setLayoutManager(closingLayoutManager);
-        employeeClosingRecyclerView.setAdapter(employeeClosingListAdapter);
+
     }
 
     /**

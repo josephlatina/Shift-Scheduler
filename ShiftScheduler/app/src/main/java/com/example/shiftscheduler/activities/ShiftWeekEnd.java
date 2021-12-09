@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 
 public class ShiftWeekEnd extends AppCompatActivity {
 
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
+
     //references to layout controls
     Button backbtn;
     EditText shiftdate;
@@ -89,7 +91,7 @@ public class ShiftWeekEnd extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent myIntent = new Intent(ShiftWeekEnd.this, ShiftCalendar.class);
-                myIntent.putExtra("date", date);
+                myIntent.putExtra(SHIFT_DATE, date);
                 myIntent.putExtra("DayObject", day);
                 startActivity(myIntent);
             }
