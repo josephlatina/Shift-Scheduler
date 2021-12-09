@@ -219,6 +219,9 @@ public class ShiftCalendar extends AppCompatActivity {
                 String errorDays = "Days To Fix: \n";
                 List<LocalDate> uniqueErrorList = errorList.stream().map(ErrorModel::getStartDate).distinct().collect(Collectors.toList());
                 for (int i = 0; i < uniqueErrorList.size(); i++) {
+                    if (uniqueErrorList.get(i).getMonthValue() != Integer.parseInt(chosenMonthYear.get(0))) {
+                        continue;
+                    }
                     errorDays += uniqueErrorList.get(i).toString();
                     errorDays += "\n";
                 }
