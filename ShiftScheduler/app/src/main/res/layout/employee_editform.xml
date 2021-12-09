@@ -211,7 +211,7 @@
             android:id="@+id/editSave"
             android:layout_width="156dp"
             android:layout_height="51dp"
-            android:layout_marginTop="780dp"
+            android:layout_marginTop="880dp"
             android:text="@string/save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -250,7 +250,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/monday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoMorningLabel" />
@@ -260,7 +260,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/wednesday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoTuesdayLabel" />
@@ -270,7 +270,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/thursday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoWednesdayLabel" />
@@ -280,7 +280,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/friday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoThursdayLabel" />
@@ -290,7 +290,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/saturday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoFridayLabel" />
@@ -300,7 +300,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/sunday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoSaturdayLabel" />
@@ -310,7 +310,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:text="@string/tuesday"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editInfoMondayLabel" />
@@ -329,7 +329,6 @@
             android:id="@+id/editInfoAvailMonMorn"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/editInfoTuesdayLabel"
             app:layout_constraintEnd_toEndOf="@+id/editInfoMorningLabel"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/editInfoMorningLabel"
