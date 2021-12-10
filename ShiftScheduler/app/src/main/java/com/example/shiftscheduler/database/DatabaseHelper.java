@@ -480,14 +480,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //check for employees that are already working in the given shift
         queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + WORK_TABLE +
                 " AS W, " + SHIFT_TABLE + " AS S WHERE E." + COL_EMPID + " = W." + COL_EMPID + " AND W." + COL_SHIFTID + " = S." + COL_SHIFTID + " AND DATE(S." +
-                COL_DATE + ") = ? )";
+                COL_DATE + ") = ? AND S." + COL_SHIFTTYPE + " = ? )";
         //check for employees that have timeoffs
         queryString += " AND E." + COL_EMPID + " NOT IN ( SELECT E." + COL_EMPID + " FROM " + TIMEOFF_TABLE +
                 " AS T WHERE E." + COL_EMPID + " = T." + COL_EMPID + " AND DATE(T." + COL_DATEFROM + ") <= ? AND DATE(T." + COL_DATETO + ") >= ? )";
         //access database
         SQLiteDatabase db = this.getReadableDatabase();
         //Cursor is the [result] set from SQL statement
-        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())),
+        Cursor cursor = db.rawQuery(queryString, new String[]{String.valueOf(Date.valueOf(date.toString())), time,
                 String.valueOf(Date.valueOf(date.toString())),String.valueOf(Date.valueOf(date.toString()))});
         //check if the result successfully brought back from the database
         if (cursor.moveToFirst()) { //move it to the first of the result set

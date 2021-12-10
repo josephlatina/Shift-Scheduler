@@ -35,6 +35,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -56,16 +57,21 @@ public class ShiftCalendar extends AppCompatActivity {
     Button exportBtn;
     Button errorBtn;
     EditText errorLabel;
+    String date;
     int selectedYear, selectedMonth, selectedDayOfMonth;
     AlertDialog.Builder alertDialogBuilder;
     //Recycler View Setup:
     private ArrayList<EmployeeModel> assignedEmployees;
+    private ArrayList<EmployeeModel> assignedClosingEmployees;
     private ArrayList<ErrorModel> errorList;
     private RecyclerView employeeRecyclerView;
+    private RecyclerView employeeClosingRecyclerView;
     private RecyclerView errorRecyclerView;
     private EmployeeListAdapter employeeListAdapter;
+    private EmployeeListAdapter employeeClosingListAdapter;
     private ErrorListAdapter errorListAdapter;
     private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager closingLayoutManager;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -76,6 +82,7 @@ public class ShiftCalendar extends AppCompatActivity {
 
         //Link the layout controls
         employeeRecyclerView = findViewById(R.id.calSelectedEmployeeRecyclerView);
+        employeeClosingRecyclerView = findViewById(R.id.calSelectedEmployeeClosingRecyclerView);
         errorRecyclerView = findViewById(R.id.calErrorRecyclerView);
         errorBtn = findViewById(R.id.errorButton);
         alertDialogBuilder = new AlertDialog.Builder(this);
@@ -157,7 +164,7 @@ public class ShiftCalendar extends AppCompatActivity {
                 LocalDate localDate = makeDate(year, month+1, dayOfMonth);
 
                 //update edit button label
-                updateEditLabel(year, month, dayOfMonth);
+                updateEditLabel(year, month+1, dayOfMonth);
 
                 //set button to be current selected date
                 editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
@@ -189,7 +196,7 @@ public class ShiftCalendar extends AppCompatActivity {
 
                 //update employees
                 updateAssignedEmployeeList();
-                buildEmployeeRecyclerView(employeeRecyclerView, localDate);
+                buildEmployeeRecyclerView(employeeRecyclerView, employeeClosingRecyclerView, localDate);
                 //update errors
 //                updateErrorList();
                 DayModel currentDay = createDayObject(localDate);
@@ -213,6 +220,9 @@ public class ShiftCalendar extends AppCompatActivity {
                 String errorDays = "Days To Fix: \n";
                 List<LocalDate> uniqueErrorList = errorList.stream().map(ErrorModel::getStartDate).distinct().collect(Collectors.toList());
                 for (int i = 0; i < uniqueErrorList.size(); i++) {
+                    if (uniqueErrorList.get(i).getMonthValue() != Integer.parseInt(chosenMonthYear.get(0))) {
+                        continue;
+                    }
                     errorDays += uniqueErrorList.get(i).toString();
                     errorDays += "\n";
                 }
@@ -277,25 +287,36 @@ public class ShiftCalendar extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onResume() {
         super.onResume();
+        LocalDate localDate;
         //receive intent
         Intent incomingIntent = getIntent();
+        date = incomingIntent.getStringExtra(ShiftWeekDay.SHIFT_DATE);
+        if (date == null) {
+            date = incomingIntent.getStringExtra(ShiftWeekEnd.SHIFT_DATE);
+        }
         DayModel day = (DayModel) incomingIntent.getSerializableExtra("DayObject");
 
         DatabaseHelper dbHelper = new DatabaseHelper(ShiftCalendar.this);
 
         //set by default the current selected day to current date
-        LocalDate localDate = LocalDate.now();
+        if (date == null) {
+            localDate = LocalDate.now();
+        } else {
+            localDate = LocalDate.parse(date, DateTimeFormatter.ISO_LOCAL_DATE);
+        }
         selectedYear = localDate.getYear();
         selectedMonth = localDate.getMonthValue();
         selectedDayOfMonth = localDate.getDayOfMonth();
         updateEditLabel(selectedYear, selectedMonth , selectedDayOfMonth);
+        long currentDate = localDate.toEpochDay() + 1;
+        calendar.setDate(currentDate*60*60*24*1000);
 
         //set button to be current selected date
         editSelectedDayBtn = (Button) findViewById(R.id.calEditDay);
 
         //update employees
         updateAssignedEmployeeList();
-        buildEmployeeRecyclerView(employeeRecyclerView, selectedLocalDate());
+        buildEmployeeRecyclerView(employeeRecyclerView, employeeClosingRecyclerView, selectedLocalDate());
         //update errors
 //        updateErrorList();
         DayModel currentDay = createDayObject(localDate);
@@ -354,10 +375,8 @@ public class ShiftCalendar extends AppCompatActivity {
         } else {
             assignedEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
                     "MORNING");
-            ArrayList<EmployeeModel> scheduledClosers;
-            scheduledClosers = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
+            assignedClosingEmployees = (ArrayList) dbHelper.getScheduledEmployees(selectedLocalDate,
                     "EVENING");
-            assignedEmployees.addAll(scheduledClosers);
         }
 
     }
@@ -410,16 +429,31 @@ public class ShiftCalendar extends AppCompatActivity {
      * For building the employee Recycler view everytime a day is selected on the calendar view
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void buildEmployeeRecyclerView(RecyclerView employeeRecyclerView, LocalDate date) {
+    private void buildEmployeeRecyclerView(RecyclerView employeeRecyclerView, RecyclerView employeeClosingRecyclerView, LocalDate date) {
         DatabaseHelper dbHelper = new DatabaseHelper(this);
 
         updateAssignedEmployeeList();
         employeeRecyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
-        employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, 3);
+
+        int dayOfWeek = date.getDayOfWeek().getValue();
+
+        if (dayOfWeek == 6 || dayOfWeek == 7) {
+            employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, "FULL", 3);
+        } else {
+            employeeClosingRecyclerView.setHasFixedSize(true);
+            closingLayoutManager = new LinearLayoutManager(this);
+
+            employeeListAdapter = new EmployeeListAdapter(assignedEmployees, dbHelper, date, "MORNING", 3);
+            employeeClosingListAdapter = new EmployeeListAdapter(assignedClosingEmployees, dbHelper, date, "EVENING", 3);
+
+            employeeClosingRecyclerView.setLayoutManager(closingLayoutManager);
+            employeeClosingRecyclerView.setAdapter(employeeClosingListAdapter);
+        }
 
         employeeRecyclerView.setLayoutManager(layoutManager);
         employeeRecyclerView.setAdapter(employeeListAdapter);
+
     }
 
     /**

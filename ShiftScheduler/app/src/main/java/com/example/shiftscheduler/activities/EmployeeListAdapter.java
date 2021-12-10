@@ -23,6 +23,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int layoutType;
     private DatabaseHelper dbHelper;
     private LocalDate date;
+    private String shiftType;
 
     public interface OnEmployeeClickListener {
         void onEmployeeClick(int position);
@@ -139,11 +140,12 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.layoutType = layoutType;
     }
 
-    public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, DatabaseHelper dbHelper, LocalDate date, int layoutType) {
+    public EmployeeListAdapter(ArrayList<EmployeeModel> employeeList, DatabaseHelper dbHelper, LocalDate date, String shiftType, int layoutType) {
         this.employeeList = employeeList;
         this.layoutType = layoutType;
         this.dbHelper = dbHelper;
         this.date = date;
+        this.shiftType = shiftType;
     }
 
     @NonNull
@@ -235,7 +237,7 @@ public class EmployeeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 elcvh.qualificationDetails.setText(qualificationDetails3);
                 //Shift
-                String shiftType = dbHelper.getShiftType(currentEmployee.getEmployeeID(), date);
+//                String shiftType = dbHelper.getShiftType(currentEmployee.getEmployeeID(), date);
                 elcvh.shiftLabelDetails.setText(shiftType.toUpperCase());
                 break;
         }

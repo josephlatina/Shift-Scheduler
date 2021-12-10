@@ -39,7 +39,7 @@ public class ShiftWeekDay extends AppCompatActivity {
     public static final String EMPLOYEE_ID = "com.example.shiftscheduler.activities.EMPLOYEE_ID";
     public static final String EMPLOYEE_NAME = "com.example.shiftscheduler.activities.EMPLOYEE_NAME";
     public static final String ACTIVITY_PAGE = "com.example.shiftscheduler.activities.ACTIVITY_PAGE";
-    final String SHIFT_DATE = "DATE";
+    public static final String SHIFT_DATE = "com.example.shiftscheduler.activities.SHIFT_DATE";
 
     //references to layout controls
     Button backbtn;
@@ -248,14 +248,14 @@ public class ShiftWeekDay extends AppCompatActivity {
          ArrayList<ErrorModel> errors = morningShift.verifyShift(dbHelper);
          */
         //If there are more than 2 employees assigned, prompt alert message
-        if (givenShift.getEmployees().size() > givenShift.getEmployeesNeeded()) {
+        if (givenShift.getEmployees().size() > 2) {
             promptAlertMessage(1, dbHelper, empID, employee, time);
             return;
         }
         //If there are 2 employees assigned, check for qualified employees
-        else if (givenShift.getEmployees().size() == givenShift.getEmployeesNeeded()){
+        else if (givenShift.getEmployees().size() >= 2){
             //loop to check if there any employees qualified
-            for (int i = 0; i < givenShift.getEmployeesNeeded(); i++) {
+            for (int i = 0; i < 2; i++) {
                 shiftEmp = givenShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
                 List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
                 if (time.equals("MORNING") && qualifications.get(0)) {
@@ -288,9 +288,9 @@ public class ShiftWeekDay extends AppCompatActivity {
         givenShift.removeEmployee(employee);
 
         //check for qualifications
-        if (givenShift.getEmployees().size() >= givenShift.getEmployeesNeeded()){
+        if (givenShift.getEmployees().size() >= 2){
             //loop to check if there any employees qualified
-            for (int i = 0; i < givenShift.getEmployeesNeeded(); i++) {
+            for (int i = 0; i < givenShift.getEmployees().size(); i++) {
                 shiftEmp = givenShift.getEmployees().stream().collect(Collectors.toList()).get(i).getEmployeeID();
                 List<Boolean> qualifications = dbHelper.getQualifications(shiftEmp);
                 if (qualifications.get(0) && qualifications.get(1)) {
